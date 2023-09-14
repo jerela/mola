@@ -28,7 +28,7 @@ class Matrix:
                 row.append(value)
             col.append(row)
         self.data = col
-            
+
     # overload equals (==) operator
     def __eq__(self, other):
         # first check that dimensions match; if not, return false
@@ -145,7 +145,6 @@ class Matrix:
         det = calling_matrix.get_diagonal_product()
         return det
 
-
     # check if matrix is singular
     def is_singular(self):
         return self.get_determinant() == 0
@@ -218,8 +217,6 @@ class Matrix:
 
     # return the inverse of a matrix
     def get_inverse(self):
-        
-        # TODO: separate functionality into functions for row echelon and reduced row echelon; leverage the properties of invertible matrices
         
         # create a deep copy of the calling matrix to avoid modifying it when calculating inverse
         calling_matrix = deepcopy(self)
