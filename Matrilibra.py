@@ -5,6 +5,12 @@ from unittest import defaultTestLoader
 
 
 class Matrix:
+    """
+    A class that represents a mathematical matrix used in linear algebra tasks. The number of rows and columns are defined by you and settable. Methods include transpose, inverse, norms, etc.
+    :param data: contains the numeric values in the matrix, implemented as a list of lists that represent the rows of the matrix
+    :param n_rows: unsigned int: the number of rows in the matrix, also known as its height
+    :param n_cols: unsigned int: the number of columns in the matrix, also known as its width
+    """
     
 
     n_rows = 0
@@ -165,7 +171,7 @@ class Matrix:
             
         # in the second part, the elements on each row to the right of the leading coefficient to zero with type 3 row operations
         for i in range(self.n_rows-1,-1,-1):
-            current_row = self.getRow(i)
+            reference_row = self.getRow(i)
             for j in range(i-1,-1,-1):
                 print(str(i) + ", " + str(j))
                 operable_row = self.getRow(j)
@@ -177,11 +183,12 @@ class Matrix:
                         leading_found = True
                         print("leading found at " + str(c))
                         continue
-                    if leading_found and operable_row[c] != 0 and current_row[c] != 0:
-                        multiplier = operable_row[c]/current_row[c]
+                    if leading_found and operable_row[c] != 0 and reference_row[c] != 0:
+                        multiplier = operable_row[c]/reference_row[c]
 
+                # if we have a reason to perform type 3 operations, we do so
                 if leading_found and multiplier != 0:
-                    self.type_three_row_operation(operable_row,current_row,multiplier)
+                    self.type_three_row_operation(operable_row,reference_row,multiplier)
                     self.type_three_row_operation(augmented_matrix.getRow(j),augmented_matrix.getRow(i),multiplier)
                 
         
