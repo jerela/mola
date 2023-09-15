@@ -1,4 +1,5 @@
 from copy import deepcopy
+import math
 from re import I
 from unittest import defaultTestLoader
 from xml.dom.expatbuilder import makeBuilder
@@ -16,11 +17,19 @@ class Matrix:
     n_cols = 0
     data = list
 
+    def __init__(self, *args):
+        if len(args) == 1:
+            self.construct_from_lists(args[0])
+        elif len(args) == 2:
+            self.construct_by_dimensions(args[0], args[1])
+        elif len(args) == 3:
+            self.construct_by_dimensions(args[0], args[1], args[2])
+
+
     # construct a matrix with r rows, c columns, and some initial value (default 0)
-    def __init__(self,r,c,value=0):
+    def construct_by_dimensions(self,r,c,value=0):
         self.n_rows = r
         self.n_cols = c
-        #self.data = [[value]*c]*r
         col = []
         for j in range(r):
             row = []
@@ -28,6 +37,18 @@ class Matrix:
                 row.append(value)
             col.append(row)
         self.data = col
+    
+    # construct a matrix from a given list of lists
+    def construct_from_lists(self,lists):
+        self.n_rows = len(lists)
+        self.n_cols = len(lists[0])
+        col = []
+        for j in range(self.n_rows):
+            row = lists[j]
+            col.append(row)
+        self.data = col
+        
+            
 
     # overload equals (==) operator
     def __eq__(self, other):
@@ -57,19 +78,19 @@ class Matrix:
             raise Exception("Cannot identify type of term on right when multiplying!")
 
     # return the number of rows
-    def getRows(self):
+    def get_height(self):
         return self.n_rows
     
     # return the number of columns
-    def getCols(self):
+    def get_width(self):
         return self.n_cols
     
     # return a row as a list
-    def getRow(self,r):
+    def get_row(self,r):
         return self.data[r]
     
     # set a row at given index to given values from a list
-    def setRow(self,r,new_row):
+    def set_row(self,r,new_row):
         self.data[r] = new_row
 
     # set a single value in a given index
@@ -93,6 +114,24 @@ class Matrix:
         matrix_string = matrix_string + "]"
         print(matrix_string)
 
+    # check if matrix elements are real
+    def is_real(self):
+        real = True
+        for i in range(self.n_rows):
+            for j in range(self.n_cols):
+                if not isinstance(self.get(i,j),float) and not isinstance(self.get(i,j),int):
+                    real = False
+        return real
+
+    # get Frobenius norm of matrix
+    def get_norm_Frobenius(self):
+        return math.sqrt((self.get_conjugate_transpose()*self).get_trace())
+
+    # form a conjugate transpose of the matrix
+    def get_conjugate_transpose(self):
+        if self.is_real():
+            return self.get_transpose()
+
     # transpose a matrix
     def transpose(self):
         transposed = Matrix(self.n_cols,self.n_rows)
@@ -104,13 +143,13 @@ class Matrix:
     # return the transpose of a matrix
     def get_transpose(self):
         calling_matrix = deepcopy(self)
-        calling_matrix.transpose()
+        calling_matrix = calling_matrix.transpose()
         return calling_matrix
 
     # return matrix product
     def matrix_multiplication(self,target_matrix):
         n_rows = self.n_rows
-        n_cols = target_matrix.getCols()
+        n_cols = target_matrix.get_width()
         product_matrix = Matrix(n_rows,n_cols)
         for i in range(n_rows):
             for j in range(n_cols):
@@ -167,7 +206,7 @@ class Matrix:
     def get_diagonal_sum(self):
         sum = 0
         for i in range(self.n_rows):
-            sum = sum + get(i,i)
+            sum = sum + self.get(i,i)
         return sum
 
     # check if matrix is invertible
@@ -194,12 +233,12 @@ class Matrix:
     # transform the parameter matrix to row echelon form; is another matrix is also passed, use it as the augmented matrix
     def transform_to_row_echelon_form(self, augmented_matrix=None):
         for j in range(0,self.n_cols):
-            first_row = self.getRow(j)
+            first_row = self.get_row(j)
             for i in range(1+j,self.n_rows):
                 # zero the element in the first column using type 3 row operations (add to one row the scalar multiple of another)
             
                 # get the row we are trying to modify
-                current_row = self.getRow(i)
+                current_row = self.get_row(i)
             
                 # if the current element is already 0, continue
                 if current_row[0+j] == 0:
@@ -213,7 +252,7 @@ class Matrix:
                 self.type_three_row_operation(current_row,first_row,multiplier)
                 # then apply to augmented matrix
                 if augmented_matrix is not None:
-                    self.type_three_row_operation(augmented_matrix.getRow(i),augmented_matrix.getRow(j),multiplier)
+                    self.type_three_row_operation(augmented_matrix.get_row(i),augmented_matrix.get_row(j),multiplier)
 
     # return the inverse of a matrix
     def get_inverse(self):
@@ -236,7 +275,7 @@ class Matrix:
         # in the first part, set the leading coefficients to 1 with type 2 row operations (multiply a row by a scalar)
         for i in range(0,calling_matrix.n_rows):
             multiplier = 0
-            current_row = calling_matrix.getRow(i)
+            current_row = calling_matrix.get_row(i)
             for c in range(calling_matrix.n_cols):
                 if current_row[c] == 0:
                     continue
@@ -246,21 +285,19 @@ class Matrix:
 
             if multiplier != 0:
                 calling_matrix.type_two_row_operation(current_row,multiplier)
-                calling_matrix.type_two_row_operation(augmented_matrix.getRow(i),multiplier)
+                calling_matrix.type_two_row_operation(augmented_matrix.get_row(i),multiplier)
             
         # in the second part, the elements on each row to the right of the leading coefficient to zero with type 3 row operations
         for i in range(calling_matrix.n_rows-1,-1,-1):
-            reference_row = calling_matrix.getRow(i)
+            reference_row = calling_matrix.get_row(i)
             for j in range(i-1,-1,-1):
-                print(str(i) + ", " + str(j))
-                operable_row = calling_matrix.getRow(j)
+                operable_row = calling_matrix.get_row(j)
                 leading_found = False
                 multiplier = 0
                 for c in range(0,calling_matrix.n_cols):
                     # check if is leading coefficient
                     if operable_row[c] != 0 and not leading_found:
                         leading_found = True
-                        print("leading found at " + str(c))
                         continue
                     if leading_found and operable_row[c] != 0 and reference_row[c] != 0:
                         multiplier = operable_row[c]/reference_row[c]
@@ -268,7 +305,7 @@ class Matrix:
                 # if we have a reason to perform type 3 operations, we do so
                 if leading_found and multiplier != 0:
                     calling_matrix.type_three_row_operation(operable_row,reference_row,multiplier)
-                    calling_matrix.type_three_row_operation(augmented_matrix.getRow(j),augmented_matrix.getRow(i),multiplier)
+                    calling_matrix.type_three_row_operation(augmented_matrix.get_row(j),augmented_matrix.get_row(i),multiplier)
                 
         # return the final inverted matrix
         return augmented_matrix

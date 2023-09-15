@@ -28,10 +28,28 @@ Python 3.9
 
 Represents a standard mathematical matrix with any number of rows and columns.
 
+**Matrix**(rows,columns,value)
+- *rows*: the number of rows (height) in the matrix
+- *columns*: the number of columns (width) in the matrix
+- *value*: the initial numeric value that is assigned to all elements in the matrix (default: 0)
+
+
 **set**(i,j,value)
 - *i*: index of row (0 being the first row)
 - *j*: index of column (0 being the first column)
 - *value*: the numeric value that is assigned to the element at the given indices
+
+
+## TODO:
+- checks to see if matrix is positive/negative definite/semidefinite
+- matrix norms
+- class wrapping linear least squares in an approachable interface
+- generalized least squares
+- Gauss-Markov
+- Levenberg-Marquardt
+- regularized least squares
+- simple decompositions
+- support for complex numbers
 
 ## License
 
