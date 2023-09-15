@@ -52,5 +52,21 @@ H = Matrix([[2,1],[4,1],[6,1]])
 y = Matrix([[0],[1],[2]])
 
 # solve a and b (which should be 0.5 and -1)
+
 theta = (H.get_transpose()*H).get_inverse() * H.get_transpose() * y
+theta.print()
+
+
+# EXAMPLE: weighted linear regression
+# define the observation matrix
+H = Matrix([[2,1],[4,1],[6,1]])
+# define the measurements
+y = Matrix([[0],[1],[2]])
+
+W = Matrix(3,3)
+W.make_identity()
+W.set(0,0,2) # make the first data sample twice as important as the others
+
+# solve a and b (which should be 0.5 and -1)
+theta = (H.get_transpose()*W*H).get_inverse() * H.get_transpose() * W * y
 theta.print()

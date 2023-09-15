@@ -71,9 +71,9 @@ class Matrix:
         if isinstance(self,Matrix) and isinstance(other,Matrix):
             return self.matrix_multiplication(other)
         elif isinstance(self,Matrix) and isinstance(other,int):
-            return self.scalar_multiplication(Matrix,other)
+            return self.scalar_multiplication(other)
         elif isinstance(self,Matrix) and isinstance(other,float):
-            return self.scalar_multiplication(Matrix,other)
+            return self.scalar_multiplication(other)
         else:
             raise Exception("Cannot identify type of term on right when multiplying!")
 
@@ -163,8 +163,8 @@ class Matrix:
     # return scalar multiplied matrix
     def scalar_multiplication(self,scalar):
         resulting_matrix = Matrix(self.n_rows,self.n_cols)
-        for i in range(n_rows):
-            for j in range(n_cols):
+        for i in range(self.n_rows):
+            for j in range(self.n_cols):
                 resulting_matrix.set(i,j,scalar*self.get(i,j))
         return resulting_matrix
     
