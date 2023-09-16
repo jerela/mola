@@ -28,7 +28,7 @@ WIP
 
 ### Matrix
 
-**Matrix** is the main class of **mola**. Most of its functionality involves calling methods from this class. However, for a more user-friendly approach, I plan on implementing some wrapper functions you can call directly (e.g., "linear_least_squares()" to perform linear regression).
+**Matrix** is the main class of **mola**. In practice, the elements of the matrix are implemented with lists. Most of its functionality involves calling methods from this class. However, for a more user-friendly approach, I plan on implementing some wrapper functions you can call directly (e.g., "linear_least_squares()" to perform linear regression).
 
 ## TODO:
 - checks to see if matrix is positive/negative definite/semidefinite
