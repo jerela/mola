@@ -1,7 +1,7 @@
 from molalib.matrix import Matrix
 
 
-def read_file(file_name, delimiter = ','):
+def read_matrix_from_file(file_name, delimiter = ','):
     """
     Returns a Matrix object constructed from the contents of a text file.
     Argument 'delimiter' specifies the character that separates data values in the text file.

@@ -1,4 +1,4 @@
-# Matrix operations and linear algebra library for vanilla Python (molalib)
+# Matrix operations and linear algebra (mola) library for vanilla Python
 
 - [Introduction](#introduction)
 - [Getting started](#getting-started)
@@ -10,9 +10,11 @@
 
 ## Introduction
 
-**molalib** is a Python library for doing algebra with matrices. It covers the basic operations such as matrix addition and multiplication, transposes, inverse, different norms and some decompositions. It is built from scratch without using any external libraries.
+**mola** is a Python library for doing algebra with matrices. It covers the basic operations such as matrix addition and multiplication, transposes, and inverse. It is written without any external Python libraries.
 
-I wrote **molalib** as a hobby project to remind myself of the linear algebra methods I studied in uni and to practice my Python programming.
+I wrote **molalib** as a hobby project to remind myself of the linear algebra I studied in uni and to practice my Python programming. Particularly, this is an exercise in publishing my first Python library.
+
+The documentation will likely improve after I learn to leverage docstrings properly.
 
 ## Getting started
 
@@ -20,33 +22,20 @@ WIP
 
 ## Prerequisites
 
-Python 3.9
+- Python 3.x (written on Python 3.9, so that's sure to work)
 
 ## Classes
 
 ### Matrix
 
-Represents a standard mathematical matrix with any number of rows and columns.
-
-**Matrix**(rows,columns,value)
-- *rows*: the number of rows (height) in the matrix
-- *columns*: the number of columns (width) in the matrix
-- *value*: the initial numeric value that is assigned to all elements in the matrix (default: 0)
-
-
-**set**(i,j,value)
-- *i*: index of row (0 being the first row)
-- *j*: index of column (0 being the first column)
-- *value*: the numeric value that is assigned to the element at the given indices
-
+**Matrix** is the main class of **mola**. Most of its functionality involves calling methods from this class. However, for a more user-friendly approach, I plan on implementing some wrapper functions you can call directly (e.g., "linear_least_squares()" to perform linear regression).
 
 ## TODO:
 - checks to see if matrix is positive/negative definite/semidefinite
-- matrix norms
-- class wrapping linear least squares in an approachable interface
-- generalized least squares
-- Gauss-Markov
-- Levenberg-Marquardt
+- different matrix norms (only Frobenius norm implemented right now)
+- class wrapping generalized least squares in an approachable interface
+- Gauss-Newton iteration
+- Levenberg-Marquardt algorithm
 - regularized least squares
 - simple decompositions
 - support for complex numbers

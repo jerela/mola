@@ -76,5 +76,5 @@ th = regression.linear_least_squares(H,y,W)
 print(th)
 
 
-mat10 = utils.read_file('data.txt')
+mat10 = utils.read_matrix_from_file('data.txt')
 mat10.print()
