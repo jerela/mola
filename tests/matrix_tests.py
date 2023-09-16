@@ -10,8 +10,8 @@ class MatrixTestCase(unittest.TestCase):
 
     def test_inverse(self):
         matrix = Matrix([[2,1,-1],[-3,-1,2],[-2,1,2]])
-        inverse = mat.get_inverse()
-        identity_matrix = identity(3)
+        inverse = matrix.get_inverse()
+        identity_matrix = utils.identity(3)
         product = matrix*inverse
         self.assertEqual(product,identity_matrix)
         
