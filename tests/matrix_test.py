@@ -1,4 +1,4 @@
-import unittest
+import pytest
 from mola import Matrix
 from mola import regression
 from mola import utils
