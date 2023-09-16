@@ -29,7 +29,7 @@ class MatrixTestCase(unittest.TestCase):
     def test_regression(self):
         H = Matrix([[2,1],[4,1],[6,1]])
         y = Matrix([[0],[1],[2]])
-        th = regression.linear_least_squares(H,y,W)
+        th = regression.linear_least_squares(H,y)
         self.assertAlmostEqual(th,(0.5,-1))
 
 
