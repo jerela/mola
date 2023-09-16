@@ -361,3 +361,5 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+python-linear-algebra.sln
+python-linear-algebra.pyproj
