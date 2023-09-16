@@ -206,7 +206,7 @@ class Matrix:
         Returns the determinant of a square matrix.
         """
         if not self.is_square():
-            raise Exception("Cannot calculate determinant because matrix is not square! Matrix is " +  str(calling_matrix.n_rows) + "x" + str(calling_matrix.n_cols))
+            raise Exception("Cannot calculate determinant because matrix is not square! Matrix is " +  str(self.n_rows) + "x" + str(self.n_cols))
             return 0
         det = 0
         
@@ -229,7 +229,7 @@ class Matrix:
         Returns the trace of a square matrix.
         """
         if not self.is_square():
-            raise Exception("Cannot calculate trace because matrix is not square! Matrix is " +  str(calling_matrix.n_rows) + "x" + str(calling_matrix.n_cols))
+            raise Exception("Cannot calculate trace because matrix is not square! Matrix is " +  str(self.n_rows) + "x" + str(self.n_cols))
             return 0
         return self.get_diagonal_sum()
         
