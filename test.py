@@ -1,6 +1,6 @@
-from molalib import Matrix
-from molalib import regression
-from molalib import utils
+from mola import Matrix
+from mola import regression
+from mola import utils
 
 mat2 = Matrix(3,5,1)
 mat3 = mat2.transpose()

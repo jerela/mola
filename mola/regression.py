@@ -1,5 +1,5 @@
-from molalib.matrix import Matrix
-from molalib.utils import identity
+from mola.matrix import Matrix
+from mola.utils import identity
 
 def linear_least_squares(H,z,W=0):
     """

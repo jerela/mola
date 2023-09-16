@@ -7,7 +7,7 @@ class MatrixTestCase(unittest.TestCase):
         self.matrix = Matrix(3,3,1)
 
     def test_inverse(self):
-        self.matrix.inverse()
+        inv = self.matrix.inverse()
 
 if __name__ == '__main__':
     unittest.main()

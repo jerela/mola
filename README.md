@@ -12,7 +12,7 @@
 
 **mola** is a Python library for doing algebra with matrices. It covers the basic operations such as matrix addition and multiplication, transposes, and inverse. It is written without any external Python libraries.
 
-I wrote **molalib** as a hobby project to remind myself of the linear algebra I studied in uni and to practice my Python programming. Particularly, this is an exercise in publishing my first Python library.
+I wrote **mola** as a hobby project to remind myself of the linear algebra I studied in uni and to practice my Python programming. Particularly, this is an exercise in publishing my first Python library.
 
 The documentation will likely improve after I learn to leverage docstrings properly.
 

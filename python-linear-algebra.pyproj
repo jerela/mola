@@ -22,10 +22,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Matrilibra.py" />
-    <Compile Include="molalib\matrix.py" />
-    <Compile Include="molalib\regression.py" />
-    <Compile Include="molalib\utils.py" />
-    <Compile Include="molalib\__init__.py">
+    <Compile Include="mola\matrix.py" />
+    <Compile Include="mola\regression.py" />
+    <Compile Include="mola\utils.py" />
+    <Compile Include="mola\__init__.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="setup.py" />
@@ -38,7 +38,7 @@
     <InterpreterReference Include="Global|PythonCore|3.9" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="molalib\" />
+    <Folder Include="mola\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="requirements.txt" />

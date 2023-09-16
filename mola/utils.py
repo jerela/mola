@@ -1,4 +1,4 @@
-from molalib.matrix import Matrix
+from mola.matrix import Matrix
 
 
 def read_matrix_from_file(file_name, delimiter = ','):
