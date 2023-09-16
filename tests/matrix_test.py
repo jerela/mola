@@ -13,24 +13,24 @@ class MatrixTestCase(unittest.TestCase):
         inverse = matrix.get_inverse()
         identity_matrix = utils.identity(3)
         product = matrix*inverse
-        self.assertEqual(product,identity_matrix)
+        self.assert(product==identity_matrix)
         
     def test_read_file(self):
         mat = utils.read_matrix_from_file('data.txt')
-        self.assertEqual(mat,Matrix([ [1,2,3],[4,5,6],[5,6,7] ]))
+        self.assert(mat==Matrix([ [1,2,3],[4,5,6],[5,6,7] ]))
         
     def test_multiplication(self):
         mat2 = Matrix(3,5,1)
         mat3 = mat2.transpose()
         mat4 = mat2.matrix_multiplication(mat3)
         mat5 = mat2*mat3
-        self.assertEqual(mat4,mat5)
+        self(mat4==mat5)
         
     def test_regression(self):
         H = Matrix([[2,1],[4,1],[6,1]])
         y = Matrix([[0],[1],[2]])
         th = regression.linear_least_squares(H,y)
-        self.assertAlmostEqual(th,(0.5,-1))
+        self.assert(th==(0.5,-1))
 
 
 if __name__ == '__main__':
