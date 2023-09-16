@@ -30,7 +30,7 @@
     </Compile>
     <Compile Include="setup.py" />
     <Compile Include="main.py" />
-    <Compile Include="tests\matrix_tests.py">
+    <Compile Include="tests\matrix_test.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="tests\__init__.py">

@@ -27,4 +27,5 @@ def read_matrix_from_file(file_name, delimiter = ','):
         
 def identity(dimension):
     identity_matrix = Matrix(dimension,dimension)
-    return identity_matrix.make_identity
+    identity_matrix.make_identity()
+    return identity_matrix

@@ -89,14 +89,15 @@ class Matrix:
         elif isinstance(self,Matrix) and isinstance(other,float):
             return self.scalar_multiplication(other)
         else:
+            print(type(other))
             raise Exception("Cannot identify type of term on right when multiplying!")
     
     # enable multiplication from either direction
     def __rmul__(self, other):
         if isinstance(other,int) or isinstance(other,float):
-            return self.__mul__(other)
-        elif isinstance(other,Matrix):
-            other.__mul__(self)
+            return self.scalar_multiplication(other)
+        else:
+            raise Exception("Unknown rmul!")
 
     # return the number of rows
     def get_height(self):

@@ -26,4 +26,4 @@ def test_regression():
     H = Matrix([[2,1],[4,1],[6,1]])
     y = Matrix([[0],[1],[2]])
     th = regression.linear_least_squares(H,y)
-    assert(th==(0.5,-1))
+    assert(th[0]-0.5 < 1e-6 and th[1]-1 < 1e-6)

@@ -78,3 +78,6 @@ print(th)
 
 mat10 = utils.read_matrix_from_file('data.txt')
 mat10.print()
+H = Matrix([[2,1],[4,1],[6,1]])
+y = Matrix([[0],[1],[2]])
+th = regression.linear_least_squares(H,y)
