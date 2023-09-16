@@ -11,8 +11,6 @@ class Matrix:
     :param n_rows: unsigned int: the number of rows in the matrix, also known as its height
     :param n_cols: unsigned int: the number of columns in the matrix, also known as its width
     """
-    
-
     n_rows = 0
     n_cols = 0
     data = list
@@ -28,6 +26,10 @@ class Matrix:
 
     # construct a matrix with r rows, c columns, and some initial value (default 0)
     def construct_by_dimensions(self,r,c,value=0):
+        """
+        Returns a Matrix object when the user has specified the number of rows 'r' and the number of columns 'c'.
+        Initial values for the elements do not have to be specified and default to 0.
+        """
         self.n_rows = r
         self.n_cols = c
         col = []
@@ -40,6 +42,10 @@ class Matrix:
     
     # construct a matrix from a given list of lists
     def construct_from_lists(self,lists):
+        """
+        Returns a Matrix object when the user has specified the number of rows 'r' and the number of columns 'c'.
+        Initial values for the elements do not have to be specified and default to 0.
+        """
         self.n_rows = len(lists)
         self.n_cols = len(lists[0])
         col = []
@@ -52,6 +58,9 @@ class Matrix:
 
     # overload equals (==) operator
     def __eq__(self, other):
+        """
+        Returns true if the matrices are equal elementwise.
+        """
         # first check that dimensions match; if not, return false
         if self.n_rows != other.n_rows | self.n_cols != other.n_cols:
             raise Exception("Matrix dimensions do not match.")
@@ -68,6 +77,11 @@ class Matrix:
 
     # overload multiplication (*) operator
     def __mul__(self, other):
+        """
+        Returns the matrix product or scalar product of a matrix and the object 'other' multiplied from the right.
+        If 'other' is another Matrix, returns a matrix that is the product of the two matrices.
+        If 'other' is an int or a float, returns a matrix whose elements have been multiplied by 'other'.
+        """
         if isinstance(self,Matrix) and isinstance(other,Matrix):
             return self.matrix_multiplication(other)
         elif isinstance(self,Matrix) and isinstance(other,int):
@@ -103,6 +117,12 @@ class Matrix:
 
     # print matrix in MATLAB-style format
     def print(self):
+        """
+        Returns a string that describes the matrix.
+        Rows are delimited by semicolons and elements in a single row by commas.
+        The whole matrix is enclosed with square brackets.
+        For example, the returned string could look like "[2 , 4; -1, 0; -5, 4]".
+        """
         matrix_string = '['
         for i in range(self.n_rows):
             for j in range(self.n_cols):
@@ -116,6 +136,10 @@ class Matrix:
 
     # check if matrix elements are real
     def is_real(self):
+        """
+        Returns true if all elements of the matrix are real-valued.
+        Otherwise, returns false.
+        """
         real = True
         for i in range(self.n_rows):
             for j in range(self.n_cols):
@@ -125,10 +149,18 @@ class Matrix:
 
     # get Frobenius norm of matrix
     def get_norm_Frobenius(self):
+        """
+        Returns the Frobenius norm of the matrix.
+        """
         return math.sqrt((self.get_conjugate_transpose()*self).get_trace())
 
     # form a conjugate transpose of the matrix
     def get_conjugate_transpose(self):
+        """
+        Returns the conjugate tranpose of the matrix.
+        For real matrices, the conjugate transpose is a normal transpose.
+        NOT IMPLEMENTED FOR COMPLEX MATRICES YET
+        """
         if self.is_real():
             return self.get_transpose()
 
@@ -170,6 +202,9 @@ class Matrix:
     
     # return determinant
     def get_determinant(self):
+        """
+        Returns the determinant of a square matrix.
+        """
         if not self.is_square():
             raise Exception("Cannot calculate determinant because matrix is not square! Matrix is " +  str(calling_matrix.n_rows) + "x" + str(calling_matrix.n_cols))
             return 0
@@ -190,6 +225,9 @@ class Matrix:
     
     # return trace
     def get_trace(self):
+        """
+        Returns the trace of a square matrix.
+        """
         if not self.is_square():
             raise Exception("Cannot calculate trace because matrix is not square! Matrix is " +  str(calling_matrix.n_rows) + "x" + str(calling_matrix.n_cols))
             return 0
@@ -197,6 +235,9 @@ class Matrix:
         
     # return product of diagonal elements
     def get_diagonal_product(self):
+        """
+        Returns the product of all the diagonal elements in the matrix.
+        """
         product = self.get(0,0)
         for i in range(1,self.n_cols):
             product = product*self.get(i,i)
@@ -204,6 +245,9 @@ class Matrix:
     
     # return sum of diagonal elements
     def get_diagonal_sum(self):
+        """
+        Returns the sum of all the diagonal elements in the matrix.
+        """
         sum = 0
         for i in range(self.n_rows):
             sum = sum + self.get(i,i)
@@ -215,6 +259,9 @@ class Matrix:
     
     # make the matrix an identity matrix
     def make_identity(self):
+        """
+        Sets all diagonal elements of the matrix to 1 and all non-diagonal elements to 0.
+        """
         for i in range(self.n_rows):
             for j in range(self.n_cols):
                 if i == j:
@@ -232,6 +279,13 @@ class Matrix:
 
     # transform the parameter matrix to row echelon form; is another matrix is also passed, use it as the augmented matrix
     def transform_to_row_echelon_form(self, augmented_matrix=None):
+        """
+        Modifies the calling matrix so that it is transformed to a row echelon form using Gauss-Jordan elimination.
+        This row echelon form is not the reduced row echelon form.
+        The argument 'augmented_matrix' can be given and is usually an identity matrix.
+        If given, 'augmented_matrix' will be subjected to the same row operations as the calling matrix.
+        The augmented matrix is used in calculating the inverse of a matrix.
+        """
         for j in range(0,self.n_cols):
             first_row = self.get_row(j)
             for i in range(1+j,self.n_rows):
@@ -256,6 +310,10 @@ class Matrix:
 
     # return the inverse of a matrix
     def get_inverse(self):
+        """
+        Returns the inverse matrix of a square matrix.
+        The product of a matrix and its inverse matrix is an identity matrix.
+        """
         
         # create a deep copy of the calling matrix to avoid modifying it when calculating inverse
         calling_matrix = deepcopy(self)

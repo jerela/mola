@@ -1,5 +1,6 @@
 from molalib import Matrix
-
+from molalib import regression
+from molalib import utils
 
 mat2 = Matrix(3,5,1)
 mat3 = mat2.transpose()
@@ -70,3 +71,10 @@ W.set(0,0,2) # make the first data sample twice as important as the others
 # solve a and b (which should be 0.5 and -1)
 theta = (H.get_transpose()*W*H).get_inverse() * H.get_transpose() * W * y
 theta.print()
+
+th = regression.linear_least_squares(H,y,W)
+print(th)
+
+
+mat10 = utils.read_file('data.txt')
+mat10.print()

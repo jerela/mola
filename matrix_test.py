@@ -6,9 +6,6 @@ class MatrixTestCase(unittest.TestCase):
     def setUp(self):
         self.matrix = Matrix(3,3,1)
 
-    def test_A(self):
-        self.fail("Not implemented")
-
     def test_inverse(self):
         self.matrix.inverse()
 

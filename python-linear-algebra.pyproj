@@ -23,9 +23,12 @@
   <ItemGroup>
     <Compile Include="Matrilibra.py" />
     <Compile Include="molalib\matrix.py" />
+    <Compile Include="molalib\regression.py" />
+    <Compile Include="molalib\utils.py" />
     <Compile Include="molalib\__init__.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="setup.py" />
     <Compile Include="test.py" />
     <Compile Include="matrix_test.py">
       <SubType>Code</SubType>
@@ -36,6 +39,9 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="molalib\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="requirements.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
 </Project>
