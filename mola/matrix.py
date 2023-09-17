@@ -46,16 +46,36 @@ class Matrix:
         Returns a Matrix object when the user has specified the number of rows 'r' and the number of columns 'c'.
         Initial values for the elements do not have to be specified and default to 0.
         """
-        self.n_rows = len(lists)
-        self.n_cols = len(lists[0])
-        col = []
-        for j in range(self.n_rows):
-            row = lists[j]
-            col.append(row)
-        self.data = col
+        # first check if list is more than 1D (assumedly 2D)
+        if isinstance(lists[0],list):
+            self.n_rows = len(lists)
+            self.n_cols = len(lists[0])
+            col = []
+            for j in range(self.n_rows):
+                row = lists[j]
+                col.append(row)
+            self.data = col
+        elif isinstance(lists,list):
+            self.n_rows = len(lists)
+            self.n_cols = 1
+            col = []
+            for j in range(self.n_rows):
+                row = lists[j]
+                col.append([row])
+            self.data = col
         
-            
-
+        
+    # overload square brackets ([]) operator
+    # first to get data
+    def __getitem__(self,row,col=None):
+        if col is None:
+            return self.data[row]
+        else:
+            return self.data[row][col]
+    # then to set data
+    def __setitem__(self,row,col,value):
+        self.data[row][col] = value
+        
     # overload equals (==) operator
     def __eq__(self, other):
         """
@@ -71,7 +91,7 @@ class Matrix:
 
         for i in range(self.n_rows):
             for j in range(self.n_cols):
-                if self.get(i,j) != other.get(i,j):
+                if self.data[i][j] != other.data[i][j]:
                     equals = False
         return equals
 
@@ -108,8 +128,20 @@ class Matrix:
         return self.n_cols
     
     # return a row as a list
-    def get_row(self,r):
-        return self.data[r]
+    def get_row(self,r,as_list=True):
+        if as_list:
+            return self.data[r]
+        else:
+            return self.construct_from_lists(self.data[r])
+    
+    def get_column(self,c,as_list=True):
+        column = []
+        for i in range(self.n_rows):
+            column.append(self.data[i][c])
+        if as_list:
+            return column
+        else:
+            return self.construct_from_lists(column)
     
     # set a row at given index to given values from a list
     def set_row(self,r,new_row):
@@ -151,7 +183,7 @@ class Matrix:
         real = True
         for i in range(self.n_rows):
             for j in range(self.n_cols):
-                if not isinstance(self.get(i,j),float) and not isinstance(self.get(i,j),int):
+                if not isinstance(self.data[i][j],float) and not isinstance(self.data[i][j],int):
                     real = False
         return real
 
@@ -178,12 +210,13 @@ class Matrix:
         for i in range(self.n_cols):
             for j in range(self.n_rows):
                 transposed.set(i,j,self.data[j][i])
-        return transposed
+        self.data = transposed.data
+        self.n_rows,self.n_cols = self.n_cols, self.n_rows
     
     # return the transpose of a matrix
     def get_transpose(self):
         calling_matrix = deepcopy(self)
-        calling_matrix = calling_matrix.transpose()
+        calling_matrix.transpose()
         return calling_matrix
 
     # return matrix product
@@ -196,7 +229,7 @@ class Matrix:
                 new_elem = 0
                 length = self.n_cols
                 for x in range(length):
-                    new_elem = new_elem + self.data[i][x]*target_matrix.get(x,j)
+                    new_elem = new_elem + self.data[i][x]*target_matrix.data[x][j]
                 product_matrix.set(i,j,new_elem)
         return product_matrix
     
@@ -205,7 +238,7 @@ class Matrix:
         resulting_matrix = Matrix(self.n_rows,self.n_cols)
         for i in range(self.n_rows):
             for j in range(self.n_cols):
-                resulting_matrix.set(i,j,scalar*self.get(i,j))
+                resulting_matrix.set(i,j,scalar*self.data[i][j])
         return resulting_matrix
     
     # return determinant
@@ -246,9 +279,9 @@ class Matrix:
         """
         Returns the product of all the diagonal elements in the matrix.
         """
-        product = self.get(0,0)
+        product = self.data[0][0]
         for i in range(1,self.n_cols):
-            product = product*self.get(i,i)
+            product = product*self.data[i][i]
         return product
     
     # return sum of diagonal elements
@@ -258,7 +291,7 @@ class Matrix:
         """
         sum = 0
         for i in range(self.n_rows):
-            sum = sum + self.get(i,i)
+            sum = sum + self.data[i][i]
         return sum
 
     # check if matrix is invertible
@@ -276,6 +309,26 @@ class Matrix:
                     self.set(i,j,1)
                 else:
                     self.set(i,j,0)
+
+    def append_column(self,column):
+        if isinstance(column,list):
+            for i in range(self.n_rows):
+                self.data[i].append(column[i])
+        elif isinstance(column,Matrix):
+            for i in range(self.n_rows):
+                self.data[i].append(column.data[i][0])
+        else:
+            raise Exception("Could not detect type of column to append!")
+        self.n_cols = self.n_cols+1
+    
+    def append_row(self,row):
+        if isinstance(row,list):
+            self.data.append(row)
+        elif isinstance(row,Matrix):
+            self.data.append(row.get_row[0])
+        else:
+            raise Exception("Could not detect type of row to append!")
+        self.n_rows = self.n_rows+1
 
     # check if matrix is symmetric
     def is_symmetric(self):

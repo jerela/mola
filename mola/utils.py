@@ -26,6 +26,24 @@ def read_matrix_from_file(file_name, delimiter = ','):
     return Matrix(cols)
         
 def identity(dimension):
+    """
+    Returns a square identity matrix.
+    Argument 'dimension' is the width and height of the matrix.
+    """
     identity_matrix = Matrix(dimension,dimension)
     identity_matrix.make_identity()
     return identity_matrix
+
+def ones(height,width):
+    """
+    Returns a matrix of ones.
+    Arguments 'height' and 'width' define the width and height of the matrix.
+    """
+    return Matrix(height,width,1)
+
+def zeros(height,width):
+    """
+    Returns a matrix of zeros.
+    Arguments 'height' and 'width' define the width and height of the matrix.
+    """
+    return Matrix(height,width,0)

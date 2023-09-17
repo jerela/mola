@@ -3,8 +3,7 @@ from mola import regression
 from mola import utils
 
 mat2 = Matrix(3,5,1)
-mat3 = mat2.transpose()
-
+mat3 = mat2.get_transpose()
 
 mat4 = mat2.matrix_multiplication(mat3)
 mat4.print()
@@ -16,6 +15,10 @@ print("This should be true:" + str(mat4==mat5))
 
 mat6 = Matrix([[2,1,-1],[-3,-1,2],[-2,1,2]])
 mat6.print()
+
+row_vector = Matrix([1, 0, 0])
+row_vector.print()
+
 inverse_matrix = mat6.get_inverse()
 
 print("inverse:")
@@ -81,3 +84,9 @@ mat10.print()
 H = Matrix([[2,1],[4,1],[6,1]])
 y = Matrix([[0],[1],[2]])
 th = regression.linear_least_squares(H,y)
+
+independent_values = Matrix([ [2],[4],[6] ])
+dependent_values = Matrix([[0],[1],[2]])
+print(regression.fit_univariate_polynomial(independent_values, dependent_values, degrees=[1, 2], intercept=True))
+
+
