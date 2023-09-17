@@ -17,7 +17,7 @@ def test_read_file():
         
 def test_multiplication():
     mat2 = Matrix(3,5,1)
-    mat3 = mat2.transpose()
+    mat3 = mat2.get_transpose()
     mat4 = mat2.matrix_multiplication(mat3)
     mat5 = mat2*mat3
     assert(mat4==mat5)
