@@ -62,19 +62,50 @@ class Matrix:
             for j in range(self.n_rows):
                 row = lists[j]
                 col.append([row])
-            self.data = col
-        
+            self.data = col        
+
         
     # overload square brackets ([]) operator
     # first to get data
-    def __getitem__(self,row,col=None):
-        if col is None:
-            return self.data[row]
+    def __getitem__(self,idx):
+        if isinstance(idx, slice) or isinstance(idx,int):
+            return Matrix(self.data[idx])
+        elif isinstance(idx,tuple):
+            rows,cols = idx
+            if isinstance(rows,int):
+                sliced_data = self.data[rows][cols]
+            else:
+                sliced_data = [r[cols] for r in self.data[rows]]
+            return Matrix(sliced_data)
         else:
-            return self.data[row][col]
+            raise Exception("invalid getitem arg")
+
     # then to set data
-    def __setitem__(self,row,col,value):
-        self.data[row][col] = value
+    def __setitem__(self,idx,value):
+        if isinstance(idx,tuple):
+            rows, cols = idx
+
+            # if the given indices are integers (not slices) and the given value is also a single numeric type
+            if isinstance(rows,int) and isinstance(cols,int) and (isinstance(value,float) or isinstance(value,int)):
+                self.data[rows][cols] = value
+            # otherwise, if the value is a single numeric type but either of the indices is not an integer (so likely a slice, or perhaps a list)
+            elif isinstance(value,float) or isinstance(value,int):
+                for r in range(rows):
+                    for c in range(cols):
+                        self.data[r][c] = value
+            # otherwise, if both indices are slices and the given value is a matrix object
+            elif isinstance(value,Matrix) and isinstance(rows,slice) and isinstance(cols,slice):
+                i = 0
+                for r in range(rows.start, rows.stop, 1):
+                    j = 0
+                    for c in range(cols.start, cols.stop, 1):
+                        self.data[r][c] = value.data[i][j]
+                        j = j + 1
+                    i = i + 1
+                        
+                        
+        else:
+            raise Exception("invalid setitem arg")
         
     # overload equals (==) operator
     def __eq__(self, other):
@@ -119,6 +150,37 @@ class Matrix:
         else:
             raise Exception("Unknown rmul!")
 
+    def __truediv__(self,other):
+        if self.n_rows == 1 and self.n_cols == 1:
+            return self.data[0][0]/other
+        else:
+            raise Exception("ERROR IN TRUEDIV")
+    
+    def __rtruediv__(self,other):
+        if self.n_rows == 1 and self.n_cols == 1:
+            return other/self.data[0][0]
+        else:
+            raise Exception("ERROR IN TRUEDIV")
+
+    def __add__(self,other):
+        output = Matrix(self.n_rows,self.n_cols,0)
+        if self.n_rows != other.n_rows or self.n_cols != other.n_cols:
+            raise Exception("Matrix dimensions must match for elementwise addition or subtraction!")
+        for i in range(self.n_rows):
+            for j in range(self.n_cols):
+                output.set(i,j,self[i][j]+other[i][j])
+        return output
+    
+    def __sub__(self,other):
+        output = Matrix(self.n_rows,self.n_cols,0)
+        if self.n_rows != other.n_rows or self.n_cols != other.n_cols:
+            raise Exception("Matrix dimensions must match for elementwise addition or subtraction!")
+        for i in range(self.n_rows):
+            for j in range(self.n_cols):
+                output.set(i,j,self.data[i][j]-other.data[i][j])
+        return output
+                
+
     # return the number of rows
     def get_height(self):
         return self.n_rows
@@ -156,7 +218,7 @@ class Matrix:
         return self.data[i][j]
 
     # print matrix in MATLAB-style format
-    def print(self):
+    def print(self, precision = 4):
         """
         Returns a string that describes the matrix.
         Rows are delimited by semicolons and elements in a single row by commas.
@@ -166,11 +228,11 @@ class Matrix:
         matrix_string = '['
         for i in range(self.n_rows):
             for j in range(self.n_cols):
-                matrix_string = matrix_string + str(self.data[i][j])
+                matrix_string = matrix_string + str(round(self.data[i][j],precision))
                 if j < self.n_cols-1:
                     matrix_string = matrix_string + ", "
             if i < self.n_rows-1:
-                matrix_string = matrix_string + "; "
+                matrix_string = matrix_string + ";\n"
         matrix_string = matrix_string + "]"
         print(matrix_string)
 
@@ -186,6 +248,25 @@ class Matrix:
                 if not isinstance(self.data[i][j],float) and not isinstance(self.data[i][j],int):
                     real = False
         return real
+
+    def is_identity(self):
+        identity = True
+        for i in range(self.n_rows):
+            for j in range(self.n_cols):
+                if i == j:
+                    if self.data[i][j] != 1:
+                        identity = False
+                else:
+                    if self.data[i][j] != 0:
+                        identity = False
+        return identity
+
+    def is_square(self):
+        return self.n_rows == self.n_cols
+
+    # a square real matrix is orthogonal if it multiplied by its tranpose is an identity matrix (its tranpose is its inverse)
+    def is_orthogonal(self):
+        return self.is_real() and self.is_square() and (self*self.get_transpose()).is_identity()
 
     # get Frobenius norm of matrix
     def get_norm_Frobenius(self):
@@ -439,3 +520,27 @@ class Matrix:
         for c in range(self.n_cols):
             operable_row[c] = operable_row[c]*scalar
 
+    def get_rows_columns(self,rows_list,cols_list):
+        col = []
+        for i in rows_list:
+            row = []
+            for j in cols_list:
+                row.append(self.data[i][j])
+            col.append(row)
+        return Matrix(col)
+    
+    def set_rows_columns(self,rows_list,cols_list,matrix):
+        rows = matrix.get_height()
+        cols = matrix.get_width()
+        rows_first = rows_list[0]
+        cols_first = cols_list[0]
+        for i in rows_list:
+            for j in cols_list:
+                self.data[i][j] = matrix[i-rows_first][j-cols_first]
+            
+    def norm_Euclidean(self):
+        norm = 0
+        for i in range(self.n_rows):
+            for j in range(self.n_cols):
+                norm = norm + pow(self.data[i][j],2)
+        return math.sqrt(norm)

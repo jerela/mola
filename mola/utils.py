@@ -25,12 +25,14 @@ def read_matrix_from_file(file_name, delimiter = ','):
 
     return Matrix(cols)
         
-def identity(dimension):
+def identity(rows, cols = None):
     """
     Returns a square identity matrix.
     Argument 'dimension' is the width and height of the matrix.
     """
-    identity_matrix = Matrix(dimension,dimension)
+    if cols is None:
+        cols = rows
+    identity_matrix = Matrix(rows,cols)
     identity_matrix.make_identity()
     return identity_matrix
 

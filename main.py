@@ -1,6 +1,7 @@
 from mola import Matrix
 from mola import regression
 from mola import utils
+from mola import decomposition
 
 mat2 = Matrix(3,5,1)
 mat3 = mat2.get_transpose()
@@ -89,4 +90,13 @@ independent_values = Matrix([ [2],[4],[6] ])
 dependent_values = Matrix([[0],[1],[2]])
 print(regression.fit_univariate_polynomial(independent_values, dependent_values, degrees=[1, 2], intercept=True))
 
+
+mat11 = Matrix([ [12, -51, 4], [6, 167, -68], [-4, 24, -41] ])
+print("original matrix:")
+mat11.print()
+Q, R = decomposition.qrd(mat11)
+print("Q:")
+Q.print()
+print("R:")
+R.print()
 
