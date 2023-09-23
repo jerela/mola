@@ -6,10 +6,12 @@ from xml.dom.expatbuilder import makeBuilder
 
 class Matrix:
     """
-    A class that represents a mathematical matrix used in linear algebra tasks. The number of rows and columns are defined by you and settable. Methods include transpose, inverse, norms, etc.
-    :param data: contains the numeric values in the matrix, implemented as a list of lists that represent the rows of the matrix
-    :param n_rows: unsigned int: the number of rows in the matrix, also known as its height
-    :param n_cols: unsigned int: the number of columns in the matrix, also known as its width
+    Class that represents a real matrix used in linear algebra tasks. The number of rows and columns are defined by you and settable. Methods include transpose, inverse, norms, etc.
+    
+    Attributes:
+    data -- nested list: contains the numeric values in the matrix, implemented as a list of lists that represent the rows of the matrix
+    n_rows -- unsigned integer: the number of rows in the matrix, also known as its height
+    n_cols -- unsigned integer: the number of columns in the matrix, also known as its width
     """
     n_rows = 0
     n_cols = 0
@@ -27,8 +29,12 @@ class Matrix:
     # construct a matrix with r rows, c columns, and some initial value (default 0)
     def construct_by_dimensions(self,r,c,value=0):
         """
-        Returns a Matrix object when the user has specified the number of rows 'r' and the number of columns 'c'.
-        Initial values for the elements do not have to be specified and default to 0.
+        Return a matrix of specified dimensions.
+        
+        Arguments:
+        r -- unsigned integer: the number of rows
+        c -- unsigned integer: the number of columns
+        value -- float or int: initial value assigned to all elements of the matrix (default 0)
         """
         self.n_rows = r
         self.n_cols = c
@@ -43,8 +49,10 @@ class Matrix:
     # construct a matrix from a given list of lists
     def construct_from_lists(self,lists):
         """
-        Returns a Matrix object when the user has specified the number of rows 'r' and the number of columns 'c'.
-        Initial values for the elements do not have to be specified and default to 0.
+        Return a matrix constructed from a list.
+        
+        Arguments:
+        lists -- the list or nested list to set as the underlying data of the matrix
         """
         # first check if list is more than 1D (assumedly 2D)
         if isinstance(lists[0],list):
@@ -68,6 +76,15 @@ class Matrix:
     # overload square brackets ([]) operator
     # first to get data
     def __getitem__(self,idx):
+        """
+        Return a matrix from the specified indices.
+        Overloads the get[] operator.
+        
+        Arguments:
+        idx -- a slice or an integer, or a two-element tuple of slices and/or integers
+        
+        Raises an exception if 'idx' is not recognized as a type with defined behaviour.
+        """
         if isinstance(idx, slice) or isinstance(idx,int):
             return Matrix(self.data[idx])
         elif isinstance(idx,tuple):
@@ -82,6 +99,15 @@ class Matrix:
 
     # then to set data
     def __setitem__(self,idx,value):
+        """
+        Set elements of the matrix.
+        Overloads the set[] operator.
+        
+        Arguments:
+        idx -- a slice or an integer, or a two-element tuple of slices and/or integers
+        
+        Raises an exception if 'idx' is not recognized as a type with defined behaviour.
+        """
         if isinstance(idx,tuple):
             rows, cols = idx
 
@@ -102,15 +128,19 @@ class Matrix:
                         self.data[r][c] = value.data[i][j]
                         j = j + 1
                     i = i + 1
-                        
-                        
         else:
             raise Exception("invalid setitem arg")
         
     # overload equals (==) operator
     def __eq__(self, other):
         """
-        Returns true if the matrices are equal elementwise.
+        Return true if the matrices are equal elementwise. Otherwise, return false.
+        Overloads the equality== operator.
+        
+        Arguments:
+        other -- Matrix: right side of the equality
+        
+        Raises an exception if the dimensions of the matrices to compare do not match.
         """
         # first check that dimensions match; if not, return false
         if self.n_rows != other.n_rows | self.n_cols != other.n_cols:
@@ -129,9 +159,16 @@ class Matrix:
     # overload multiplication (*) operator
     def __mul__(self, other):
         """
-        Returns the matrix product or scalar product of a matrix and the object 'other' multiplied from the right.
-        If 'other' is another Matrix, returns a matrix that is the product of the two matrices.
-        If 'other' is an int or a float, returns a matrix whose elements have been multiplied by 'other'.
+        Return the matrix product or scalar product of a matrix and the object 'other' multiplied from the right.
+        Overloads the multiplication * operator.
+        
+        Arguments:
+        other -- Matrix or scalar, the term that is multiplied with the matrix
+        
+        If 'other' is a Matrix, the output is a matrix that is the product of the two matrices.
+        If 'other' is an int or a float, the output a matrix whose elements have been multiplied by 'other'.
+        
+        Raises an exception if 'other' is not Matrix, int or float.
         """
         if isinstance(self,Matrix) and isinstance(other,Matrix):
             return self.matrix_multiplication(other)
@@ -145,24 +182,61 @@ class Matrix:
     
     # enable multiplication from either direction
     def __rmul__(self, other):
+        """
+        Return the matrix resulting from a scalar product with the argument.
+        
+        Arguments:
+        other -- numeric or int
+        
+        Raises an exception if 'other' is not scalar or int.
+        """
         if isinstance(other,int) or isinstance(other,float):
             return self.scalar_multiplication(other)
         else:
             raise Exception("Unknown rmul!")
 
     def __truediv__(self,other):
+        """
+        Return a single numeric value that is the element of the matrix divided by 'other'.
+        Defined only for matrices of height 1 and width 1 (single-element matrix).
+        Overloads the divison / operator.
+        
+        Arguments:
+        other -- the divisor
+        
+        Raises an exception if matrix dimensions are not 1x1.
+        """
         if self.n_rows == 1 and self.n_cols == 1:
             return self.data[0][0]/other
         else:
-            raise Exception("ERROR IN TRUEDIV")
+            raise Exception("Cannot perform division because matrix dimensions are not 1x1.")
     
     def __rtruediv__(self,other):
+        """
+        Return a single numeric value that is the argument 'other' divided by the element of the matrix.
+        Defined only for matrices of height 1 and width 1 (single-element matrix).
+        Overloads the division / operator.
+        
+        Arguments:
+        other -- the dividend
+        
+        Raises an exception if matrix dimensions are not 1x1.
+        """
         if self.n_rows == 1 and self.n_cols == 1:
             return other/self.data[0][0]
         else:
-            raise Exception("ERROR IN TRUEDIV")
+            raise Exception("Cannot perform division because matrix dimensions are not 1x1.")
 
     def __add__(self,other):
+        """
+        Return a Matrix that is the sum of two matrices or the original matrix where a scalar has been added to all elements.
+        Overloads the addition + operator.
+        
+        Arguments:
+        other -- the matrix or scalar to add to the matrix on the left
+        
+        Raises an exception if 'other' is a matrix but its dimensions do not match those of the matrix on the left.
+        """
         output = Matrix(self.n_rows,self.n_cols,0)
         if self.n_rows != other.n_rows or self.n_cols != other.n_cols:
             raise Exception("Matrix dimensions must match for elementwise addition or subtraction!")
@@ -172,6 +246,15 @@ class Matrix:
         return output
     
     def __sub__(self,other):
+        """
+        Return a matrix that is the subtraction of two matrices or the original matrix where a scalar has been subtracted from all elements.
+        Overloads the subtraction - operator.
+        
+        Arguments:
+        other -- the matrix or scalar to subtract from the matrix on the left
+        
+        Raises an exception if 'other' is a matrix but its dimensions do not match those of the matrix on the left.
+        """
         output = Matrix(self.n_rows,self.n_cols,0)
         if self.n_rows != other.n_rows or self.n_cols != other.n_cols:
             raise Exception("Matrix dimensions must match for elementwise addition or subtraction!")
@@ -183,20 +266,36 @@ class Matrix:
 
     # return the number of rows
     def get_height(self):
+        """Return the number of rows in the matrix."""
         return self.n_rows
     
     # return the number of columns
     def get_width(self):
+        """Return the number of columns in the matrix."""
         return self.n_cols
     
     # return a row as a list
     def get_row(self,r,as_list=True):
+        """
+        Return a specified row of the matrix as list or matrix.
+        
+        Arguments:
+        r -- unsigned integer: index of the row
+        as_list - Boolean: whether to return the row as a list or not, in which case it is returned as a matrix (default true)
+        """
         if as_list:
             return self.data[r]
         else:
             return self.construct_from_lists(self.data[r])
     
     def get_column(self,c,as_list=True):
+        """
+        Return a specified column of the matrix as list or matrix.
+        
+        Arguments:
+        c -- unsigned integer: index of the column
+        as_list - Boolean: whether to return the column as a list or not, in which case it is returned as a matrix (default true)
+        """
         column = []
         for i in range(self.n_rows):
             column.append(self.data[i][c])
@@ -207,23 +306,30 @@ class Matrix:
     
     # set a row at given index to given values from a list
     def set_row(self,r,new_row):
+        """Set the specified row of the matrix.
+
+        Arguments:
+        r -- unsigned integer: index of the row
+        new_row -- list: the values that are assigned to that row
+        """
         self.data[r] = new_row
 
     # set a single value in a given index
     def set(self,i,j,value):
+        """Set the element at specified position."""
         self.data[i][j] = value
 
     # get a single value in a given index
     def get(self,i,j):
+        """Get the element at specified position."""
         return self.data[i][j]
 
     # print matrix in MATLAB-style format
     def print(self, precision = 4):
         """
-        Returns a string that describes the matrix.
-        Rows are delimited by semicolons and elements in a single row by commas.
-        The whole matrix is enclosed with square brackets.
-        For example, the returned string could look like "[2 , 4; -1, 0; -5, 4]".
+        Print a string that describes the matrix.
+        Rows are delimited by semicolons and newlines. Elements in a single row are delimited by commas.
+        The matrix is enclosed with square brackets.
         """
         matrix_string = '['
         for i in range(self.n_rows):
@@ -238,10 +344,7 @@ class Matrix:
 
     # check if matrix elements are real
     def is_real(self):
-        """
-        Returns true if all elements of the matrix are real-valued.
-        Otherwise, returns false.
-        """
+        """Return true if all elements of the matrix are real-valued. Otherwise, return false."""
         real = True
         for i in range(self.n_rows):
             for j in range(self.n_cols):
@@ -250,6 +353,7 @@ class Matrix:
         return real
 
     def is_identity(self):
+        """Return true if the matrix is an identity matrix. Otherwise, return false."""
         identity = True
         for i in range(self.n_rows):
             for j in range(self.n_cols):
@@ -262,31 +366,31 @@ class Matrix:
         return identity
 
     def is_square(self):
+        """Return true if the matrix is square (number of columns equals number of rows). Otherwise, return false."""
         return self.n_rows == self.n_cols
 
     # a square real matrix is orthogonal if it multiplied by its tranpose is an identity matrix (its tranpose is its inverse)
     def is_orthogonal(self):
+        """Return true if the matrix is real and square and its transpose is its inverse. Otherwise, return false."""
         return self.is_real() and self.is_square() and (self*self.get_transpose()).is_identity()
 
     # get Frobenius norm of matrix
     def get_norm_Frobenius(self):
-        """
-        Returns the Frobenius norm of the matrix.
-        """
+        """Return the Frobenius norm of the matrix."""
         return math.sqrt((self.get_conjugate_transpose()*self).get_trace())
 
     # form a conjugate transpose of the matrix
     def get_conjugate_transpose(self):
         """
-        Returns the conjugate tranpose of the matrix.
-        For real matrices, the conjugate transpose is a normal transpose.
-        NOT IMPLEMENTED FOR COMPLEX MATRICES YET
+        Return the conjugate tranpose of the matrix.
+        For real matrices, the conjugate transpose is the transpose.
         """
         if self.is_real():
             return self.get_transpose()
 
     # transpose a matrix
     def transpose(self):
+        """Transpose the matrix."""
         transposed = Matrix(self.n_cols,self.n_rows)
         for i in range(self.n_cols):
             for j in range(self.n_rows):
@@ -296,12 +400,18 @@ class Matrix:
     
     # return the transpose of a matrix
     def get_transpose(self):
+        """Return the transpose of the matrix."""
         calling_matrix = deepcopy(self)
         calling_matrix.transpose()
         return calling_matrix
 
     # return matrix product
     def matrix_multiplication(self,target_matrix):
+        """Return the matrix product of two matrices.
+        
+        Arguments:
+        target_matrix --- the matrix on the right side of multiplication
+        """
         n_rows = self.n_rows
         n_cols = target_matrix.get_width()
         product_matrix = Matrix(n_rows,n_cols)
@@ -316,6 +426,11 @@ class Matrix:
     
     # return scalar multiplied matrix
     def scalar_multiplication(self,scalar):
+        """Return the scalar product of the matrix with a scalar.
+        
+        Arguments:
+        scalar -- a numeric value that scales all elements of the matrix
+        """
         resulting_matrix = Matrix(self.n_rows,self.n_cols)
         for i in range(self.n_rows):
             for j in range(self.n_cols):
@@ -325,7 +440,8 @@ class Matrix:
     # return determinant
     def get_determinant(self):
         """
-        Returns the determinant of a square matrix.
+        Return the determinant of a square matrix.
+        Raises an exception if the matrix is not square.
         """
         if not self.is_square():
             raise Exception("Cannot calculate determinant because matrix is not square! Matrix is " +  str(self.n_rows) + "x" + str(self.n_cols))
@@ -343,12 +459,14 @@ class Matrix:
 
     # check if matrix is singular
     def is_singular(self):
+        """Return true if the determinant of the matrix is zero. Otherwise, return false."""
         return self.get_determinant() == 0
     
     # return trace
     def get_trace(self):
         """
-        Returns the trace of a square matrix.
+        Return the trace of a square matrix.
+        Raises an exception if the matrix is not square.
         """
         if not self.is_square():
             raise Exception("Cannot calculate trace because matrix is not square! Matrix is " +  str(self.n_rows) + "x" + str(self.n_cols))
@@ -357,9 +475,7 @@ class Matrix:
         
     # return product of diagonal elements
     def get_diagonal_product(self):
-        """
-        Returns the product of all the diagonal elements in the matrix.
-        """
+        """Return the product of all the diagonal elements in the matrix."""
         product = self.data[0][0]
         for i in range(1,self.n_cols):
             product = product*self.data[i][i]
@@ -367,9 +483,7 @@ class Matrix:
     
     # return sum of diagonal elements
     def get_diagonal_sum(self):
-        """
-        Returns the sum of all the diagonal elements in the matrix.
-        """
+        """Return the sum of all the diagonal elements in the matrix."""
         sum = 0
         for i in range(self.n_rows):
             sum = sum + self.data[i][i]
@@ -377,13 +491,12 @@ class Matrix:
 
     # check if matrix is invertible
     def is_invertible(self):
+        """Return true if the matrix is not singular. Otherwise, return false."""
         return not self.is_singular()
     
     # make the matrix an identity matrix
     def make_identity(self):
-        """
-        Sets all diagonal elements of the matrix to 1 and all non-diagonal elements to 0.
-        """
+        """Set all diagonal elements of the matrix to 1 and all non-diagonal elements to 0."""
         for i in range(self.n_rows):
             for j in range(self.n_cols):
                 if i == j:
@@ -392,6 +505,13 @@ class Matrix:
                     self.set(i,j,0)
 
     def append_column(self,column):
+        """Append a column to the right of the matrix.
+        
+        Arguments:
+        column --- list or single-column matrix: the column that is appended to the right of the matrix
+        
+        Raises an exception if 'column' is not a list or a matrix.
+        """
         if isinstance(column,list):
             for i in range(self.n_rows):
                 self.data[i].append(column[i])
@@ -403,6 +523,13 @@ class Matrix:
         self.n_cols = self.n_cols+1
     
     def append_row(self,row):
+        """Append a row to the bottom of the matrix.
+        
+        Arguments:
+        row --- list or single-row matrix: the row that is appended to the bottom of the matrix
+        
+        Raises an exception if 'row' is not a list or a matrix.
+        """
         if isinstance(row,list):
             self.data.append(row)
         elif isinstance(row,Matrix):
@@ -413,19 +540,19 @@ class Matrix:
 
     # check if matrix is symmetric
     def is_symmetric(self):
+        """Return true if the matrix equals its transpose. Otherwise, return false."""
         return self == self.get_transpose()
 
-    # check if matrix is square
-    def is_square(self):
-        return self.n_cols == self.n_rows
 
     # transform the parameter matrix to row echelon form; is another matrix is also passed, use it as the augmented matrix
     def transform_to_row_echelon_form(self, augmented_matrix=None):
         """
-        Modifies the calling matrix so that it is transformed to a row echelon form using Gauss-Jordan elimination.
+        Modify the matrix so that it is transformed to a row echelon form using Gauss-Jordan elimination.
         This row echelon form is not the reduced row echelon form.
-        The argument 'augmented_matrix' can be given and is usually an identity matrix.
-        If given, 'augmented_matrix' will be subjected to the same row operations as the calling matrix.
+        
+        Arguments:
+        augmented_matrix -- optional matrix (usually identity) that is subjected to the same row operations as the calling matrix
+                
         The augmented matrix is used in calculating the inverse of a matrix.
         """
         for j in range(0,self.n_cols):
@@ -453,8 +580,9 @@ class Matrix:
     # return the inverse of a matrix
     def get_inverse(self):
         """
-        Returns the inverse matrix of a square matrix.
+        Return the inverse matrix of a square matrix.
         The product of a matrix and its inverse matrix is an identity matrix.
+        Raises an exception if the matrix is not square.
         """
         
         # create a deep copy of the calling matrix to avoid modifying it when calculating inverse
@@ -512,15 +640,18 @@ class Matrix:
                         
     # perform type 3 row operation (add the scalar multiple of multiplied_row to operable_row)
     def type_three_row_operation(self,operable_row,multiplied_row,scalar):
+        """Perform a type three row operation (add the scalar multiple of a row to another row)."""
         for c in range(self.n_cols):
             operable_row[c] = operable_row[c] - multiplied_row[c]*scalar
             
     # perform type 2 row operation (multiply operable row by a scalar)
     def type_two_row_operation(self,operable_row,scalar):
+        """Perform a type two row operation (multiply a row by a scalar)."""
         for c in range(self.n_cols):
             operable_row[c] = operable_row[c]*scalar
 
     def get_rows_columns(self,rows_list,cols_list):
+        """Return a submatrix from specified indices."""
         col = []
         for i in rows_list:
             row = []
@@ -530,6 +661,7 @@ class Matrix:
         return Matrix(col)
     
     def set_rows_columns(self,rows_list,cols_list,matrix):
+        """Set the values in specified indices."""
         rows = matrix.get_height()
         cols = matrix.get_width()
         rows_first = rows_list[0]
@@ -539,6 +671,7 @@ class Matrix:
                 self.data[i][j] = matrix[i-rows_first][j-cols_first]
             
     def norm_Euclidean(self):
+        """Return the Euclidean norm of the matrix."""
         norm = 0
         for i in range(self.n_rows):
             for j in range(self.n_cols):

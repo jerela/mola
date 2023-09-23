@@ -3,8 +3,11 @@ from mola.matrix import Matrix
 
 def read_matrix_from_file(file_name, delimiter = ','):
     """
-    Returns a Matrix object constructed from the contents of a text file.
-    Argument 'delimiter' specifies the character that separates data values in the text file.
+    Return a matrix constructed from the contents of a text file.
+    
+    Arguments:
+    delimiter -- character: specifies the delimiter that separates data values in the text file (default ,)
+    
     If no delimiter is given, the file is assumed to be in comma-separated values format.
     """
     # read all lines from file
@@ -27,8 +30,13 @@ def read_matrix_from_file(file_name, delimiter = ','):
         
 def identity(rows, cols = None):
     """
-    Returns a square identity matrix.
-    Argument 'dimension' is the width and height of the matrix.
+    Return a square identity matrix.
+    
+    Arguments:
+    rows -- unsigned integer: height of the matrix
+    cols -- unsigned integer: width of the matrix (default None)
+    
+    If 'cols' is not specified, the matrix is assumed to have the same number of columns as the number of rows.
     """
     if cols is None:
         cols = rows
@@ -38,14 +46,20 @@ def identity(rows, cols = None):
 
 def ones(height,width):
     """
-    Returns a matrix of ones.
-    Arguments 'height' and 'width' define the width and height of the matrix.
+    Return a matrix where all elements are 1.
+    
+    Arguments:
+    height -- unsigned integer: height of the matrix
+    width -- unsigned integer: width of the matrix
     """
     return Matrix(height,width,1)
 
 def zeros(height,width):
     """
-    Returns a matrix of zeros.
-    Arguments 'height' and 'width' define the width and height of the matrix.
+    Return a matrix where all elements are 0.
+    
+    Arguments:
+    height -- unsigned integer: height of the matrix
+    width -- unsigned integer: width of the matrix
     """
     return Matrix(height,width,0)

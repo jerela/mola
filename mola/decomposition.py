@@ -6,10 +6,12 @@ from mola.utils import identity, ones
 # QR decomposition using Householder reflections
 def qrd(A_original):
     """
-    Returns a two-element tuple of Matrix objects.
+    Return a two-element tuple of matrices.
     The elements of the tuple are the Q and R matrices from the QR decomposition of the input matrix.
     The original input matrix is decomposed into a rotation matrix Q and an upper triangular matrix R.
     The decomposition is valid for any real square matrix.
+    
+    Raises an exception if the matrix is not square.
     """
     
     if not A_original.is_square():

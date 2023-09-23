@@ -14,11 +14,9 @@
 
 I wrote **mola** as a hobby project to remind myself of the linear algebra I studied in uni and to practice my Python programming. Particularly, this is an exercise in publishing my first Python library.
 
-The documentation will likely improve after I learn to leverage docstrings properly.
-
 ## Getting started
 
-WIP
+See main.py for examples and read the documentation.
 
 ## Prerequisites
 
@@ -32,13 +30,11 @@ WIP
 
 ## TODO:
 - checks to see if matrix is positive/negative definite/semidefinite
-- different matrix norms (only Frobenius norm implemented right now)
-- class wrapping generalized least squares in an approachable interface
+- different matrix norms (only Frobenius and Euclidean norm implemented right now)
 - Gauss-Newton iteration
 - Levenberg-Marquardt algorithm
 - regularized least squares
-- simple decompositions
-- support for complex numbers
+- more decompositions (only QR implemented so far)
 
 ## License
 

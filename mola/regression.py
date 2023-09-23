@@ -4,12 +4,15 @@ from mola.utils import identity, ones
 
 def linear_least_squares(H,z,W=None):
     """
-    Returns the parameters of a first-order polynomial in a tuple.
+    Return the parameters of a first-order polynomial in a tuple.
     The parameters are the slope (first element) and the intercept (second element).
-    Argument 'H' is the observation matrix of the linear system of equations.
-    Argument 'z' are the measured values depicting the right side of the linear system of equations.
-    Argument 'W' is a weight matrix containing the weights for observations in its diagonals.
-    If no weight matrix is given, an identity matrix is assumed and all observations are equally weighted.
+    
+    Arguments:
+    H -- Matrix: the observation matrix of the linear system of equations
+    z -- Matrix: the measured values depicting the right side of the linear system of equations
+    W -- Matrix: a weight matrix containing the weights for observations in its diagonals
+    
+    If no 'W' is given, an identity matrix is assumed and all observations are equally weighted.
     """
     if W is None:
         W = identity(H.get_height())
@@ -20,12 +23,14 @@ def linear_least_squares(H,z,W=None):
 
 def fit_univariate_polynomial(independent_values, dependent_values, degrees=[1], intercept=True, weights = None):
     """
-    Returns the parameters of an nth-order polynomial in a tuple.
-    Argument 'independent_values' is the matrix of independent values.
-    Argument 'dependent_values' is the matrix of dependent values.
-    Argument 'degrees' is a list of degrees of polynomial terms that you want to include in the polynomial function that is fitted.
-    Argument 'intercept' is a boolean telling if an intercept term should be included.
-    Argument 'weights' is an optional weights matrix to weight certain data points over others.
+    Return the parameters of an nth-order polynomial in a tuple.
+    
+    Arguments:
+    independent_values -- Matrix: the matrix of independent values
+    dependent_values -- matrix: the matrix of dependent values
+    degrees -- a list of degrees of the polynomial terms in the polynomial function that is fitted
+    intercept -- Boolean: whether an intercept term should be included in the polynomial function
+    weights -- Matrix: an optional weights matrix to weight certain data points over others
     """
     
     # first, construct the observation matrix H from the independent values
