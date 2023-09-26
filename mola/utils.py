@@ -63,3 +63,33 @@ def zeros(height,width):
     width -- unsigned integer: width of the matrix
     """
     return Matrix(height,width,0)
+
+def equals_approx(left,right,precision=1e-12):
+    """Return true if the compared objects are roughly equal elementwise. Otherwise, return false.
+    
+    Arguments:
+    left -- Matrix, list, tuple, or a single value: the object on the left side of the comparison
+    right -- Matrix, list, tuple or a single value: the object on the right side of the comparison
+    precision -- float: the maximum allowed difference between matching elements (default 1e-12)
+    
+    Raises an exception if 'left' and 'right' have different dimensions.
+    """
+    equals = True
+    # if both objects are matrices
+    if isinstance(left,Matrix) and isinstance(right,Matrix):
+        if not (left.get_height() == right.get_height() and left.get_width() == right.get_width()):
+            raise Exception("Exception in equals_approx(): matrices have different dimensions")
+        for row in range(left.get_height()):
+            equals = equals_approx(left.get_row(row),right.get_row(row),precision)
+    # otherwise, if both objects are lists or tuples
+    elif (isinstance(left,tuple) or isinstance(left,list)) and (isinstance(right,tuple) or isinstance(right,list)):
+        if not (len(left) == len(right)):
+            raise Exception("Exception in equals_approx(): objects have different lengths")
+        for i in range(len(right)):
+            if abs(left[i]-right[i]) > precision:
+                equals = False
+    # otherwise, if both objects are single values
+    else:
+        if abs(left-right) > precision:
+            equals = False
+    return equals
