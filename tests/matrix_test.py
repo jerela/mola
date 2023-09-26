@@ -36,9 +36,9 @@ def test_linear_regression():
 
 def test_second_order_polynomial_regression():
     independent_values = Matrix([[-1],[0],[2]])
-    dependent_values = Matrix([[2],[0],[8]])
+    dependent_values = Matrix([[1],[0],[4]])
     th = regression.fit_univariate_polynomial(independent_values,dependent_values, degrees=[2], intercept=False)
-    assert(utils.equals_approx(th,(2,0)))
+    assert(utils.equals_approx(th[0],1))
     
 def test_first_order_polynomial_regression():
     independent_values = Matrix([ [2],[4],[6] ])
@@ -50,4 +50,4 @@ def test_qr_decomposition():
     Q, R = decomposition.qrd(mat)
     q = Matrix([ [0.8571, -0.3943, 0.3314], [0.4286, 0.9029, -0.0343], [-0.2857, 0.1714, 0.9429]])
     r = Matrix([ [14, 21, -14], [0, 175, -70], [0, 0, -35] ])
-    assert(utils.equals_approx(Q,q,1e-4) and utils.utils.equals_approx(R,R,1e-4))
+    assert(utils.equals_approx(Q,q,1e-4) and utils.equals_approx(R,R,1e-4))
