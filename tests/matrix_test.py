@@ -1,6 +1,7 @@
 from mola import Matrix
 from mola import regression
 from mola import utils
+from mola import decomposition
 
 
 def test_equals_approx():

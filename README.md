@@ -16,6 +16,8 @@ I wrote **mola** as a hobby project to remind myself of the linear algebra I stu
 
 ## Getting started
 
+Install with "pip install mola" or the GitHub repository for a more recent version.
+
 See main.py for examples and read the documentation.
 
 ## Prerequisites
