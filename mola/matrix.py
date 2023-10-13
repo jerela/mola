@@ -162,10 +162,9 @@ class Matrix:
         
         Raises an exception if the dimensions of the matrices to compare do not match.
         """
-        # first check that dimensions match; if not, return false
-        if self.n_rows != other.n_rows | self.n_cols != other.n_cols:
-            raise Exception("Matrix dimensions do not match.")
-            return 0
+        # first check that dimensions match; if not, raise exception
+        if self.n_rows != other.n_rows or self.n_cols != other.n_cols:
+            raise Exception("Matrix dimensions do not match. Left matrix is " + str(self.n_rows) + "x" + str(self.n_cols) + ", right matrix is " + str(other.get_height()) + "x" + str(other.get_width()) + ".")
         
         # assume that the matrices are equal; compare each element and if any exists that isn't equal, change the assumption to false
         equals = True
@@ -437,6 +436,11 @@ class Matrix:
         Arguments:
         target_matrix --- the matrix on the right side of multiplication
         """
+        
+        # check if the number of columns of the calling matrix equals the number of rows of the target matrix
+        if self.n_cols != target_matrix.get_height():
+            raise Exception("Cannot perform matrix multiplication because the number of columns in the left matrix doesn't match the number of rows in the right matrix. Left matrix has " + str(self.n_cols) + " columns, right matrix has " + str(target_matrix.get_height()) + " rows.")
+        
         n_rows = self.n_rows
         n_cols = target_matrix.get_width()
         product_matrix = Matrix(n_rows,n_cols)

@@ -23,7 +23,7 @@ def test_read_file():
         
 def test_multiplication():
     mat1 = Matrix(3,5,1)
-    mat2 = utils.identity(3,5)
+    mat2 = utils.identity(3,3)
     assert(mat2*mat1==mat1)
     
 def test_singularity():
