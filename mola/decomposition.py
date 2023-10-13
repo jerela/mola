@@ -1,7 +1,9 @@
 
-from pickletools import read_stringnl_noescape_pair
 from mola.matrix import Matrix
 from mola.utils import identity, ones
+import math
+from copy import deepcopy
+from random import random
 
 # QR decomposition using Householder reflections
 def qrd(A_original):
@@ -54,3 +56,146 @@ def qrd(A_original):
     # return Q and R, where Q is the full rotation matrix (constructed from Householder reflections) to turn the original input matrix A into a upper triangular matrix R
     return (Q.get_transpose(),A)
 
+
+def eigend(S):
+    """
+    Calculate the eigenvalue decomposition of matrix S and return the matrix of eigenvalues E and matrix of eigenvectors V.
+    Uses the Jacobi eigendecomposition algorithm.
+    
+    Raises an exception if the matrix is not symmetric (for now).
+    """
+    
+    # first check if S is symmetric
+    # TODO: if isn't, convert to symmetric and calculate how its eigenvalues must be converted back to the original matrix
+    if not S.is_symmetric():
+        raise Exception("Matrix for eigenvalue decomposition is not symmetric!")
+
+    # function to calculate the non-diagonal Frobenius norm of a matrix
+    def off(A):
+        sum_term = 0
+        for i in range(n):
+            for j in range(n):
+                if i != j:
+                    sum_term = sum_term + A[i,j]*A[i,j]
+        return math.sqrt(sum_term)
+
+    # function to calculate the Frobenius norm of a matrix
+    def frobenius(A):
+        sum_term = 0
+        for i in range(n):
+            for j in range(n):
+                sum_term = sum_term + abs(A[i,j])*abs(A[i,j])
+        return math.sqrt(sum_term)
+
+    # return the i and k indices such that they correspond to the maximum nondiagonal absolute value 
+    def choose_ik():
+        i = 0
+        k = 0
+        for x in range(n):
+            for y in range(n):
+                if x != y and abs(B[x,y]) > abs(B[i,k]):
+                    i = x
+                    k = y
+        return (i,k)
+
+    # maximum number of iterations to perform
+    max_it = 100000
+    # dimensions of the square matrix
+    n = S.get_height()
+    # initialize V to the identity matrix; later to hold the eigenvectors
+    V = identity(n)
+    # initialize the error tolerance to stop looping
+    eps = frobenius(S)*1e-3
+    B = deepcopy(S)
+    iteration = 0
+    # main loop for the algortihm
+    while (off(B)>eps):
+        #print(off(B))
+        # choose (i,k) such that |a[i,k]| is maximal but not on diagonal
+        i,k = choose_ik()
+        #print((i,k))
+        #for i in range(n):
+        #    for k in range(n):
+        #        if i == k:
+        #            continue
+        # calculate c and s
+        if B[i,k] == 0:
+            c = 1
+            s = 0
+        else:
+            tau = (B[i,i]-B[k,k])/(2*B[i,k])
+            if tau>=0:
+                t = 1/(tau+math.sqrt(1+tau*tau))
+            else:
+                t = -1/(-tau+math.sqrt(1+tau*tau))
+            c = 1/math.sqrt(1+t*t)
+            s = t*c
+        # calculate G
+        G = identity(n)
+        G[i,i] = c
+        G[k,k] = c
+        G[i,k] = s
+        G[k,i] = -s
+        # set B (matrix of eigenvalues)
+        B = G.get_transpose()*B*G
+        # set V (matrix of eigenvectors)
+        V = V*G
+        iteration = iteration + 1
+        if iteration > max_it:
+            print("Jacobi eigendecomposition algorithm reached maximum number of iterations, breaking")
+            break
+    
+    # sort according to descending absolute eigenvalue
+    eigenvalues = B.get_diagonal_elements()
+    eigenvalues_abs = (abs(x) for x in eigenvalues)
+    order = [x for x in range(n)]
+    # get the order of sorted indices
+    zipped = zip(order,eigenvalues_abs)
+    order_sorted = sorted(zipped,key=lambda x: x[1], reverse=True)
+    new_order, eigenvalues_sorted = zip(*order_sorted)
+
+    # construct the sorted list of eigenvalues and the sorted matrix of eigenvectors
+    eigenvalues_sorted = []
+    eigenvectors_sorted = deepcopy(V)
+    for i in range(len(new_order)):
+        eigenvalues_sorted.append(eigenvalues[new_order[i]])
+        eigenvectors_sorted[:,i] = V[:,new_order[i]]
+
+    
+    
+    return (eigenvalues_sorted,eigenvectors_sorted)
+    
+
+def eigenvector(A):
+    """
+    Return the dominant eigenvector and corresponding eigenvalue of matrix A.
+    """
+    v = power_method(A)
+    e = rayleigh_quotient(A,v)
+    return (v,e)
+
+def rayleigh_quotient(A,v):
+    """
+    Return the Rayleigh quotient of matrix A.
+    The Rayleigh quotient in this case is the eigenvalue corresponding to the eigenvector v.
+    """
+    return v.get_conjugate_transpose()*A*v / (v.get_conjugate_transpose()*v)
+    
+        
+
+def power_method(A):
+    """
+    Return the dominant eigenvalue of the matrix A.
+    """
+        
+    # initialize the vector with random values using list comprehension
+    vector = Matrix([random() for x in range(A.get_height())])
+        
+    # do the iteration to (hopefully) converge the vector towards its dominant eigenvector
+    for i in range(100):
+        vector = (A*vector) / ((A*vector).norm_Euclidean())
+
+    return vector
+
+
+    

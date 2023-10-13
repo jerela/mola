@@ -1,8 +1,7 @@
 from copy import deepcopy
 import math
-from re import I
-from unittest import defaultTestLoader
-from xml.dom.expatbuilder import makeBuilder
+import random
+
 
 class Matrix:
     """
@@ -19,15 +18,15 @@ class Matrix:
 
     def __init__(self, *args):
         if len(args) == 1:
-            self.construct_from_lists(args[0])
+            self.__construct_from_lists(args[0])
         elif len(args) == 2:
-            self.construct_by_dimensions(args[0], args[1])
+            self.__construct_by_dimensions(args[0], args[1])
         elif len(args) == 3:
-            self.construct_by_dimensions(args[0], args[1], args[2])
+            self.__construct_by_dimensions(args[0], args[1], args[2])
 
 
     # construct a matrix with r rows, c columns, and some initial value (default 0)
-    def construct_by_dimensions(self,r,c,value=0):
+    def __construct_by_dimensions(self,r,c,value=0):
         """
         Return a matrix of specified dimensions.
         
@@ -47,15 +46,22 @@ class Matrix:
         self.data = col
     
     # construct a matrix from a given list of lists
-    def construct_from_lists(self,lists):
+    def __construct_from_lists(self,lists):
         """
         Return a matrix constructed from a list.
         
         Arguments:
         lists -- the list or nested list to set as the underlying data of the matrix
         """
-        # first check if list is more than 1D (assumedly 2D)
-        if isinstance(lists[0],list):
+        # first check if lists is just an int
+        if isinstance(lists,int):
+            self.n_rows = 1
+            self.n_cols = 1
+            col = []
+            col.append([lists])
+            self.data = col
+        # check if list is more than 1D (assumedly 2D)
+        elif isinstance(lists[0],list):
             self.n_rows = len(lists)
             self.n_cols = len(lists[0])
             col = []
@@ -72,6 +78,9 @@ class Matrix:
                 col.append([row])
             self.data = col        
 
+    def __abs__(self):
+        if self.n_rows == 1 and self.n_cols == 1:
+            return abs(self.data[0][0])
         
     # overload square brackets ([]) operator
     # first to get data
@@ -89,11 +98,22 @@ class Matrix:
             return Matrix(self.data[idx])
         elif isinstance(idx,tuple):
             rows,cols = idx
-            if isinstance(rows,int):
+            # rows is int and cols is slice:
+            if isinstance(rows,int) and isinstance(cols,slice):
+                sliced_data = Matrix(self.data[rows][cols])
+            # rows is int and cols is int
+            elif isinstance(rows,int) and isinstance(cols,int):
                 sliced_data = self.data[rows][cols]
-            else:
-                sliced_data = [r[cols] for r in self.data[rows]]
-            return Matrix(sliced_data)
+            # rows is slice and cols is int
+            elif isinstance(rows,slice) and isinstance(cols,int):
+                sliced_data = Matrix([r[cols] for r in self.data[rows]])
+            return sliced_data
+
+            #if isinstance(rows,int):
+            #    sliced_data = self.data[rows][cols]
+            #else:
+            #    sliced_data = [r[cols] for r in self.data[rows]]
+            #return Matrix(sliced_data)
         else:
             raise Exception("invalid getitem arg")
 
@@ -171,11 +191,11 @@ class Matrix:
         Raises an exception if 'other' is not Matrix, int or float.
         """
         if isinstance(self,Matrix) and isinstance(other,Matrix):
-            return self.matrix_multiplication(other)
+            return self.__matrix_multiplication(other)
         elif isinstance(self,Matrix) and isinstance(other,int):
-            return self.scalar_multiplication(other)
+            return self.__scalar_multiplication(other)
         elif isinstance(self,Matrix) and isinstance(other,float):
-            return self.scalar_multiplication(other)
+            return self.__scalar_multiplication(other)
         else:
             print(type(other))
             raise Exception("Cannot identify type of term on right when multiplying!")
@@ -191,10 +211,11 @@ class Matrix:
         Raises an exception if 'other' is not scalar or int.
         """
         if isinstance(other,int) or isinstance(other,float):
-            return self.scalar_multiplication(other)
+            return self.__scalar_multiplication(other)
         else:
             raise Exception("Unknown rmul!")
 
+    # overload division (/) operator
     def __truediv__(self,other):
         """
         Return a single numeric value that is the element of the matrix divided by 'other'.
@@ -206,11 +227,14 @@ class Matrix:
         
         Raises an exception if matrix dimensions are not 1x1.
         """
-        if self.n_rows == 1 and self.n_cols == 1:
-            return self.data[0][0]/other
+        if isinstance(other,Matrix):
+            if other.n_rows == 1 and other.n_cols == 1:
+                return self.data[0][0]/other
         else:
-            raise Exception("Cannot perform division because matrix dimensions are not 1x1.")
+            return self.__mul__(1/other)
+#            raise Exception("Cannot perform division because matrix dimensions are not 1x1.")
     
+    # enable division from either direction
     def __rtruediv__(self,other):
         """
         Return a single numeric value that is the argument 'other' divided by the element of the matrix.
@@ -227,6 +251,7 @@ class Matrix:
         else:
             raise Exception("Cannot perform division because matrix dimensions are not 1x1.")
 
+    # overload addition (+) operator
     def __add__(self,other):
         """
         Return a Matrix that is the sum of two matrices or the original matrix where a scalar has been added to all elements.
@@ -245,6 +270,7 @@ class Matrix:
                 output.set(i,j,self[i][j]+other[i][j])
         return output
     
+    # overload subtraction (-) operator
     def __sub__(self,other):
         """
         Return a matrix that is the subtraction of two matrices or the original matrix where a scalar has been subtracted from all elements.
@@ -263,7 +289,6 @@ class Matrix:
                 output.set(i,j,self.data[i][j]-other.data[i][j])
         return output
                 
-
     # return the number of rows
     def get_height(self):
         """Return the number of rows in the matrix."""
@@ -406,7 +431,7 @@ class Matrix:
         return calling_matrix
 
     # return matrix product
-    def matrix_multiplication(self,target_matrix):
+    def __matrix_multiplication(self,target_matrix):
         """Return the matrix product of two matrices.
         
         Arguments:
@@ -425,7 +450,7 @@ class Matrix:
         return product_matrix
     
     # return scalar multiplied matrix
-    def scalar_multiplication(self,scalar):
+    def __scalar_multiplication(self,scalar):
         """Return the scalar product of the matrix with a scalar.
         
         Arguments:
@@ -452,7 +477,7 @@ class Matrix:
         calling_matrix = deepcopy(self)
 
         # transform the matrix to a normal row echelon form
-        calling_matrix.transform_to_row_echelon_form()
+        calling_matrix.__transform_to_row_echelon_form()
                     
         det = calling_matrix.get_diagonal_product()
         return det
@@ -488,6 +513,14 @@ class Matrix:
         for i in range(self.n_rows):
             sum = sum + self.data[i][i]
         return sum
+    
+    # return diagonal elements in a list
+    def get_diagonal_elements(self):
+        """Return the diagonal elements of a matrix as a list."""
+        diagonal = []
+        for i in range(self.n_rows):
+            diagonal.append(self.data[i][i])
+        return diagonal
 
     # check if matrix is invertible
     def is_invertible(self):
@@ -545,37 +578,91 @@ class Matrix:
 
 
     # transform the parameter matrix to row echelon form; is another matrix is also passed, use it as the augmented matrix
-    def transform_to_row_echelon_form(self, augmented_matrix=None):
+    def __transform_to_row_echelon_form(self, augmented_matrix=None, calculate_rank=False):
         """
         Modify the matrix so that it is transformed to a row echelon form using Gauss-Jordan elimination.
         This row echelon form is not the reduced row echelon form.
         
         Arguments:
-        augmented_matrix -- optional matrix (usually identity) that is subjected to the same row operations as the calling matrix
+        augmented_matrix -- optional matrix (usually identity) that is subjected to the same row operations as the calling matrix (default None)
+        calculate_rank -- Boolean: whether to return the rank of the calling matrix (default false)
                 
         The augmented matrix is used in calculating the inverse of a matrix.
         """
+
+        # loop through columns
         for j in range(0,self.n_cols):
-            first_row = self.get_row(j)
+            
+            # this check ensures that the algorithm works also for non-square matrices (e.g., when we want to calculate their rank instead of inverting them)
+            if self.n_rows > j:
+                first_row = self.get_row(j)
+            else:
+                continue
+            
+            # loop through rows
             for i in range(1+j,self.n_rows):
                 # zero the element in the first column using type 3 row operations (add to one row the scalar multiple of another)
             
                 # get the row we are trying to modify
                 current_row = self.get_row(i)
-            
+
                 # if the current element is already 0, continue
                 if current_row[0+j] == 0:
                     continue
-            
+                
+                # check if the row is zero and if it is, continue to next one (no need to operate on a row of zeros)
+                if self.row_is_zeros(j):
+                    continue
+
                 # calculate the scalar to multiply the first row with
                 multiplier = current_row[0+j]/first_row[0+j]
-            
+
                 # perform type 3 row operations
                 # first apply to the matrix we're currently working on
-                self.type_three_row_operation(current_row,first_row,multiplier)
+                self.__type_three_row_operation(current_row,first_row,multiplier)
                 # then apply to augmented matrix
                 if augmented_matrix is not None:
-                    self.type_three_row_operation(augmented_matrix.get_row(i),augmented_matrix.get_row(j),multiplier)
+                    self.__type_three_row_operation(augmented_matrix.get_row(i),augmented_matrix.get_row(j),multiplier)
+        
+        # finally, count how many zero rows we have to be able to calculate rank
+        if calculate_rank:
+            n_zero_rows = self.count_zero_rows()
+            return self.n_rows-n_zero_rows
+
+
+    def get_row_echelon_form(self):
+        return deepcopy(self).__transform_to_row_echelon_form()
+
+    def count_zero_rows(self):
+        """Return the number of rows that have only zero-valued elements."""
+        num_zero_rows = 0
+        for row in range(self.n_rows):
+            if self.row_is_zeros(row):
+                num_zero_rows = num_zero_rows + 1
+        return num_zero_rows
+
+    def row_is_zeros(self,r):
+        """
+        Return true if all elements in the row are zero-valued. Otherwise, return false.
+        
+        Arguments:
+        r -- unsigned integer: the index of the row
+        """
+        
+        is_zero = True
+        for elem in self.data[r]:
+            if elem != 0:
+                is_zero = False
+                break
+        return is_zero
+
+    # return the rank of a matrix
+    def get_rank(self):
+        """
+        Return the rank of a matrix.
+        The rank is the number of linearly independent rows (or columns) in a matrix.
+        """
+        return deepcopy(self).__transform_to_row_echelon_form(calculate_rank=True)
 
     # return the inverse of a matrix
     def get_inverse(self):
@@ -597,8 +684,12 @@ class Matrix:
         augmented_matrix.make_identity()
 
         # first, transform the matrix to a normal row echelon form
-        calling_matrix.transform_to_row_echelon_form(augmented_matrix)
+        calling_matrix.__transform_to_row_echelon_form(augmented_matrix)
                 
+        # if the determinant of the matrix is 0, it is singular and therefore not invertible
+        if calling_matrix.get_diagonal_product() == 0:
+            raise Exception ("Matrix is not invertible because it is singular!")
+
         # then, transform the row echelon form to reduced row echelon form
         # in the first part, set the leading coefficients to 1 with type 2 row operations (multiply a row by a scalar)
         for i in range(0,calling_matrix.n_rows):
@@ -612,8 +703,8 @@ class Matrix:
                     break
 
             if multiplier != 0:
-                calling_matrix.type_two_row_operation(current_row,multiplier)
-                calling_matrix.type_two_row_operation(augmented_matrix.get_row(i),multiplier)
+                calling_matrix.__type_two_row_operation(current_row,multiplier)
+                calling_matrix.__type_two_row_operation(augmented_matrix.get_row(i),multiplier)
             
         # in the second part, the elements on each row to the right of the leading coefficient to zero with type 3 row operations
         for i in range(calling_matrix.n_rows-1,-1,-1):
@@ -632,43 +723,45 @@ class Matrix:
 
                 # if we have a reason to perform type 3 operations, we do so
                 if leading_found and multiplier != 0:
-                    calling_matrix.type_three_row_operation(operable_row,reference_row,multiplier)
-                    calling_matrix.type_three_row_operation(augmented_matrix.get_row(j),augmented_matrix.get_row(i),multiplier)
+                    calling_matrix.__type_three_row_operation(operable_row,reference_row,multiplier)
+                    calling_matrix.__type_three_row_operation(augmented_matrix.get_row(j),augmented_matrix.get_row(i),multiplier)
                 
         # return the final inverted matrix
         return augmented_matrix
                         
     # perform type 3 row operation (add the scalar multiple of multiplied_row to operable_row)
-    def type_three_row_operation(self,operable_row,multiplied_row,scalar):
+    def __type_three_row_operation(self,operable_row,multiplied_row,scalar):
         """Perform a type three row operation (add the scalar multiple of a row to another row)."""
         for c in range(self.n_cols):
             operable_row[c] = operable_row[c] - multiplied_row[c]*scalar
             
     # perform type 2 row operation (multiply operable row by a scalar)
-    def type_two_row_operation(self,operable_row,scalar):
+    def __type_two_row_operation(self,operable_row,scalar):
         """Perform a type two row operation (multiply a row by a scalar)."""
         for c in range(self.n_cols):
             operable_row[c] = operable_row[c]*scalar
 
-    def get_rows_columns(self,rows_list,cols_list):
-        """Return a submatrix from specified indices."""
-        col = []
-        for i in rows_list:
-            row = []
-            for j in cols_list:
-                row.append(self.data[i][j])
-            col.append(row)
-        return Matrix(col)
+    # REPLACED BY [] OPERATOR
+    #def get_rows_columns(self,rows_list,cols_list):
+    #    """Return a submatrix from specified indices."""
+    #    col = []
+    #    for i in rows_list:
+    #        row = []
+    #        for j in cols_list:
+    #            row.append(self.data[i][j])
+    #        col.append(row)
+    #    return Matrix(col)
     
-    def set_rows_columns(self,rows_list,cols_list,matrix):
-        """Set the values in specified indices."""
-        rows = matrix.get_height()
-        cols = matrix.get_width()
-        rows_first = rows_list[0]
-        cols_first = cols_list[0]
-        for i in rows_list:
-            for j in cols_list:
-                self.data[i][j] = matrix[i-rows_first][j-cols_first]
+    # REPLACED BY [] OPERATOR
+    #def set_rows_columns(self,rows_list,cols_list,matrix):
+    #    """Set the values in specified indices."""
+    #    rows = matrix.get_height()
+    #    cols = matrix.get_width()
+    #    rows_first = rows_list[0]
+    #    cols_first = cols_list[0]
+    #    for i in rows_list:
+    #        for j in cols_list:
+    #            self.data[i][j] = matrix[i-rows_first][j-cols_first]
             
     def norm_Euclidean(self):
         """Return the Euclidean norm of the matrix."""
@@ -677,3 +770,22 @@ class Matrix:
             for j in range(self.n_cols):
                 norm = norm + pow(self.data[i][j],2)
         return math.sqrt(norm)
+
+    # doesn't seem to work
+    def get_dominant_eigenvector(self):
+        eigenvector = []
+        for i in range(self.n_cols):
+            eigenvector.append(random.randint(-10,10))
+
+        eigenvector = Matrix(eigenvector)
+
+        err = 1e9
+
+        while err > 1e-15:
+            eigenvector_prev = eigenvector
+            eigenvector = self*eigenvector
+            eigenvector = eigenvector*(1/eigenvector.norm_Euclidean())
+            err = (eigenvector-eigenvector_prev).norm_Euclidean()
+            
+        return eigenvector 
+            

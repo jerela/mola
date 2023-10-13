@@ -6,14 +6,6 @@ from mola import decomposition
 mat2 = Matrix(3,5,1)
 mat3 = mat2.get_transpose()
 
-mat4 = mat2.matrix_multiplication(mat3)
-mat4.print()
-
-mat5 = mat2*mat3
-mat5.print()
-
-print("This should be true:" + str(mat4==mat5))
-
 mat6 = Matrix([[2,1,-1],[-3,-1,2],[-2,1,2]])
 mat6.print()
 
@@ -88,8 +80,8 @@ th = regression.linear_least_squares(H,y)
 
 independent_values = Matrix([ [2],[4],[6] ])
 dependent_values = Matrix([[0],[1],[2]])
-print(regression.fit_univariate_polynomial(independent_values, dependent_values, degrees=[1, 2], intercept=True))
-
+th = regression.fit_univariate_polynomial(independent_values, dependent_values, degrees=[1, 2], intercept=True)
+assert(utils.equals_approx(th, (0.5, 0, -1)))
 
 mat11 = Matrix([ [12, -51, 4], [6, 167, -68], [-4, 24, -41] ])
 print("original matrix:")
@@ -100,3 +92,24 @@ Q.print()
 print("R:")
 R.print()
 
+independent_values = Matrix([[-1],[0],[2]])
+dependent_values = Matrix([[1],[0],[4]])
+th = regression.fit_univariate_polynomial(independent_values,dependent_values, degrees=[2], intercept=False)
+print(th)
+assert(utils.equals_approx(th[0],1))
+
+#(mat11.get_dominant_eigenvector()).print()
+
+# create a symmetric matrix
+#mat12 = Matrix([[1,2,3,4,5],[2,7,51,-5,21],[3,51,-11,-23,0],[4,-5,-23,4.2,40.4],[5,21,0,40.4,0.5]])
+#[eigs, V] = decomposition.eigend(mat12)
+#print(eigs)
+#V.print()
+
+mat13 = Matrix([[1,0], [1,3]])
+#[eigs, V] = decomposition.eigend(mat13)
+#print(eigs)
+#V.print()
+v,e = decomposition.eigenvector(mat13)
+v.print()
+print(e)

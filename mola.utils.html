@@ -17,7 +17,15 @@
 <font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
     
 <tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
-<td width="100%"><dl><dt><a name="-identity"><strong>identity</strong></a>(rows, cols=None)</dt><dd><tt>Return&nbsp;a&nbsp;square&nbsp;identity&nbsp;matrix.<br>
+<td width="100%"><dl><dt><a name="-equals_approx"><strong>equals_approx</strong></a>(left, right, precision=1e-12)</dt><dd><tt>Return&nbsp;true&nbsp;if&nbsp;the&nbsp;compared&nbsp;objects&nbsp;are&nbsp;roughly&nbsp;equal&nbsp;elementwise.&nbsp;Otherwise,&nbsp;return&nbsp;false.<br>
+&nbsp;<br>
+Arguments:<br>
+left&nbsp;--&nbsp;Matrix,&nbsp;list,&nbsp;tuple,&nbsp;or&nbsp;a&nbsp;single&nbsp;value:&nbsp;the&nbsp;object&nbsp;on&nbsp;the&nbsp;left&nbsp;side&nbsp;of&nbsp;the&nbsp;comparison<br>
+right&nbsp;--&nbsp;Matrix,&nbsp;list,&nbsp;tuple&nbsp;or&nbsp;a&nbsp;single&nbsp;value:&nbsp;the&nbsp;object&nbsp;on&nbsp;the&nbsp;right&nbsp;side&nbsp;of&nbsp;the&nbsp;comparison<br>
+precision&nbsp;--&nbsp;float:&nbsp;the&nbsp;maximum&nbsp;allowed&nbsp;difference&nbsp;between&nbsp;matching&nbsp;elements&nbsp;(default&nbsp;1e-12)<br>
+&nbsp;<br>
+Raises&nbsp;an&nbsp;exception&nbsp;if&nbsp;'left'&nbsp;and&nbsp;'right'&nbsp;have&nbsp;different&nbsp;dimensions.</tt></dd></dl>
+ <dl><dt><a name="-identity"><strong>identity</strong></a>(rows, cols=None)</dt><dd><tt>Return&nbsp;a&nbsp;square&nbsp;identity&nbsp;matrix.<br>
 &nbsp;<br>
 Arguments:<br>
 rows&nbsp;--&nbsp;unsigned&nbsp;integer:&nbsp;height&nbsp;of&nbsp;the&nbsp;matrix<br>

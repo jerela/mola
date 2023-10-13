@@ -18,7 +18,8 @@
     
 <tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
 <td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="math.html">math</a><br>
-</td><td width="25%" valign=top></td><td width="25%" valign=top></td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+</td><td width="25%" valign=top><a href="random.html">random</a><br>
+</td><td width="25%" valign=top></td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#ee77aa">
 <td colspan=3 valign=bottom>&nbsp;<br>
@@ -50,6 +51,8 @@ n_rows&nbsp;--&nbsp;unsigned&nbsp;integer:&nbsp;the&nbsp;number&nbsp;of&nbsp;row
 n_cols&nbsp;--&nbsp;unsigned&nbsp;integer:&nbsp;the&nbsp;number&nbsp;of&nbsp;columns&nbsp;in&nbsp;the&nbsp;matrix,&nbsp;also&nbsp;known&nbsp;as&nbsp;its&nbsp;width<br>&nbsp;</tt></td></tr>
 <tr><td>&nbsp;</td>
 <td width="100%">Methods defined here:<br>
+<dl><dt><a name="Matrix-__abs__"><strong>__abs__</strong></a>(self)</dt></dl>
+
 <dl><dt><a name="Matrix-__add__"><strong>__add__</strong></a>(self, other)</dt><dd><tt>Return&nbsp;a&nbsp;<a href="#Matrix">Matrix</a>&nbsp;that&nbsp;is&nbsp;the&nbsp;sum&nbsp;of&nbsp;two&nbsp;matrices&nbsp;or&nbsp;the&nbsp;original&nbsp;matrix&nbsp;where&nbsp;a&nbsp;scalar&nbsp;has&nbsp;been&nbsp;added&nbsp;to&nbsp;all&nbsp;elements.<br>
 Overloads&nbsp;the&nbsp;addition&nbsp;+&nbsp;operator.<br>
 &nbsp;<br>
@@ -142,17 +145,7 @@ row&nbsp;---&nbsp;list&nbsp;or&nbsp;single-row&nbsp;matrix:&nbsp;the&nbsp;row&nb
 &nbsp;<br>
 Raises&nbsp;an&nbsp;exception&nbsp;if&nbsp;'row'&nbsp;is&nbsp;not&nbsp;a&nbsp;list&nbsp;or&nbsp;a&nbsp;matrix.</tt></dd></dl>
 
-<dl><dt><a name="Matrix-construct_by_dimensions"><strong>construct_by_dimensions</strong></a>(self, r, c, value=0)</dt><dd><tt>Return&nbsp;a&nbsp;matrix&nbsp;of&nbsp;specified&nbsp;dimensions.<br>
-&nbsp;<br>
-Arguments:<br>
-r&nbsp;--&nbsp;unsigned&nbsp;integer:&nbsp;the&nbsp;number&nbsp;of&nbsp;rows<br>
-c&nbsp;--&nbsp;unsigned&nbsp;integer:&nbsp;the&nbsp;number&nbsp;of&nbsp;columns<br>
-value&nbsp;--&nbsp;float&nbsp;or&nbsp;int:&nbsp;initial&nbsp;value&nbsp;assigned&nbsp;to&nbsp;all&nbsp;elements&nbsp;of&nbsp;the&nbsp;matrix&nbsp;(default&nbsp;0)</tt></dd></dl>
-
-<dl><dt><a name="Matrix-construct_from_lists"><strong>construct_from_lists</strong></a>(self, lists)</dt><dd><tt>Return&nbsp;a&nbsp;matrix&nbsp;constructed&nbsp;from&nbsp;a&nbsp;list.<br>
-&nbsp;<br>
-Arguments:<br>
-lists&nbsp;--&nbsp;the&nbsp;list&nbsp;or&nbsp;nested&nbsp;list&nbsp;to&nbsp;set&nbsp;as&nbsp;the&nbsp;underlying&nbsp;data&nbsp;of&nbsp;the&nbsp;matrix</tt></dd></dl>
+<dl><dt><a name="Matrix-count_zero_rows"><strong>count_zero_rows</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;number&nbsp;of&nbsp;rows&nbsp;that&nbsp;have&nbsp;only&nbsp;zero-valued&nbsp;elements.</tt></dd></dl>
 
 <dl><dt><a name="Matrix-get"><strong>get</strong></a>(self, i, j)</dt><dd><tt>Get&nbsp;the&nbsp;element&nbsp;at&nbsp;specified&nbsp;position.</tt></dd></dl>
 
@@ -168,9 +161,13 @@ For&nbsp;real&nbsp;matrices,&nbsp;the&nbsp;conjugate&nbsp;transpose&nbsp;is&nbsp
 <dl><dt><a name="Matrix-get_determinant"><strong>get_determinant</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;determinant&nbsp;of&nbsp;a&nbsp;square&nbsp;matrix.<br>
 Raises&nbsp;an&nbsp;exception&nbsp;if&nbsp;the&nbsp;matrix&nbsp;is&nbsp;not&nbsp;square.</tt></dd></dl>
 
+<dl><dt><a name="Matrix-get_diagonal_elements"><strong>get_diagonal_elements</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;diagonal&nbsp;elements&nbsp;of&nbsp;a&nbsp;matrix&nbsp;as&nbsp;a&nbsp;list.</tt></dd></dl>
+
 <dl><dt><a name="Matrix-get_diagonal_product"><strong>get_diagonal_product</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;product&nbsp;of&nbsp;all&nbsp;the&nbsp;diagonal&nbsp;elements&nbsp;in&nbsp;the&nbsp;matrix.</tt></dd></dl>
 
 <dl><dt><a name="Matrix-get_diagonal_sum"><strong>get_diagonal_sum</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;sum&nbsp;of&nbsp;all&nbsp;the&nbsp;diagonal&nbsp;elements&nbsp;in&nbsp;the&nbsp;matrix.</tt></dd></dl>
+
+<dl><dt><a name="Matrix-get_dominant_eigenvector"><strong>get_dominant_eigenvector</strong></a>(self)</dt><dd><tt>#&nbsp;doesn't&nbsp;seem&nbsp;to&nbsp;work</tt></dd></dl>
 
 <dl><dt><a name="Matrix-get_height"><strong>get_height</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;number&nbsp;of&nbsp;rows&nbsp;in&nbsp;the&nbsp;matrix.</tt></dd></dl>
 
@@ -180,13 +177,16 @@ Raises&nbsp;an&nbsp;exception&nbsp;if&nbsp;the&nbsp;matrix&nbsp;is&nbsp;not&nbsp
 
 <dl><dt><a name="Matrix-get_norm_Frobenius"><strong>get_norm_Frobenius</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;Frobenius&nbsp;norm&nbsp;of&nbsp;the&nbsp;matrix.</tt></dd></dl>
 
+<dl><dt><a name="Matrix-get_rank"><strong>get_rank</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;rank&nbsp;of&nbsp;a&nbsp;matrix.<br>
+The&nbsp;rank&nbsp;is&nbsp;the&nbsp;number&nbsp;of&nbsp;linearly&nbsp;independent&nbsp;rows&nbsp;(or&nbsp;columns)&nbsp;in&nbsp;a&nbsp;matrix.</tt></dd></dl>
+
 <dl><dt><a name="Matrix-get_row"><strong>get_row</strong></a>(self, r, as_list=True)</dt><dd><tt>Return&nbsp;a&nbsp;specified&nbsp;row&nbsp;of&nbsp;the&nbsp;matrix&nbsp;as&nbsp;list&nbsp;or&nbsp;matrix.<br>
 &nbsp;<br>
 Arguments:<br>
 r&nbsp;--&nbsp;unsigned&nbsp;integer:&nbsp;index&nbsp;of&nbsp;the&nbsp;row<br>
 as_list&nbsp;-&nbsp;Boolean:&nbsp;whether&nbsp;to&nbsp;return&nbsp;the&nbsp;row&nbsp;as&nbsp;a&nbsp;list&nbsp;or&nbsp;not,&nbsp;in&nbsp;which&nbsp;case&nbsp;it&nbsp;is&nbsp;returned&nbsp;as&nbsp;a&nbsp;matrix&nbsp;(default&nbsp;true)</tt></dd></dl>
 
-<dl><dt><a name="Matrix-get_rows_columns"><strong>get_rows_columns</strong></a>(self, rows_list, cols_list)</dt><dd><tt>Return&nbsp;a&nbsp;submatrix&nbsp;from&nbsp;specified&nbsp;indices.</tt></dd></dl>
+<dl><dt><a name="Matrix-get_row_echelon_form"><strong>get_row_echelon_form</strong></a>(self)</dt></dl>
 
 <dl><dt><a name="Matrix-get_trace"><strong>get_trace</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;trace&nbsp;of&nbsp;a&nbsp;square&nbsp;matrix.<br>
 Raises&nbsp;an&nbsp;exception&nbsp;if&nbsp;the&nbsp;matrix&nbsp;is&nbsp;not&nbsp;square.</tt></dd></dl>
@@ -211,21 +211,16 @@ Raises&nbsp;an&nbsp;exception&nbsp;if&nbsp;the&nbsp;matrix&nbsp;is&nbsp;not&nbsp
 
 <dl><dt><a name="Matrix-make_identity"><strong>make_identity</strong></a>(self)</dt><dd><tt>Set&nbsp;all&nbsp;diagonal&nbsp;elements&nbsp;of&nbsp;the&nbsp;matrix&nbsp;to&nbsp;1&nbsp;and&nbsp;all&nbsp;non-diagonal&nbsp;elements&nbsp;to&nbsp;0.</tt></dd></dl>
 
-<dl><dt><a name="Matrix-matrix_multiplication"><strong>matrix_multiplication</strong></a>(self, target_matrix)</dt><dd><tt>Return&nbsp;the&nbsp;matrix&nbsp;product&nbsp;of&nbsp;two&nbsp;matrices.<br>
-&nbsp;<br>
-Arguments:<br>
-target_matrix&nbsp;---&nbsp;the&nbsp;matrix&nbsp;on&nbsp;the&nbsp;right&nbsp;side&nbsp;of&nbsp;multiplication</tt></dd></dl>
-
 <dl><dt><a name="Matrix-norm_Euclidean"><strong>norm_Euclidean</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;Euclidean&nbsp;norm&nbsp;of&nbsp;the&nbsp;matrix.</tt></dd></dl>
 
 <dl><dt><a name="Matrix-print"><strong>print</strong></a>(self, precision=4)</dt><dd><tt>Print&nbsp;a&nbsp;string&nbsp;that&nbsp;describes&nbsp;the&nbsp;matrix.<br>
 Rows&nbsp;are&nbsp;delimited&nbsp;by&nbsp;semicolons&nbsp;and&nbsp;newlines.&nbsp;Elements&nbsp;in&nbsp;a&nbsp;single&nbsp;row&nbsp;are&nbsp;delimited&nbsp;by&nbsp;commas.<br>
 The&nbsp;matrix&nbsp;is&nbsp;enclosed&nbsp;with&nbsp;square&nbsp;brackets.</tt></dd></dl>
 
-<dl><dt><a name="Matrix-scalar_multiplication"><strong>scalar_multiplication</strong></a>(self, scalar)</dt><dd><tt>Return&nbsp;the&nbsp;scalar&nbsp;product&nbsp;of&nbsp;the&nbsp;matrix&nbsp;with&nbsp;a&nbsp;scalar.<br>
+<dl><dt><a name="Matrix-row_is_zeros"><strong>row_is_zeros</strong></a>(self, r)</dt><dd><tt>Return&nbsp;true&nbsp;if&nbsp;all&nbsp;elements&nbsp;in&nbsp;the&nbsp;row&nbsp;are&nbsp;zero-valued.&nbsp;Otherwise,&nbsp;return&nbsp;false.<br>
 &nbsp;<br>
 Arguments:<br>
-scalar&nbsp;--&nbsp;a&nbsp;numeric&nbsp;value&nbsp;that&nbsp;scales&nbsp;all&nbsp;elements&nbsp;of&nbsp;the&nbsp;matrix</tt></dd></dl>
+r&nbsp;--&nbsp;unsigned&nbsp;integer:&nbsp;the&nbsp;index&nbsp;of&nbsp;the&nbsp;row</tt></dd></dl>
 
 <dl><dt><a name="Matrix-set"><strong>set</strong></a>(self, i, j, value)</dt><dd><tt>Set&nbsp;the&nbsp;element&nbsp;at&nbsp;specified&nbsp;position.</tt></dd></dl>
 
@@ -235,21 +230,7 @@ Arguments:<br>
 r&nbsp;--&nbsp;unsigned&nbsp;integer:&nbsp;index&nbsp;of&nbsp;the&nbsp;row<br>
 new_row&nbsp;--&nbsp;list:&nbsp;the&nbsp;values&nbsp;that&nbsp;are&nbsp;assigned&nbsp;to&nbsp;that&nbsp;row</tt></dd></dl>
 
-<dl><dt><a name="Matrix-set_rows_columns"><strong>set_rows_columns</strong></a>(self, rows_list, cols_list, matrix)</dt><dd><tt>Set&nbsp;the&nbsp;values&nbsp;in&nbsp;specified&nbsp;indices.</tt></dd></dl>
-
-<dl><dt><a name="Matrix-transform_to_row_echelon_form"><strong>transform_to_row_echelon_form</strong></a>(self, augmented_matrix=None)</dt><dd><tt>Modify&nbsp;the&nbsp;matrix&nbsp;so&nbsp;that&nbsp;it&nbsp;is&nbsp;transformed&nbsp;to&nbsp;a&nbsp;row&nbsp;echelon&nbsp;form&nbsp;using&nbsp;Gauss-Jordan&nbsp;elimination.<br>
-This&nbsp;row&nbsp;echelon&nbsp;form&nbsp;is&nbsp;not&nbsp;the&nbsp;reduced&nbsp;row&nbsp;echelon&nbsp;form.<br>
-&nbsp;<br>
-Arguments:<br>
-augmented_matrix&nbsp;--&nbsp;optional&nbsp;matrix&nbsp;(usually&nbsp;identity)&nbsp;that&nbsp;is&nbsp;subjected&nbsp;to&nbsp;the&nbsp;same&nbsp;row&nbsp;operations&nbsp;as&nbsp;the&nbsp;calling&nbsp;matrix<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
-The&nbsp;augmented&nbsp;matrix&nbsp;is&nbsp;used&nbsp;in&nbsp;calculating&nbsp;the&nbsp;inverse&nbsp;of&nbsp;a&nbsp;matrix.</tt></dd></dl>
-
 <dl><dt><a name="Matrix-transpose"><strong>transpose</strong></a>(self)</dt><dd><tt>Transpose&nbsp;the&nbsp;matrix.</tt></dd></dl>
-
-<dl><dt><a name="Matrix-type_three_row_operation"><strong>type_three_row_operation</strong></a>(self, operable_row, multiplied_row, scalar)</dt><dd><tt>Perform&nbsp;a&nbsp;type&nbsp;three&nbsp;row&nbsp;operation&nbsp;(add&nbsp;the&nbsp;scalar&nbsp;multiple&nbsp;of&nbsp;a&nbsp;row&nbsp;to&nbsp;another&nbsp;row).</tt></dd></dl>
-
-<dl><dt><a name="Matrix-type_two_row_operation"><strong>type_two_row_operation</strong></a>(self, operable_row, scalar)</dt><dd><tt>Perform&nbsp;a&nbsp;type&nbsp;two&nbsp;row&nbsp;operation&nbsp;(multiply&nbsp;a&nbsp;row&nbsp;by&nbsp;a&nbsp;scalar).</tt></dd></dl>
 
 <hr>
 Data descriptors defined here:<br>
@@ -272,13 +253,5 @@ The&nbsp;argument&nbsp;must&nbsp;be&nbsp;an&nbsp;iterable&nbsp;if&nbsp;specified
 
 <dl><dt><strong>n_rows</strong> = 0</dl>
 
-</td></tr></table></td></tr></table><p>
-<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
-<tr bgcolor="#55aa55">
-<td colspan=3 valign=bottom>&nbsp;<br>
-<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
-    
-<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
-<td width="100%"><strong>I</strong> = re.IGNORECASE<br>
-<strong>defaultTestLoader</strong> = &lt;unittest.loader.TestLoader object&gt;</td></tr></table>
+</td></tr></table></td></tr></table>
 </body></html>
