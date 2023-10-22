@@ -100,20 +100,24 @@ class Matrix:
             rows,cols = idx
             # rows is int and cols is slice:
             if isinstance(rows,int) and isinstance(cols,slice):
-                sliced_data = Matrix(self.data[rows][cols])
+                #sliced_data = Matrix(self.data[rows][cols])
+                return Matrix(self.data[rows][cols])
             # rows is int and cols is int
             elif isinstance(rows,int) and isinstance(cols,int):
-                sliced_data = self.data[rows][cols]
+                #sliced_data = self.data[rows][cols]
+                return self.data[rows][cols]
             # rows is slice and cols is int
             elif isinstance(rows,slice) and isinstance(cols,int):
-                sliced_data = Matrix([r[cols] for r in self.data[rows]])
-            return sliced_data
+                #sliced_data = Matrix([r[cols] for r in self.data[rows]])
+                return Matrix([r[cols] for r in self.data[rows]])
+            # if both are slices
+            elif isinstance(rows,slice) and isinstance(cols,slice):
+                #newlist = [r[cols] for r in self.data[rows]]
+                #sliced_data = Matrix(newlist)
+                return Matrix([r[cols] for r in self.data[rows]])
+                
+            #return sliced_data
 
-            #if isinstance(rows,int):
-            #    sliced_data = self.data[rows][cols]
-            #else:
-            #    sliced_data = [r[cols] for r in self.data[rows]]
-            #return Matrix(sliced_data)
         else:
             raise Exception("invalid getitem arg")
 
@@ -266,7 +270,7 @@ class Matrix:
             raise Exception("Matrix dimensions must match for elementwise addition or subtraction!")
         for i in range(self.n_rows):
             for j in range(self.n_cols):
-                output.set(i,j,self[i][j]+other[i][j])
+                output.set(i,j,self[i,j]+other[i,j])
         return output
     
     # overload subtraction (-) operator
@@ -348,12 +352,13 @@ class Matrix:
         """Get the element at specified position."""
         return self.data[i][j]
 
-    # print matrix in MATLAB-style format
-    def print(self, precision = 4):
-        """
-        Print a string that describes the matrix.
+    # define what happens when the matrix is converted to a string, such as when print(Matrix) is called
+    def __str__(self, precision = 4):
+        """Define the string representation of Matrix.
         Rows are delimited by semicolons and newlines. Elements in a single row are delimited by commas.
         The matrix is enclosed with square brackets.
+        
+        Returns a string that describes the matrix.
         """
         matrix_string = '['
         for i in range(self.n_rows):
@@ -364,7 +369,16 @@ class Matrix:
             if i < self.n_rows-1:
                 matrix_string = matrix_string + ";\n"
         matrix_string = matrix_string + "]"
-        print(matrix_string)
+        return matrix_string
+
+    # print matrix in MATLAB-style format
+    def print(self, precision = 4):
+        """
+        Print a string that describes the matrix.
+        Rows are delimited by semicolons and newlines. Elements in a single row are delimited by commas.
+        The matrix is enclosed with square brackets.
+        """
+        print(self.__str__(precision))
 
     # check if matrix elements are real
     def is_real(self):
@@ -444,14 +458,115 @@ class Matrix:
         n_rows = self.n_rows
         n_cols = target_matrix.get_width()
         product_matrix = Matrix(n_rows,n_cols)
+        length = self.n_cols
+        
+#        target_transpose = target_matrix.get_transpose()
+
         for i in range(n_rows):
+            current_row = self.get_row(i)
+            #current_row_target = target_transpose.get_row(i)
             for j in range(n_cols):
                 new_elem = 0
-                length = self.n_cols
                 for x in range(length):
-                    new_elem = new_elem + self.data[i][x]*target_matrix.data[x][j]
+                    new_elem = new_elem + current_row[x]*target_matrix.data[x][j]
                 product_matrix.set(i,j,new_elem)
+            
         return product_matrix
+
+    # return matrix product
+    def __matrix_multiplication_tiled(self,target_matrix):
+        """Return the matrix product of two matrices.
+        
+        Arguments:
+        target_matrix --- the matrix on the right side of multiplication
+        """
+        
+        # check if the number of columns of the calling matrix equals the number of rows of the target matrix
+        if self.n_cols != target_matrix.get_height():
+            raise Exception("Cannot perform matrix multiplication because the number of columns in the left matrix doesn't match the number of rows in the right matrix. Left matrix has " + str(self.n_cols) + " columns, right matrix has " + str(target_matrix.get_height()) + " rows.")
+        
+        n = self.n_rows
+        p = target_matrix.get_width()
+        product_matrix = Matrix(n,p)
+        m = self.n_cols
+
+        # pick tile size
+        T = 4
+        for I in range(0,n,T):
+            for J in range(0,p,T):
+                for K in range(0,m,T):
+                    #print("I" + str(I) + " J" + str(J) + " K" + str(K))
+                    product_matrix[I:min(I+T,n),J:min(J+T,m)] = self[I:min(I+T,n),K:min(K+T,p)].__matrix_multiplication(target_matrix[K:min(K+T,p),J:min(J+T,m)])
+                    #for i in range(I,min(I+T,n)):
+                    #    for j in range(J,min(J+T,p)):
+                    #        summed = 0
+                    #        left_row = self.data[i]
+                    #        for k in range(K,min(K+T,m)):
+                    #            summed = summed + left_row[k]*target_matrix.data[k][j]
+                    #        product_matrix[i,j] = product_matrix[i,j] + summed
+        return product_matrix
+
+    # return matrix product
+    def __matrix_multiplication_dac(self,target_matrix):
+        """Return the matrix product of two matrices.
+        This implementation uses the divide and conquer algorithm, where the matrices are recursively split into submatrices until the dimension is below a certain threshold and we perform a "normal" matrix multiplication.
+        
+        Arguments:
+        target_matrix --- the matrix on the right side of multiplication
+        
+        Raises an exception if the number of columns of the calling matrix does not match the number of rows of the target matrix.
+        """
+        
+        # check if the number of columns of the calling matrix equals the number of rows of the target matrix
+        if self.n_cols != target_matrix.get_height():
+            raise Exception("Cannot perform matrix multiplication because the number of columns in the left matrix doesn't match the number of rows in the right matrix. Left matrix has " + str(self.n_cols) + " columns, right matrix has " + str(target_matrix.get_height()) + " rows.")
+        
+        n = self.n_rows
+        m = self.n_cols
+        p = target_matrix.n_cols
+        # get maximum of n, m, p
+        max_dim = max(n,m,m)
+
+        if max_dim <= 2:
+            return self.__matrix_multiplication(target_matrix)
+        elif max_dim == n:
+            # split the left matrix horizontally
+            #A1 = self[0:n//2,0:m]
+            #A2 = self[n//2:n,0:m]
+            #return (A1*target_matrix).concatenate(A2*target_matrix,dim='vertical')
+            return (self[0:n//2,0:m]*target_matrix).concatenate(self[n//2:n,0:m]*target_matrix,dim='vertical')
+        elif max_dim == p:
+            #split the right matrix vertically
+            #B1 = target_matrix[0:m,0:p//2]
+            #B2 = target_matrix[0:m,p//2:p]
+            #return (self*B1).concatenate(self*B2)
+            return (self*target_matrix[0:m,0:p//2]).concatenate(self*target_matrix[0:m,p//2:p])
+        else:
+            # split A vertically and B horizontally
+            #A1 = self[0:n,0:m//2]
+            #A2 = self[0:n,m//2:m]
+            #B1 = target_matrix[0:m//2,0:p]
+            #B2 = target_matrix[m//2:m,0:p]
+            #return A1*B1 + A2*B2
+            return self[0:n,0:m//2]*target_matrix[0:m//2,0:p] + self[0:n,m//2:m]*target_matrix[m//2:m,0:p]
+
+
+    
+    # concatenate two matrices to form a new one
+    def concatenate(self,other,dim='horizontal'):
+        """Return a new matrix that is the concatenation of the calling matrix and another matrix.
+        
+        Arguments:
+        other -- the matrix that is concatenated to the calling matrix
+        dim -- string: the dimension along which the matrices are concatenated, either 'horizontal' where the width of the matrix increases or 'vertical' where the height of the matrix increases (default 'horizontal')
+        """
+        if dim == 'horizontal':
+            new_data = [x + y for x,y in zip(self.data, other.data)]
+        elif dim == 'vertical':
+            new_data = self.data
+            for i in other.data:
+                new_data.append(i)
+        return Matrix(new_data)
     
     # return scalar multiplied matrix
     def __scalar_multiplication(self,scalar):

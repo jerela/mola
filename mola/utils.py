@@ -1,5 +1,21 @@
+import random
 from mola.matrix import Matrix
 
+
+
+def randoms(height,width):
+    """
+    Return a matrix where all elements are random numbers between 0 and 1.
+    
+    Arguments:
+    height -- unsigned integer: height of the matrix
+    width -- unsigned integer: width of the matrix
+    """
+    mat = Matrix(height,width)
+    for row in range(height):
+        for col in range(width):
+            mat.set(row,col,random.random())
+    return mat
 
 def read_matrix_from_file(file_name, delimiter = ','):
     """
