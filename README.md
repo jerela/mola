@@ -24,6 +24,13 @@ See main.py for examples and read the documentation.
 
 - Python 3.x (written on Python 3.9, so that's sure to work)
 
+## Current features
+
+- basic matrix operations implemented (addition, multiplication, transpose, inverse)
+- user-friendly wrappers for function fitting (including linear least squares regression, Tikhonov regularization, Gauss-Newton iteration for nonlinear fitting)
+- some basic matrix decompositions (QR decomposition and eigendecomposition)
+
+
 ## Classes
 
 ### Matrix
@@ -33,10 +40,7 @@ See main.py for examples and read the documentation.
 ## TODO:
 - checks to see if matrix is positive/negative definite/semidefinite
 - different matrix norms (only Frobenius and Euclidean norm implemented right now)
-- Gauss-Newton iteration
-- Levenberg-Marquardt algorithm
-- regularized least squares
-- more decompositions (only QR implemented so far)
+- more decompositions
 
 ## License
 

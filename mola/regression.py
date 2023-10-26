@@ -1,5 +1,5 @@
 from mola.matrix import Matrix
-from mola.utils import identity, ones
+from mola.utils import identity, ones, zeros, randoms
 from copy import deepcopy
 
 def linear_least_squares(H,z,W=None):
@@ -65,6 +65,42 @@ def fit_univariate_polynomial(independent_values, dependent_values, degrees=[1],
     th_tuple = tuple(th.get_column(0))
     return th_tuple
 
+# fit nonlinear function parameters using Gauss-Newton iteration
+def fit_nonlinear(independent_values, dependent_values, h, J, initial=None, max_iters = 1e2):
+    """Returns the estimated parameters of a nonlinear model using the Gauss-Newton iteration algorithm.
+    
+    Arguments:
+    independent_values -- Matrix: the matrix of independent values
+    dependent_values -- Matrix: the matrix of dependent values
+    h -- Matrix: the model function
+    J -- Matrix: the Jacobian matrix of the model function
+    initial -- Matrix: the initial guess of the parameters (default None, in which case they are randomized)
+    max_iters -- int: the maximum number of iterations (default 100)
+    """
 
+    # if no initial guess is given, randomize it
+    if initial is None:
+        initial = randoms(1,J.get_width())
+    theta = initial
+    
+    # set the step size
+    k = 0.05
 
+    # get the number of data points
+    n_samples = independent_values.get_height()
 
+    # initialize the matrices H and Jh that will later hold the model function and Jacobian for each sample and latest parameter estimates
+    H = zeros(n_samples,h.get_width())
+    Jh = zeros(n_samples,J.get_width())
+        
+    # main loop
+    for i in range(int(max_iters)):
+        # evaluate the model function and Jacobian for each samples and each unknown parameter using the latest parameter estimates
+        for sample in range(n_samples):
+            for col in range(h.get_width()):
+                H[sample,col] = h.get(0,col)(theta.get(0,col),independent_values.get(sample,col))
+                Jh[sample,col] = J.get(0,col)(theta.get(0,col),independent_values.get(sample,col))
+        # update theta
+        theta = theta + (Jh.get_transpose()*Jh).get_inverse() * Jh.get_transpose() * (dependent_values - H)
+
+    return tuple(theta.get_column(0))
