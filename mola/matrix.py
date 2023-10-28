@@ -198,7 +198,7 @@ class Matrix:
         if isinstance(self,Matrix) and isinstance(other,Matrix):
             # check if the number of columns of the calling matrix equals the number of rows of the target matrix
             if self.n_cols != other.get_height():
-                raise Exception("Cannot perform matrix multiplication because the number of columns in the left matrix doesn't match the number of rows in the right matrix. Left matrix has " + str(self.n_cols) + " columns, right matrix has " + str(target_matrix.get_height()) + " rows.")
+                raise Exception("Cannot perform matrix multiplication because the number of columns in the left matrix doesn't match the number of rows in the right matrix. Left matrix has " + str(self.n_cols) + " columns, right matrix has " + str(other.get_height()) + " rows.")
             # for small matrices, use the naive method for matrix multiplication; otherwise, transpose the target matrix on the right first
             if self.n_cols < 10:
                 return self.__matrix_multiplication_naive(other)
