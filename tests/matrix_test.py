@@ -17,9 +17,11 @@ def test_inverse():
     product = matrix*inverse
     assert(product==identity_matrix)
         
-def test_read_file():
-    mat = utils.read_matrix_from_file('data.txt')
-    assert(mat==Matrix([ [1,2,3],[4,5,6],[5,6,7] ]))
+def test_read_write():
+    mat1 = Matrix([ [1,2,3],[4,5,6],[5,6,7] ])
+    utils.write_matrix_to_file(mat1,'data.txt')
+    mat2 = utils.read_matrix_from_file('data.txt')
+    assert(mat2==Matrix([ [1,2,3],[4,5,6],[5,6,7] ]))
         
 def test_multiplication():
     mat1 = Matrix(3,5,1)

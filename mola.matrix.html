@@ -81,6 +81,7 @@ Raises&nbsp;an&nbsp;exception&nbsp;if&nbsp;'idx'&nbsp;is&nbsp;not&nbsp;recognize
 
 <dl><dt><a name="Matrix-__mul__"><strong>__mul__</strong></a>(self, other)</dt><dd><tt>Return&nbsp;the&nbsp;matrix&nbsp;product&nbsp;or&nbsp;scalar&nbsp;product&nbsp;of&nbsp;a&nbsp;matrix&nbsp;and&nbsp;the&nbsp;<a href="builtins.html#object">object</a>&nbsp;'other'&nbsp;multiplied&nbsp;from&nbsp;the&nbsp;right.<br>
 Overloads&nbsp;the&nbsp;multiplication&nbsp;*&nbsp;operator.<br>
+This&nbsp;function&nbsp;doesn't&nbsp;handle&nbsp;the&nbsp;calculations,&nbsp;but&nbsp;rather&nbsp;calls&nbsp;the&nbsp;appropriate&nbsp;function&nbsp;depending&nbsp;on&nbsp;the&nbsp;type&nbsp;of&nbsp;the&nbsp;inputs.<br>
 &nbsp;<br>
 Arguments:<br>
 other&nbsp;--&nbsp;<a href="#Matrix">Matrix</a>&nbsp;or&nbsp;scalar,&nbsp;the&nbsp;term&nbsp;that&nbsp;is&nbsp;multiplied&nbsp;with&nbsp;the&nbsp;matrix<br>
@@ -88,7 +89,7 @@ other&nbsp;--&nbsp;<a href="#Matrix">Matrix</a>&nbsp;or&nbsp;scalar,&nbsp;the&nb
 If&nbsp;'other'&nbsp;is&nbsp;a&nbsp;<a href="#Matrix">Matrix</a>,&nbsp;the&nbsp;output&nbsp;is&nbsp;a&nbsp;matrix&nbsp;that&nbsp;is&nbsp;the&nbsp;product&nbsp;of&nbsp;the&nbsp;two&nbsp;matrices.<br>
 If&nbsp;'other'&nbsp;is&nbsp;an&nbsp;int&nbsp;or&nbsp;a&nbsp;float,&nbsp;the&nbsp;output&nbsp;a&nbsp;matrix&nbsp;whose&nbsp;elements&nbsp;have&nbsp;been&nbsp;multiplied&nbsp;by&nbsp;'other'.<br>
 &nbsp;<br>
-Raises&nbsp;an&nbsp;exception&nbsp;if&nbsp;'other'&nbsp;is&nbsp;not&nbsp;<a href="#Matrix">Matrix</a>,&nbsp;int&nbsp;or&nbsp;float.</tt></dd></dl>
+Raises&nbsp;an&nbsp;exception&nbsp;if&nbsp;'other'&nbsp;is&nbsp;not&nbsp;<a href="#Matrix">Matrix</a>,&nbsp;int&nbsp;or&nbsp;float,&nbsp;or&nbsp;if&nbsp;'other'&nbsp;is&nbsp;a&nbsp;<a href="#Matrix">Matrix</a>&nbsp;but&nbsp;its&nbsp;dimensions&nbsp;are&nbsp;invalid&nbsp;for&nbsp;multiplication&nbsp;with&nbsp;'self'.</tt></dd></dl>
 
 <dl><dt><a name="Matrix-__rmul__"><strong>__rmul__</strong></a>(self, other)</dt><dd><tt>Return&nbsp;the&nbsp;matrix&nbsp;resulting&nbsp;from&nbsp;a&nbsp;scalar&nbsp;product&nbsp;with&nbsp;the&nbsp;argument.<br>
 &nbsp;<br>

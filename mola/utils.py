@@ -31,9 +31,12 @@ def write_matrix_to_file(matrix, file_name, delimiter = ','):
     # write matrix to file
     for row in range(matrix.get_height()):
         for col in range(matrix.get_width()):
+            # write value of the current element
             file.write(str(matrix.get(row,col)))
+            # if we're not at the end of the row, write the delimiter
             if col < matrix.get_width()-1:
                 file.write(delimiter)
+        # at the end of the row, write a newline character
         file.write('\n')
     file.close()
 

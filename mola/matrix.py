@@ -184,6 +184,7 @@ class Matrix:
         """
         Return the matrix product or scalar product of a matrix and the object 'other' multiplied from the right.
         Overloads the multiplication * operator.
+        This function doesn't handle the calculations, but rather calls the appropriate function depending on the type of the inputs.
         
         Arguments:
         other -- Matrix or scalar, the term that is multiplied with the matrix
@@ -191,10 +192,18 @@ class Matrix:
         If 'other' is a Matrix, the output is a matrix that is the product of the two matrices.
         If 'other' is an int or a float, the output a matrix whose elements have been multiplied by 'other'.
         
-        Raises an exception if 'other' is not Matrix, int or float.
+        Raises an exception if 'other' is not Matrix, int or float, or if 'other' is a Matrix but its dimensions are invalid for multiplication with 'self'.
         """
+        
         if isinstance(self,Matrix) and isinstance(other,Matrix):
-            return self.__matrix_multiplication_transposed(other)
+            # check if the number of columns of the calling matrix equals the number of rows of the target matrix
+            if self.n_cols != other.get_height():
+                raise Exception("Cannot perform matrix multiplication because the number of columns in the left matrix doesn't match the number of rows in the right matrix. Left matrix has " + str(self.n_cols) + " columns, right matrix has " + str(target_matrix.get_height()) + " rows.")
+            # for small matrices, use the naive method for matrix multiplication; otherwise, transpose the target matrix on the right first
+            if self.n_cols < 10:
+                return self.__matrix_multiplication_naive(other)
+            else:
+                return self.__matrix_multiplication_transposed(other)
         elif isinstance(self,Matrix) and isinstance(other,int):
             return self.__scalar_multiplication(other)
         elif isinstance(self,Matrix) and isinstance(other,float):
@@ -450,11 +459,6 @@ class Matrix:
         Arguments:
         target_matrix --- the matrix on the right side of multiplication
         """
-        
-        # check if the number of columns of the calling matrix equals the number of rows of the target matrix
-        if self.n_cols != target_matrix.get_height():
-            raise Exception("Cannot perform matrix multiplication because the number of columns in the left matrix doesn't match the number of rows in the right matrix. Left matrix has " + str(self.n_cols) + " columns, right matrix has " + str(target_matrix.get_height()) + " rows.")
-        
         n_rows = self.n_rows
         n_cols = target_matrix.get_width()
         product_matrix = Matrix(n_rows,n_cols)
@@ -477,14 +481,11 @@ class Matrix:
     def __matrix_multiplication_transposed(self,target_matrix):
         """Return the matrix product of two matrices.
         
+        Transposes the data of the matrix on the right before entering the multiplication loop. This improves performance for matrices that aren't very small (width or height is greater than 10) compared to the "naive" approach.
+        
         Arguments:
         target_matrix --- the matrix on the right side of multiplication
-        """
-        
-        # check if the number of columns of the calling matrix equals the number of rows of the target matrix
-        if self.n_cols != target_matrix.get_height():
-            raise Exception("Cannot perform matrix multiplication because the number of columns in the left matrix doesn't match the number of rows in the right matrix. Left matrix has " + str(self.n_cols) + " columns, right matrix has " + str(target_matrix.get_height()) + " rows.")
-        
+        """        
         n_rows = self.n_rows
         n_cols = target_matrix.get_width()
         product_matrix = Matrix(n_rows,n_cols)
@@ -527,11 +528,6 @@ class Matrix:
         Arguments:
         target_matrix --- the matrix on the right side of multiplication
         """
-        
-        # check if the number of columns of the calling matrix equals the number of rows of the target matrix
-        if self.n_cols != target_matrix.get_height():
-            raise Exception("Cannot perform matrix multiplication because the number of columns in the left matrix doesn't match the number of rows in the right matrix. Left matrix has " + str(self.n_cols) + " columns, right matrix has " + str(target_matrix.get_height()) + " rows.")
-        
         n = self.n_rows
         p = target_matrix.get_width()
         product_matrix = Matrix(n,p)

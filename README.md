@@ -40,7 +40,11 @@ See main.py for examples and read the documentation.
 ## TODO:
 - checks to see if matrix is positive/negative definite/semidefinite
 - different matrix norms (only Frobenius and Euclidean norm implemented right now)
-- more decompositions
+- more decompositions (SVD)
+- user-friendly wrapper for logistic regression
+- clustering (k-means clustering, mountain clustering, subtractive clustering)
+- preprocessing functions for matrix data (center and scale, e.g., z-scores)
+- labeled matrices
 
 ## License
 
