@@ -194,7 +194,7 @@ class Matrix:
         Raises an exception if 'other' is not Matrix, int or float.
         """
         if isinstance(self,Matrix) and isinstance(other,Matrix):
-            return self.__matrix_multiplication(other)
+            return self.__matrix_multiplication_transposed(other)
         elif isinstance(self,Matrix) and isinstance(other,int):
             return self.__scalar_multiplication(other)
         elif isinstance(self,Matrix) and isinstance(other,float):
@@ -443,8 +443,8 @@ class Matrix:
         calling_matrix.transpose()
         return calling_matrix
 
-    # return matrix product
-    def __matrix_multiplication(self,target_matrix):
+    # return matrix product; this is faster than the transposed version for small matrices
+    def __matrix_multiplication_naive(self,target_matrix):
         """Return the matrix product of two matrices.
         
         Arguments:
@@ -469,6 +469,53 @@ class Matrix:
                 new_elem = 0
                 for x in range(length):
                     new_elem = new_elem + current_row[x]*target_matrix.data[x][j]
+                product_matrix.set(i,j,new_elem)
+            
+        return product_matrix
+
+    # return matrix product where the data of the target matrix is first transposed; this faster than the naive version for large matrices
+    def __matrix_multiplication_transposed(self,target_matrix):
+        """Return the matrix product of two matrices.
+        
+        Arguments:
+        target_matrix --- the matrix on the right side of multiplication
+        """
+        
+        # check if the number of columns of the calling matrix equals the number of rows of the target matrix
+        if self.n_cols != target_matrix.get_height():
+            raise Exception("Cannot perform matrix multiplication because the number of columns in the left matrix doesn't match the number of rows in the right matrix. Left matrix has " + str(self.n_cols) + " columns, right matrix has " + str(target_matrix.get_height()) + " rows.")
+        
+        n_rows = self.n_rows
+        n_cols = target_matrix.get_width()
+        product_matrix = Matrix(n_rows,n_cols)
+        length = self.n_cols
+
+        # transpose the data of the target matrix so that its elements can be accessed more efficiently in the multiplication loop
+        target_data = target_matrix.data
+        target_data_transposed = []
+        for col in range(target_matrix.get_width()):
+            new_row = []
+            for row in range(target_matrix.get_height()):
+                new_row.append(target_data[row][col])
+            target_data_transposed.append(new_row)
+                
+
+#        target_transpose = target_matrix.get_transpose()
+
+        # loop through rows in the calling matrix
+        for i in range(n_rows):
+            # get current row of the calling matrix so using it is faster later
+            current_row = self.get_row(i)
+            # loop through the columns of the target matrix
+            for j in range(n_cols):
+                # get current row of the target matrix so using it is faster in the following loop
+                current_row_target = target_data_transposed[j]
+                # initialize the sum to zero
+                new_elem = 0
+                # loop through the elements of the current row of the calling matrix and the current column of the target matrix
+                for x in range(length):
+                    new_elem = new_elem + current_row[x]*current_row_target[x]
+                # set the element of the product matrix
                 product_matrix.set(i,j,new_elem)
             
         return product_matrix

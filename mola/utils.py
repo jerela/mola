@@ -17,6 +17,26 @@ def randoms(height,width):
             mat.set(row,col,random.random())
     return mat
 
+def write_matrix_to_file(matrix, file_name, delimiter = ','):
+    """
+    Write a matrix to a text file.
+    
+    Arguments:
+    matrix -- Matrix: the matrix to write to the file
+    file_name -- string: the name of the file to write to
+    delimiter -- character: specifies the delimiter that separates data values in the text file (default ,)
+    """
+    # open file for writing
+    file = open(file_name,'w')
+    # write matrix to file
+    for row in range(matrix.get_height()):
+        for col in range(matrix.get_width()):
+            file.write(str(matrix.get(row,col)))
+            if col < matrix.get_width()-1:
+                file.write(delimiter)
+        file.write('\n')
+    file.close()
+
 def read_matrix_from_file(file_name, delimiter = ','):
     """
     Return a matrix constructed from the contents of a text file.

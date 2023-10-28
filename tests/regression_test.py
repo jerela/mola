@@ -18,3 +18,13 @@ def test_first_order_polynomial_regression():
     independent_values = Matrix([ [2],[4],[6] ])
     dependent_values = Matrix([[0],[1],[2]])
     assert(utils.equals_approx(regression.fit_univariate_polynomial(independent_values, dependent_values, degrees=[1, 2], intercept=True), (0.5, 0, -1)))
+
+def test_nonlinear_regression():
+    h = Matrix([lambda a,x: pow(a,x)])
+    independents = Matrix([1, 2, 3])
+    y = Matrix([2, 4, 8])
+    # let J be the Jacobian of h(x)
+    J = Matrix([lambda a,x: x*pow(a,x-1)])
+    # estimate the parameter (the base a of a^x)
+    theta = regression.fit_nonlinear(independents, y, h, J, initial=Matrix([0.5]))
+    assert(theta[0] == 2)

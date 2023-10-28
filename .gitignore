@@ -363,3 +363,6 @@ MigrationBackup/
 FodyWeavers.xsd
 python-linear-algebra.sln
 python-linear-algebra.pyproj
+
+# folder with matrices as text files
+data/
