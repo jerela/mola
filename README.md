@@ -1,4 +1,4 @@
-# Matrix operations and linear algebra (mola) library for vanilla Python
+# Matrix operations and linear algebra (mola) library for core Python
 
 - [Introduction](#introduction)
 - [Getting started](#getting-started)
@@ -10,13 +10,13 @@
 
 ## Introduction
 
-**mola** is a Python library for doing algebra with matrices. It covers the basic operations such as matrix addition and multiplication, transposes, and inverse. It is written without any external Python libraries.
+**mola** is a Python library for doing algebra with matrices. It covers the basic operations such as matrix addition and multiplication, transposes, and inverse. Additionally, it has some miscellaneous data analytical tools for regression, clustering etc. It is written without any external Python libraries.
 
 I wrote **mola** as a hobby project to remind myself of the linear algebra I studied in uni and to practice my Python programming. Particularly, this is an exercise in publishing my first Python library.
 
 ## Getting started
 
-Install with "pip install mola" or the GitHub repository for a more recent version.
+Install with "pip install mola" or download the GitHub repository for a more recent version.
 
 See main.py for examples and read the documentation.
 
@@ -29,7 +29,7 @@ See main.py for examples and read the documentation.
 - basic matrix operations implemented (addition, multiplication, transpose, inverse)
 - user-friendly wrappers for function fitting (including linear least squares regression, Tikhonov regularization, Gauss-Newton iteration for nonlinear fitting)
 - some basic matrix decompositions (QR decomposition and eigendecomposition)
-
+- clustering with hard k-means and fuzzy c-means
 
 ## Classes
 
@@ -42,7 +42,7 @@ See main.py for examples and read the documentation.
 - different matrix norms (only Frobenius and Euclidean norm implemented right now)
 - more decompositions (SVD)
 - user-friendly wrapper for logistic regression
-- clustering (k-means clustering, mountain clustering, subtractive clustering)
+- more clustering algorithms (mountain clustering, subtractive clustering)
 - preprocessing functions for matrix data (center and scale, e.g., z-scores)
 - labeled matrices
 
