@@ -33,6 +33,11 @@ right&nbsp;--&nbsp;Matrix,&nbsp;list,&nbsp;tuple&nbsp;or&nbsp;a&nbsp;single&nbsp
 precision&nbsp;--&nbsp;float:&nbsp;the&nbsp;maximum&nbsp;allowed&nbsp;difference&nbsp;between&nbsp;matching&nbsp;elements&nbsp;(default&nbsp;1e-12)<br>
 &nbsp;<br>
 Raises&nbsp;an&nbsp;exception&nbsp;if&nbsp;'left'&nbsp;and&nbsp;'right'&nbsp;have&nbsp;different&nbsp;dimensions.</tt></dd></dl>
+ <dl><dt><a name="-get_mean"><strong>get_mean</strong></a>(data, along='col')</dt><dd><tt>Return&nbsp;the&nbsp;mean&nbsp;of&nbsp;a&nbsp;matrix.<br>
+&nbsp;<br>
+Arguments:<br>
+data&nbsp;--&nbsp;Matrix:&nbsp;the&nbsp;matrix&nbsp;whose&nbsp;mean&nbsp;is&nbsp;to&nbsp;be&nbsp;calculated<br>
+along&nbsp;--&nbsp;string:&nbsp;the&nbsp;dimension&nbsp;along&nbsp;which&nbsp;the&nbsp;mean&nbsp;is&nbsp;to&nbsp;be&nbsp;calculated&nbsp;(default&nbsp;'col')</tt></dd></dl>
  <dl><dt><a name="-identity"><strong>identity</strong></a>(rows, cols=None)</dt><dd><tt>Return&nbsp;a&nbsp;square&nbsp;identity&nbsp;matrix.<br>
 &nbsp;<br>
 Arguments:<br>
@@ -56,6 +61,14 @@ Arguments:<br>
 delimiter&nbsp;--&nbsp;character:&nbsp;specifies&nbsp;the&nbsp;delimiter&nbsp;that&nbsp;separates&nbsp;data&nbsp;values&nbsp;in&nbsp;the&nbsp;text&nbsp;file&nbsp;(default&nbsp;,)<br>
 &nbsp;<br>
 If&nbsp;no&nbsp;delimiter&nbsp;is&nbsp;given,&nbsp;the&nbsp;file&nbsp;is&nbsp;assumed&nbsp;to&nbsp;be&nbsp;in&nbsp;comma-separated&nbsp;values&nbsp;format.</tt></dd></dl>
+ <dl><dt><a name="-transpose_list"><strong>transpose_list</strong></a>(data)</dt><dd><tt>Return&nbsp;the&nbsp;transpose&nbsp;of&nbsp;a&nbsp;2D&nbsp;list.<br>
+&nbsp;<br>
+Arguments:<br>
+data&nbsp;--&nbsp;list:&nbsp;the&nbsp;2D&nbsp;list&nbsp;to&nbsp;be&nbsp;transposed</tt></dd></dl>
+ <dl><dt><a name="-uniques"><strong>uniques</strong></a>(data)</dt><dd><tt>Return&nbsp;the&nbsp;unique&nbsp;rows&nbsp;of&nbsp;a&nbsp;2D&nbsp;matrix&nbsp;or&nbsp;list.<br>
+&nbsp;<br>
+Arguments:<br>
+data&nbsp;--&nbsp;Matrix&nbsp;or&nbsp;list:&nbsp;the&nbsp;matrix&nbsp;or&nbsp;list&nbsp;whose&nbsp;unique&nbsp;rows&nbsp;are&nbsp;to&nbsp;be&nbsp;returned</tt></dd></dl>
  <dl><dt><a name="-write_matrix_to_file"><strong>write_matrix_to_file</strong></a>(matrix, file_name, delimiter=',')</dt><dd><tt>Write&nbsp;a&nbsp;matrix&nbsp;to&nbsp;a&nbsp;text&nbsp;file.<br>
 &nbsp;<br>
 Arguments:<br>

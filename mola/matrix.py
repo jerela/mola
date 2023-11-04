@@ -370,9 +370,6 @@ class Matrix:
         """Get the element at specified position."""
         return self.data[i][j]
 
-    def __len__(self):
-        return self.n_rows
-
     # define what happens when the matrix is converted to a string, such as when print(Matrix) is called
     def __str__(self, precision = 4):
         """Define the string representation of Matrix.
