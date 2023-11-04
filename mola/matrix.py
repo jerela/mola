@@ -152,6 +152,15 @@ class Matrix:
                         self.data[r][c] = value.data[i][j]
                         j = j + 1
                     i = i + 1
+            #otherwise, if either of the indices is a slice and the given value is a matrix object
+            elif isinstance(value,Matrix) and isinstance(rows,int) and isinstance(cols,slice):
+                i = 0
+                if cols == slice(None,None,None):
+                    cols = slice(0,self.n_cols,1)
+                for c in range(cols.start, cols.stop, 1):
+                    self.data[rows][c] = value.data[i][c]
+            else:
+                raise Exception("Undefined behaviour in setitem. Needs to be defined.")
         else:
             raise Exception("invalid setitem arg")
         
@@ -276,7 +285,7 @@ class Matrix:
         """
         output = Matrix(self.n_rows,self.n_cols,0)
         if self.n_rows != other.n_rows or self.n_cols != other.n_cols:
-            raise Exception("Matrix dimensions must match for elementwise addition or subtraction!")
+            raise Exception("Matrix dimensions must match for elementwise addition or subtraction! Left side is ", str(self.n_rows), "x", str(self.n_cols), " and right side is ", str(other.get_height()), "x", str(other.get_width()), "!")
         for i in range(self.n_rows):
             for j in range(self.n_cols):
                 output.set(i,j,self[i,j]+other[i,j])
@@ -360,6 +369,9 @@ class Matrix:
     def get(self,i,j):
         """Get the element at specified position."""
         return self.data[i][j]
+
+    def __len__(self):
+        return self.n_rows
 
     # define what happens when the matrix is converted to a string, such as when print(Matrix) is called
     def __str__(self, precision = 4):

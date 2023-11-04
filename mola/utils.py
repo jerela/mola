@@ -132,3 +132,72 @@ def equals_approx(left,right,precision=1e-12):
         if abs(left-right) > precision:
             equals = False
     return equals
+
+
+# calculate the mean of a matrix
+def get_mean(data, along='col'):
+    """
+    Return the mean of a matrix.
+    
+    Arguments:
+    data -- Matrix: the matrix whose mean is to be calculated
+    along -- string: the dimension along which the mean is to be calculated (default 'col')
+    """
+    
+    
+    if isinstance(data,Matrix):
+        operable_data = data.data
+    elif isinstance(data,list):
+        operable_data = data
+    else:
+        raise Exception("exception in utils.mean(): unidentified data type")    
+
+    if along=='col':
+        operable_data = transpose_list(operable_data)
+
+
+    return Matrix([sum(row)/len(row) for row in operable_data])
+    
+
+# transpose a 2D list
+def transpose_list(data):
+    """
+    Return the transpose of a 2D list.
+    
+    Arguments:
+    data -- list: the 2D list to be transposed
+    """
+    width = len(data[0])
+    height = len(data)
+    data_transposed = []
+    for col in range(width):
+        new_row = []
+        for row in range(height):
+            new_row.append(data[row][col])
+        data_transposed.append(new_row)
+    return data_transposed
+
+
+
+# return the unique rows of a matrix or a list
+def uniques(data):
+    """
+    Return the unique rows of a 2D matrix or list.
+    
+    Arguments:
+    data -- Matrix or list: the matrix or list whose unique rows are to be returned
+    """
+
+    # convert to lists if necessary
+    if isinstance(data,Matrix):
+        operable_data = data.data
+    elif isinstance(data,list):
+        operable_data = data
+    else:
+        raise Exception("exception in utils.uniques(): unidentified data type")
+    
+    unique_rows = []
+    for row in operable_data:
+        if row not in unique_rows:
+            unique_rows.append(row)
+    return unique_rows
