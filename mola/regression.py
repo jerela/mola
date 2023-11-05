@@ -2,7 +2,7 @@ from mola.matrix import Matrix
 from mola.utils import identity, ones, zeros, randoms
 from copy import deepcopy
 
-def linear_least_squares(H,z,W=None):
+def linear_least_squares(H: Matrix, z: Matrix, W=None):
     """
     Return the parameters of a first-order polynomial in a tuple.
     The parameters are the slope (first element) and the intercept (second element).
@@ -66,8 +66,9 @@ def fit_univariate_polynomial(independent_values, dependent_values, degrees=[1],
     return th_tuple
 
 # fit nonlinear function parameters using Gauss-Newton iteration
-def fit_nonlinear(independent_values, dependent_values, h, J, initial=None, max_iters = 1e2):
-    """Returns the estimated parameters of a nonlinear model using the Gauss-Newton iteration algorithm.
+def fit_nonlinear(independent_values, dependent_values, h, J, initial=None, max_iters = 100):
+    """
+    Return the estimated parameters of a nonlinear model using the Gauss-Newton iteration algorithm.
     
     Arguments:
     independent_values -- Matrix: the matrix of independent values
@@ -94,7 +95,7 @@ def fit_nonlinear(independent_values, dependent_values, h, J, initial=None, max_
     Jh = zeros(n_samples,J.get_width())
         
     # main loop
-    for i in range(int(max_iters)):
+    for i in range(max_iters):
         # evaluate the model function and Jacobian for each samples and each unknown parameter using the latest parameter estimates
         for sample in range(n_samples):
             for col in range(h.get_width()):

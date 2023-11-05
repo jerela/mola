@@ -45,6 +45,7 @@ See main.py for examples and read the documentation.
 - more clustering algorithms (mountain clustering, subtractive clustering)
 - preprocessing functions for matrix data (center and scale, e.g., z-scores)
 - labeled matrices
+- example data analysis project to showcase existing features
 
 ## License
 

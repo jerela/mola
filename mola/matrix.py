@@ -5,7 +5,7 @@ import random
 
 class Matrix:
     """
-    Class that represents a real matrix used in linear algebra tasks. The number of rows and columns are defined by you and settable. Methods include transpose, inverse, norms, etc.
+    Class that represents a real matrix used in linear algebra tasks. Methods include transpose, inverse, norms, etc. The values of the matrix are stored in a nested list where the outer list contains the rows of the matrix and the inner lists (the rows) contain the elements of the rows. Therefore, when accessing the data, the first index refers to the row and the second index refers to the column.
     
     Attributes:
     data -- nested list: contains the numeric values in the matrix, implemented as a list of lists that represent the rows of the matrix
@@ -28,7 +28,7 @@ class Matrix:
     # construct a matrix with r rows, c columns, and some initial value (default 0)
     def __construct_by_dimensions(self,r,c,value=0):
         """
-        Return a matrix of specified dimensions.
+        Return a matrix of specified dimensions. The elements are initialized to the specified value. If no value is provided, all elements are set to zero.
         
         Arguments:
         r -- unsigned integer: the number of rows
@@ -53,14 +53,15 @@ class Matrix:
         Arguments:
         lists -- the list or nested list to set as the underlying data of the matrix
         """
-        # first check if lists is just an int
+        # first check if lists is just an int; with how the class manages constructors, this condition should no longer occur
         if isinstance(lists,int):
             self.n_rows = 1
             self.n_cols = 1
             col = []
             col.append([lists])
             self.data = col
-        # check if list is more than 1D (assumedly 2D)
+            raise Exception("Input parameter in constructor was an integer but code was executed in condition that should be deprecated in Matrix::construct_from_lists()")
+        # check if list is more than 1D (assumedly 2D) by seeing if the first element in the input parameter list is also a list
         elif isinstance(lists[0],list):
             self.n_rows = len(lists)
             self.n_cols = len(lists[0])
@@ -69,6 +70,7 @@ class Matrix:
                 row = lists[j]
                 col.append(row)
             self.data = col
+        # if the input parameter was not a nested list, assume it was a simple 1D list and construct a matrix with a single column
         elif isinstance(lists,list):
             self.n_rows = len(lists)
             self.n_cols = 1
@@ -79,8 +81,17 @@ class Matrix:
             self.data = col        
 
     def __abs__(self):
+        """
+        Return the absolute value of a 1x1 matrix (i.e., a matrix with just one element).
+        The returned value is a numeric type, not a matrix.
+        
+        Raises an exception if the matrix is larger than 1x1.
+        """
         if self.n_rows == 1 and self.n_cols == 1:
             return abs(self.data[0][0])
+        else:
+            raise Exception("Matrix is larger than 1x1 in Matrix::abs()")
+        
         
     # overload square brackets ([]) operator
     # first to get data
@@ -94,23 +105,26 @@ class Matrix:
         
         Raises an exception if 'idx' is not recognized as a type with defined behaviour.
         """
+        # first, check if the given index is a slice (several rows as index) or an integer (only one row as the index)
         if isinstance(idx, slice) or isinstance(idx,int):
+            # if the index is a slice, return a matrix with the specified row(s)
             return Matrix(self.data[idx])
+        # otherwise, check if the given index is a tuple of two slices or integers (i.e., both row(s) and column(s) defined as the index)
         elif isinstance(idx,tuple):
             rows,cols = idx
-            # rows is int and cols is slice:
+            # rows is int and cols is slice (several values from a single row are queried)
             if isinstance(rows,int) and isinstance(cols,slice):
                 #sliced_data = Matrix(self.data[rows][cols])
                 return Matrix(self.data[rows][cols])
-            # rows is int and cols is int
+            # rows is int and cols is int (one value from given row and column indices is queried)
             elif isinstance(rows,int) and isinstance(cols,int):
                 #sliced_data = self.data[rows][cols]
                 return self.data[rows][cols]
-            # rows is slice and cols is int
+            # rows is slice and cols is int (several values from a single column are queried)
             elif isinstance(rows,slice) and isinstance(cols,int):
                 #sliced_data = Matrix([r[cols] for r in self.data[rows]])
                 return Matrix([r[cols] for r in self.data[rows]])
-            # if both are slices
+            # if both are slices (a submatrix is queried)
             elif isinstance(rows,slice) and isinstance(cols,slice):
                 #newlist = [r[cols] for r in self.data[rows]]
                 #sliced_data = Matrix(newlist)
@@ -193,7 +207,7 @@ class Matrix:
         """
         Return the matrix product or scalar product of a matrix and the object 'other' multiplied from the right.
         Overloads the multiplication * operator.
-        This function doesn't handle the calculations, but rather calls the appropriate function depending on the type of the inputs.
+        This function doesn't handle the calculations, but rather calls the appropriate algorithm depending on the type of the inputs.
         
         Arguments:
         other -- Matrix or scalar, the term that is multiplied with the matrix
@@ -203,7 +217,7 @@ class Matrix:
         
         Raises an exception if 'other' is not Matrix, int or float, or if 'other' is a Matrix but its dimensions are invalid for multiplication with 'self'.
         """
-        
+        # if both left and right are matrices, perform matrix multiplication
         if isinstance(self,Matrix) and isinstance(other,Matrix):
             # check if the number of columns of the calling matrix equals the number of rows of the target matrix
             if self.n_cols != other.get_height():
@@ -213,13 +227,15 @@ class Matrix:
                 return self.__matrix_multiplication_naive(other)
             else:
                 return self.__matrix_multiplication_transposed(other)
+        # otherwise, if left side is a matrix and right side is a scalar, perform scalar multiplication
         elif isinstance(self,Matrix) and isinstance(other,int):
             return self.__scalar_multiplication(other)
         elif isinstance(self,Matrix) and isinstance(other,float):
             return self.__scalar_multiplication(other)
+        # otherwise, we the operation may not be valid and we raise an exception
         else:
             print(type(other))
-            raise Exception("Cannot identify type of term on right when multiplying!")
+            raise Exception("Cannot identify type of term on right when multiplying in Matrix::mul()")
     
     # enable multiplication from either direction
     def __rmul__(self, other):
@@ -248,9 +264,11 @@ class Matrix:
         
         Raises an exception if matrix dimensions are not 1x1.
         """
+        # if the denominator is a 1x1 matrix, return the element divided by the argument
         if isinstance(other,Matrix):
             if other.n_rows == 1 and other.n_cols == 1:
                 return self.data[0][0]/other
+        # otherwise, assume that the denominator is a numeric type and call mul()
         else:
             return self.__mul__(1/other)
 #            raise Exception("Cannot perform division because matrix dimensions are not 1x1.")
@@ -284,8 +302,10 @@ class Matrix:
         Raises an exception if 'other' is a matrix but its dimensions do not match those of the matrix on the left.
         """
         output = Matrix(self.n_rows,self.n_cols,0)
+        # first, ensure that the dimensions of the matrices match
         if self.n_rows != other.n_rows or self.n_cols != other.n_cols:
             raise Exception("Matrix dimensions must match for elementwise addition or subtraction! Left side is ", str(self.n_rows), "x", str(self.n_cols), " and right side is ", str(other.get_height()), "x", str(other.get_width()), "!")
+        # if we passed the dimension check, we can add the matrices elementwise
         for i in range(self.n_rows):
             for j in range(self.n_cols):
                 output.set(i,j,self[i,j]+other[i,j])
@@ -303,8 +323,10 @@ class Matrix:
         Raises an exception if 'other' is a matrix but its dimensions do not match those of the matrix on the left.
         """
         output = Matrix(self.n_rows,self.n_cols,0)
+        # first, ensure that the dimensions of the matrices match
         if self.n_rows != other.n_rows or self.n_cols != other.n_cols:
             raise Exception("Matrix dimensions must match for elementwise addition or subtraction!")
+        # if we passed the dimension check, we can subtract the matrices elementwise
         for i in range(self.n_rows):
             for j in range(self.n_cols):
                 output.set(i,j,self.data[i][j]-other.data[i][j])
@@ -321,7 +343,7 @@ class Matrix:
         return self.n_cols
     
     # return a row as a list
-    def get_row(self,r,as_list=True):
+    def get_row(self, r: int, as_list=True):
         """
         Return a specified row of the matrix as list or matrix.
         
@@ -334,7 +356,7 @@ class Matrix:
         else:
             return self.construct_from_lists(self.data[r])
     
-    def get_column(self,c,as_list=True):
+    def get_column(self, c: int, as_list=True):
         """
         Return a specified column of the matrix as list or matrix.
         
@@ -351,8 +373,9 @@ class Matrix:
             return self.construct_from_lists(column)
     
     # set a row at given index to given values from a list
-    def set_row(self,r,new_row):
-        """Set the specified row of the matrix.
+    def set_row(self, r: int, new_row: list):
+        """
+        Set the specified row of the matrix.
 
         Arguments:
         r -- unsigned integer: index of the row
@@ -361,22 +384,23 @@ class Matrix:
         self.data[r] = new_row
 
     # set a single value in a given index
-    def set(self,i,j,value):
+    def set(self, i: int, j: int, value):
         """Set the element at specified position."""
         self.data[i][j] = value
 
     # get a single value in a given index
-    def get(self,i,j):
+    def get(self, i: int, j: int):
         """Get the element at specified position."""
         return self.data[i][j]
 
     # define what happens when the matrix is converted to a string, such as when print(Matrix) is called
     def __str__(self, precision = 4):
-        """Define the string representation of Matrix.
+        """
+        Return a string that describes the matrix when string() is called with the matrix as the argument.
+        
+        This function defines the string representation of Matrix.
         Rows are delimited by semicolons and newlines. Elements in a single row are delimited by commas.
         The matrix is enclosed with square brackets.
-        
-        Returns a string that describes the matrix.
         """
         matrix_string = '['
         for i in range(self.n_rows):
@@ -395,11 +419,15 @@ class Matrix:
         Print a string that describes the matrix.
         Rows are delimited by semicolons and newlines. Elements in a single row are delimited by commas.
         The matrix is enclosed with square brackets.
+        Calls the overloaded str() function with the possibility to specify how many decimals are shown.
+        
+        Arguments:
+        precision -- unsigned integer: the number of decimals shown in the output (default 4)
         """
         print(self.__str__(precision))
 
     # check if matrix elements are real
-    def is_real(self):
+    def is_real(self) -> bool:
         """Return true if all elements of the matrix are real-valued. Otherwise, return false."""
         real = True
         for i in range(self.n_rows):
@@ -408,7 +436,7 @@ class Matrix:
                     real = False
         return real
 
-    def is_identity(self):
+    def is_identity(self) -> bool:
         """Return true if the matrix is an identity matrix. Otherwise, return false."""
         identity = True
         for i in range(self.n_rows):
@@ -421,7 +449,7 @@ class Matrix:
                         identity = False
         return identity
 
-    def is_square(self):
+    def is_square(self) -> bool:
         """Return true if the matrix is square (number of columns equals number of rows). Otherwise, return false."""
         return self.n_rows == self.n_cols
 
@@ -443,6 +471,8 @@ class Matrix:
         """
         if self.is_real():
             return self.get_transpose()
+        else:
+            raise Exception("Function Matrix::get_conjugate_transpose() is not defined for non-real matrices yet!")
 
     # transpose a matrix
     def transpose(self):
@@ -654,7 +684,7 @@ class Matrix:
         return det
 
     # check if matrix is singular
-    def is_singular(self):
+    def is_singular(self) -> bool:
         """Return true if the determinant of the matrix is zero. Otherwise, return false."""
         return self.get_determinant() == 0
     
@@ -694,12 +724,12 @@ class Matrix:
         return diagonal
 
     # check if matrix is invertible
-    def is_invertible(self):
+    def is_invertible(self) -> bool:
         """Return true if the matrix is not singular. Otherwise, return false."""
         return not self.is_singular()
     
     # make the matrix an identity matrix
-    def make_identity(self):
+    def make_identity(self) -> None:
         """Set all diagonal elements of the matrix to 1 and all non-diagonal elements to 0."""
         for i in range(self.n_rows):
             for j in range(self.n_cols):
@@ -708,7 +738,7 @@ class Matrix:
                 else:
                     self.set(i,j,0)
 
-    def append_column(self,column):
+    def append_column(self, column) -> None:
         """Append a column to the right of the matrix.
         
         Arguments:
@@ -726,7 +756,7 @@ class Matrix:
             raise Exception("Could not detect type of column to append!")
         self.n_cols = self.n_cols+1
     
-    def append_row(self,row):
+    def append_row(self, row) -> None:
         """Append a row to the bottom of the matrix.
         
         Arguments:
@@ -743,7 +773,7 @@ class Matrix:
         self.n_rows = self.n_rows+1
 
     # check if matrix is symmetric
-    def is_symmetric(self):
+    def is_symmetric(self) -> bool:
         """Return true if the matrix equals its transpose. Otherwise, return false."""
         return self == self.get_transpose()
 
@@ -804,7 +834,7 @@ class Matrix:
     def get_row_echelon_form(self):
         return deepcopy(self).__transform_to_row_echelon_form()
 
-    def count_zero_rows(self):
+    def count_zero_rows(self) -> int:
         """Return the number of rows that have only zero-valued elements."""
         num_zero_rows = 0
         for row in range(self.n_rows):
@@ -812,7 +842,7 @@ class Matrix:
                 num_zero_rows = num_zero_rows + 1
         return num_zero_rows
 
-    def row_is_zeros(self,r):
+    def row_is_zeros(self, r: int) -> bool:
         """
         Return true if all elements in the row are zero-valued. Otherwise, return false.
         

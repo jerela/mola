@@ -25,18 +25,18 @@
 <font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
     
 <tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
-<td width="100%"><dl><dt><a name="-distance_euclidean_pow"><strong>distance_euclidean_pow</strong></a>(p1, p2)</dt><dd><tt>Return&nbsp;the&nbsp;squared&nbsp;Euclidean&nbsp;distance&nbsp;between&nbsp;two&nbsp;points.<br>
+<td width="100%"><dl><dt><a name="-distance_euclidean_pow"><strong>distance_euclidean_pow</strong></a>(p1, p2) -&gt; float</dt><dd><tt>Return&nbsp;the&nbsp;squared&nbsp;Euclidean&nbsp;distance&nbsp;between&nbsp;two&nbsp;points.<br>
 If&nbsp;you&nbsp;want&nbsp;to&nbsp;retrieve&nbsp;the&nbsp;actual&nbsp;Euclidean&nbsp;distance,&nbsp;take&nbsp;the&nbsp;square&nbsp;root&nbsp;of&nbsp;the&nbsp;result.&nbsp;However,&nbsp;using&nbsp;this&nbsp;squared&nbsp;version&nbsp;is&nbsp;computationally&nbsp;more&nbsp;efficient.<br>
 &nbsp;<br>
 Arguments:<br>
 p1&nbsp;--&nbsp;list:&nbsp;the&nbsp;first&nbsp;point<br>
 p2&nbsp;--&nbsp;list:&nbsp;the&nbsp;second&nbsp;point</tt></dd></dl>
- <dl><dt><a name="-distance_taxicab"><strong>distance_taxicab</strong></a>(p1, p2)</dt><dd><tt>Return&nbsp;the&nbsp;taxicab&nbsp;distance&nbsp;(also&nbsp;known&nbsp;as&nbsp;Manhattan&nbsp;distance)&nbsp;between&nbsp;two&nbsp;points.<br>
+ <dl><dt><a name="-distance_taxicab"><strong>distance_taxicab</strong></a>(p1, p2) -&gt; float</dt><dd><tt>Return&nbsp;the&nbsp;taxicab&nbsp;distance&nbsp;(also&nbsp;known&nbsp;as&nbsp;Manhattan&nbsp;distance)&nbsp;between&nbsp;two&nbsp;points.<br>
 &nbsp;<br>
 Arguments:<br>
 p1&nbsp;--&nbsp;list:&nbsp;the&nbsp;first&nbsp;point<br>
 p2&nbsp;--&nbsp;list:&nbsp;the&nbsp;second&nbsp;point</tt></dd></dl>
- <dl><dt><a name="-find_c_means"><strong>find_c_means</strong></a>(data, num_centers=2, max_iterations=100, distance_function=&lt;function distance_euclidean_pow at 0x000002575B236E50&gt;, initial_centers=None)</dt><dd><tt>Return&nbsp;the&nbsp;cluster&nbsp;centers&nbsp;and&nbsp;the&nbsp;membership&nbsp;matrix&nbsp;of&nbsp;points&nbsp;using&nbsp;soft&nbsp;k-means&nbsp;clustering&nbsp;(also&nbsp;known&nbsp;as&nbsp;fuzzy&nbsp;c-means).<br>
+ <dl><dt><a name="-find_c_means"><strong>find_c_means</strong></a>(data: mola.matrix.Matrix, num_centers=2, max_iterations=100, distance_function=&lt;function distance_euclidean_pow at 0x00000256295E9550&gt;, initial_centers=None)</dt><dd><tt>Return&nbsp;the&nbsp;cluster&nbsp;centers&nbsp;and&nbsp;the&nbsp;membership&nbsp;matrix&nbsp;of&nbsp;points&nbsp;using&nbsp;soft&nbsp;k-means&nbsp;clustering&nbsp;(also&nbsp;known&nbsp;as&nbsp;fuzzy&nbsp;c-means).<br>
 &nbsp;<br>
 This&nbsp;algorithm&nbsp;is&nbsp;well-suited&nbsp;to&nbsp;cluster&nbsp;data&nbsp;that&nbsp;is&nbsp;not&nbsp;clearly&nbsp;separable&nbsp;into&nbsp;distinct&nbsp;clusters.<br>
 &nbsp;&nbsp;&nbsp;&nbsp;<br>
@@ -46,7 +46,7 @@ num_centers&nbsp;--&nbsp;int:&nbsp;the&nbsp;number&nbsp;of&nbsp;cluster&nbsp;cen
 max_iterations&nbsp;--&nbsp;int:&nbsp;the&nbsp;maximum&nbsp;number&nbsp;of&nbsp;iterations&nbsp;where&nbsp;cluster&nbsp;centers&nbsp;are&nbsp;updated&nbsp;(default&nbsp;100)<br>
 distance_function&nbsp;--&nbsp;function:&nbsp;the&nbsp;distance&nbsp;function&nbsp;to&nbsp;be&nbsp;used&nbsp;(default&nbsp;Euclidean&nbsp;distance);&nbsp;options&nbsp;are&nbsp;squared&nbsp;Euclidean&nbsp;distance&nbsp;(distance_euclidean_pow)&nbsp;and&nbsp;taxicab&nbsp;distance&nbsp;(distance_taxicab)<br>
 initial_centers&nbsp;--&nbsp;Matrix:&nbsp;the&nbsp;initial&nbsp;cluster&nbsp;centers;&nbsp;if&nbsp;not&nbsp;specified,&nbsp;they&nbsp;are&nbsp;initialized&nbsp;randomly&nbsp;(default&nbsp;None)</tt></dd></dl>
- <dl><dt><a name="-find_k_means"><strong>find_k_means</strong></a>(data, num_centers=2, max_iterations=100, distance_function=&lt;function distance_euclidean_pow at 0x000002575B236E50&gt;, initial_centers=None)</dt><dd><tt>Return&nbsp;the&nbsp;cluster&nbsp;centers&nbsp;using&nbsp;hard&nbsp;k-means&nbsp;clustering.<br>
+ <dl><dt><a name="-find_k_means"><strong>find_k_means</strong></a>(data: mola.matrix.Matrix, num_centers=2, max_iterations=100, distance_function=&lt;function distance_euclidean_pow at 0x00000256295E9550&gt;, initial_centers=None)</dt><dd><tt>Return&nbsp;the&nbsp;cluster&nbsp;centers&nbsp;using&nbsp;hard&nbsp;k-means&nbsp;clustering.<br>
 &nbsp;<br>
 Note&nbsp;that&nbsp;there&nbsp;is&nbsp;no&nbsp;guarantee&nbsp;that&nbsp;the&nbsp;algorithm&nbsp;converges.&nbsp;This&nbsp;is&nbsp;why&nbsp;you&nbsp;should&nbsp;use&nbsp;several&nbsp;restarts&nbsp;or&nbsp;fuzzy&nbsp;k-means&nbsp;(function&nbsp;<a href="#-find_c_means">find_c_means</a>()&nbsp;in&nbsp;this&nbsp;module).<br>
 &nbsp;<br>

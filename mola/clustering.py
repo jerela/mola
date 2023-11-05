@@ -5,7 +5,7 @@ from mola.matrix import Matrix
 from mola.utils import zeros, get_mean, uniques, randoms
 
 # calculate the Euclidean distance between two points; note that this actually returns the squared distance, but because we only need it to compare distances, it doesn't matter and not including the square root is faster to compute
-def distance_euclidean_pow(p1,p2):
+def distance_euclidean_pow(p1,p2) -> float:
     """Return the squared Euclidean distance between two points.
     If you want to retrieve the actual Euclidean distance, take the square root of the result. However, using this squared version is computationally more efficient.
     
@@ -24,7 +24,7 @@ def distance_euclidean_pow(p1,p2):
     return distance
 
 
-def distance_taxicab(p1,p2):
+def distance_taxicab(p1,p2) -> float:
     """
     Return the taxicab distance (also known as Manhattan distance) between two points.
     
@@ -39,7 +39,7 @@ def distance_taxicab(p1,p2):
 
 
 # hard k-means clustering algorithm
-def find_k_means(data, num_centers = 2, max_iterations = 100, distance_function = distance_euclidean_pow, initial_centers = None):
+def find_k_means(data: Matrix, num_centers = 2, max_iterations = 100, distance_function = distance_euclidean_pow, initial_centers = None):
     """
     Return the cluster centers using hard k-means clustering.
     
@@ -111,7 +111,7 @@ def find_k_means(data, num_centers = 2, max_iterations = 100, distance_function 
 
 
 # soft k-means clustering algorithm
-def find_c_means(data, num_centers = 2, max_iterations = 100, distance_function = distance_euclidean_pow, initial_centers = None):
+def find_c_means(data: Matrix, num_centers = 2, max_iterations = 100, distance_function = distance_euclidean_pow, initial_centers = None):
     """
     Return the cluster centers and the membership matrix of points using soft k-means clustering (also known as fuzzy c-means).
     

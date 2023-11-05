@@ -6,12 +6,15 @@ from copy import deepcopy
 from random import random
 
 # QR decomposition using Householder reflections
-def qrd(A_original):
+def qrd(A_original: Matrix):
     """
     Return a two-element tuple of matrices.
     The elements of the tuple are the Q and R matrices from the QR decomposition of the input matrix.
     The original input matrix is decomposed into a rotation matrix Q and an upper triangular matrix R.
     The decomposition is valid for any real square matrix.
+    
+    Arguments:
+    A_original -- Matrix: the matrix to be decomposed
     
     Raises an exception if the matrix is not square.
     """
@@ -57,10 +60,13 @@ def qrd(A_original):
     return (Q.get_transpose(),A)
 
 
-def eigend(S):
+def eigend(S: Matrix):
     """
     Calculate the eigenvalue decomposition of matrix S and return the matrix of eigenvalues E and matrix of eigenvectors V.
     Uses the Jacobi eigendecomposition algorithm.
+    
+    Arguments:
+    S -- Matrix: the matrix whose eigenvalue decomposition is to be calculated
     
     Raises an exception if the matrix is not symmetric (for now).
     """
@@ -166,7 +172,7 @@ def eigend(S):
     return (eigenvalues_sorted,eigenvectors_sorted)
     
 
-def eigenvector(A):
+def eigenvector(A: Matrix) -> tuple:
     """
     Return the dominant eigenvector and corresponding eigenvalue of matrix A.
     """
@@ -174,18 +180,23 @@ def eigenvector(A):
     e = rayleigh_quotient(A,v)
     return (v,e)
 
-def rayleigh_quotient(A,v):
+def rayleigh_quotient(A: Matrix, v: Matrix):
     """
     Return the Rayleigh quotient of matrix A.
     The Rayleigh quotient in this case is the eigenvalue corresponding to the eigenvector v.
+    
+    Arguments:
+    A -- Matrix: the matrix whose Rayleigh quotient is to be calculated
+    v -- Matrix: the eigenvector corresponding to the eigenvalue to be calculated
     """
     return v.get_conjugate_transpose()*A*v / (v.get_conjugate_transpose()*v)
     
-        
-
-def power_method(A):
+def power_method(A: Matrix) -> Matrix:
     """
-    Return the dominant eigenvalue of the matrix A.
+    Return the dominant eigenvector of the matrix A.
+    
+    Arguments:
+    A -- Matrix: the matrix whose dominant eigenvector is to be calculated
     """
         
     # initialize the vector with random values using list comprehension

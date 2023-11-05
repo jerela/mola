@@ -3,7 +3,7 @@ from mola.matrix import Matrix
 
 
 
-def randoms(height,width):
+def randoms(height: int, width: int) -> Matrix:
     """
     Return a matrix where all elements are random numbers between 0 and 1.
     
@@ -17,7 +17,7 @@ def randoms(height,width):
             mat.set(row,col,random.random())
     return mat
 
-def write_matrix_to_file(matrix, file_name, delimiter = ','):
+def write_matrix_to_file(matrix: Matrix, file_name: str, delimiter = ',') -> None:
     """
     Write a matrix to a text file.
     
@@ -40,11 +40,12 @@ def write_matrix_to_file(matrix, file_name, delimiter = ','):
         file.write('\n')
     file.close()
 
-def read_matrix_from_file(file_name, delimiter = ','):
+def read_matrix_from_file(file_name: str, delimiter = ',') -> Matrix:
     """
     Return a matrix constructed from the contents of a text file.
     
     Arguments:
+    file_name -- string: the name of the file to read from
     delimiter -- character: specifies the delimiter that separates data values in the text file (default ,)
     
     If no delimiter is given, the file is assumed to be in comma-separated values format.
@@ -67,7 +68,7 @@ def read_matrix_from_file(file_name, delimiter = ','):
 
     return Matrix(cols)
         
-def identity(rows, cols = None):
+def identity(rows: int, cols = None) -> Matrix:
     """
     Return a square identity matrix.
     
@@ -83,7 +84,7 @@ def identity(rows, cols = None):
     identity_matrix.make_identity()
     return identity_matrix
 
-def ones(height,width):
+def ones(height: int, width: int) -> Matrix:
     """
     Return a matrix where all elements are 1.
     
@@ -93,7 +94,7 @@ def ones(height,width):
     """
     return Matrix(height,width,1)
 
-def zeros(height,width):
+def zeros(height: int, width: int) -> Matrix:
     """
     Return a matrix where all elements are 0.
     
@@ -103,7 +104,7 @@ def zeros(height,width):
     """
     return Matrix(height,width,0)
 
-def equals_approx(left,right,precision=1e-12):
+def equals_approx(left, right, precision=1e-12) -> bool:
     """Return true if the compared objects are roughly equal elementwise. Otherwise, return false.
     
     Arguments:
@@ -135,9 +136,9 @@ def equals_approx(left,right,precision=1e-12):
 
 
 # calculate the mean of a matrix
-def get_mean(data, along='col'):
+def get_mean(data: Matrix, along='col') -> Matrix:
     """
-    Return the mean of a matrix.
+    Return the mean of a matrix as a single-row or single-column matrix.
     
     Arguments:
     data -- Matrix: the matrix whose mean is to be calculated
@@ -160,7 +161,7 @@ def get_mean(data, along='col'):
     
 
 # transpose a 2D list
-def transpose_list(data):
+def transpose_list(data: list) -> list:
     """
     Return the transpose of a 2D list.
     

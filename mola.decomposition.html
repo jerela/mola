@@ -25,20 +25,33 @@
 <font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
     
 <tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
-<td width="100%"><dl><dt><a name="-eigend"><strong>eigend</strong></a>(S)</dt><dd><tt>Calculate&nbsp;the&nbsp;eigenvalue&nbsp;decomposition&nbsp;of&nbsp;matrix&nbsp;S&nbsp;and&nbsp;return&nbsp;the&nbsp;matrix&nbsp;of&nbsp;eigenvalues&nbsp;E&nbsp;and&nbsp;matrix&nbsp;of&nbsp;eigenvectors&nbsp;V.<br>
+<td width="100%"><dl><dt><a name="-eigend"><strong>eigend</strong></a>(S: mola.matrix.Matrix)</dt><dd><tt>Calculate&nbsp;the&nbsp;eigenvalue&nbsp;decomposition&nbsp;of&nbsp;matrix&nbsp;S&nbsp;and&nbsp;return&nbsp;the&nbsp;matrix&nbsp;of&nbsp;eigenvalues&nbsp;E&nbsp;and&nbsp;matrix&nbsp;of&nbsp;eigenvectors&nbsp;V.<br>
 Uses&nbsp;the&nbsp;Jacobi&nbsp;eigendecomposition&nbsp;algorithm.<br>
 &nbsp;<br>
+Arguments:<br>
+S&nbsp;--&nbsp;Matrix:&nbsp;the&nbsp;matrix&nbsp;whose&nbsp;eigenvalue&nbsp;decomposition&nbsp;is&nbsp;to&nbsp;be&nbsp;calculated<br>
+&nbsp;<br>
 Raises&nbsp;an&nbsp;exception&nbsp;if&nbsp;the&nbsp;matrix&nbsp;is&nbsp;not&nbsp;symmetric&nbsp;(for&nbsp;now).</tt></dd></dl>
- <dl><dt><a name="-eigenvector"><strong>eigenvector</strong></a>(A)</dt><dd><tt>Return&nbsp;the&nbsp;dominant&nbsp;eigenvector&nbsp;and&nbsp;corresponding&nbsp;eigenvalue&nbsp;of&nbsp;matrix&nbsp;A.</tt></dd></dl>
- <dl><dt><a name="-power_method"><strong>power_method</strong></a>(A)</dt><dd><tt>Return&nbsp;the&nbsp;dominant&nbsp;eigenvalue&nbsp;of&nbsp;the&nbsp;matrix&nbsp;A.</tt></dd></dl>
- <dl><dt><a name="-qrd"><strong>qrd</strong></a>(A_original)</dt><dd><tt>Return&nbsp;a&nbsp;two-element&nbsp;tuple&nbsp;of&nbsp;matrices.<br>
+ <dl><dt><a name="-eigenvector"><strong>eigenvector</strong></a>(A: mola.matrix.Matrix) -&gt; tuple</dt><dd><tt>Return&nbsp;the&nbsp;dominant&nbsp;eigenvector&nbsp;and&nbsp;corresponding&nbsp;eigenvalue&nbsp;of&nbsp;matrix&nbsp;A.</tt></dd></dl>
+ <dl><dt><a name="-power_method"><strong>power_method</strong></a>(A: mola.matrix.Matrix) -&gt; mola.matrix.Matrix</dt><dd><tt>Return&nbsp;the&nbsp;dominant&nbsp;eigenvector&nbsp;of&nbsp;the&nbsp;matrix&nbsp;A.<br>
+&nbsp;<br>
+Arguments:<br>
+A&nbsp;--&nbsp;Matrix:&nbsp;the&nbsp;matrix&nbsp;whose&nbsp;dominant&nbsp;eigenvector&nbsp;is&nbsp;to&nbsp;be&nbsp;calculated</tt></dd></dl>
+ <dl><dt><a name="-qrd"><strong>qrd</strong></a>(A_original: mola.matrix.Matrix)</dt><dd><tt>Return&nbsp;a&nbsp;two-element&nbsp;tuple&nbsp;of&nbsp;matrices.<br>
 The&nbsp;elements&nbsp;of&nbsp;the&nbsp;tuple&nbsp;are&nbsp;the&nbsp;Q&nbsp;and&nbsp;R&nbsp;matrices&nbsp;from&nbsp;the&nbsp;QR&nbsp;decomposition&nbsp;of&nbsp;the&nbsp;input&nbsp;matrix.<br>
 The&nbsp;original&nbsp;input&nbsp;matrix&nbsp;is&nbsp;decomposed&nbsp;into&nbsp;a&nbsp;rotation&nbsp;matrix&nbsp;Q&nbsp;and&nbsp;an&nbsp;upper&nbsp;triangular&nbsp;matrix&nbsp;R.<br>
 The&nbsp;decomposition&nbsp;is&nbsp;valid&nbsp;for&nbsp;any&nbsp;real&nbsp;square&nbsp;matrix.<br>
 &nbsp;<br>
+Arguments:<br>
+A_original&nbsp;--&nbsp;Matrix:&nbsp;the&nbsp;matrix&nbsp;to&nbsp;be&nbsp;decomposed<br>
+&nbsp;<br>
 Raises&nbsp;an&nbsp;exception&nbsp;if&nbsp;the&nbsp;matrix&nbsp;is&nbsp;not&nbsp;square.</tt></dd></dl>
  <dl><dt><a name="-random"><strong>random</strong></a>()<font color="#909090"><font face="helvetica, arial"> method of <a href="random.html#Random">random.Random</a> instance</font></font></dt><dd><tt><a href="#-random">random</a>()&nbsp;-&gt;&nbsp;x&nbsp;in&nbsp;the&nbsp;interval&nbsp;[0,&nbsp;1).</tt></dd></dl>
- <dl><dt><a name="-rayleigh_quotient"><strong>rayleigh_quotient</strong></a>(A, v)</dt><dd><tt>Return&nbsp;the&nbsp;Rayleigh&nbsp;quotient&nbsp;of&nbsp;matrix&nbsp;A.<br>
-The&nbsp;Rayleigh&nbsp;quotient&nbsp;in&nbsp;this&nbsp;case&nbsp;is&nbsp;the&nbsp;eigenvalue&nbsp;corresponding&nbsp;to&nbsp;the&nbsp;eigenvector&nbsp;v.</tt></dd></dl>
+ <dl><dt><a name="-rayleigh_quotient"><strong>rayleigh_quotient</strong></a>(A: mola.matrix.Matrix, v: mola.matrix.Matrix)</dt><dd><tt>Return&nbsp;the&nbsp;Rayleigh&nbsp;quotient&nbsp;of&nbsp;matrix&nbsp;A.<br>
+The&nbsp;Rayleigh&nbsp;quotient&nbsp;in&nbsp;this&nbsp;case&nbsp;is&nbsp;the&nbsp;eigenvalue&nbsp;corresponding&nbsp;to&nbsp;the&nbsp;eigenvector&nbsp;v.<br>
+&nbsp;<br>
+Arguments:<br>
+A&nbsp;--&nbsp;Matrix:&nbsp;the&nbsp;matrix&nbsp;whose&nbsp;Rayleigh&nbsp;quotient&nbsp;is&nbsp;to&nbsp;be&nbsp;calculated<br>
+v&nbsp;--&nbsp;Matrix:&nbsp;the&nbsp;eigenvector&nbsp;corresponding&nbsp;to&nbsp;the&nbsp;eigenvalue&nbsp;to&nbsp;be&nbsp;calculated</tt></dd></dl>
 </td></tr></table>
 </body></html>

@@ -17,7 +17,7 @@
 <font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
     
 <tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
-<td width="100%"><dl><dt><a name="-fit_nonlinear"><strong>fit_nonlinear</strong></a>(independent_values, dependent_values, h, J, initial=None, max_iters=100)</dt><dd><tt>Returns&nbsp;the&nbsp;estimated&nbsp;parameters&nbsp;of&nbsp;a&nbsp;nonlinear&nbsp;model&nbsp;using&nbsp;the&nbsp;Gauss-Newton&nbsp;iteration&nbsp;algorithm.<br>
+<td width="100%"><dl><dt><a name="-fit_nonlinear"><strong>fit_nonlinear</strong></a>(independent_values, dependent_values, h, J, initial=None, max_iters=100)</dt><dd><tt>Return&nbsp;the&nbsp;estimated&nbsp;parameters&nbsp;of&nbsp;a&nbsp;nonlinear&nbsp;model&nbsp;using&nbsp;the&nbsp;Gauss-Newton&nbsp;iteration&nbsp;algorithm.<br>
 &nbsp;<br>
 Arguments:<br>
 independent_values&nbsp;--&nbsp;Matrix:&nbsp;the&nbsp;matrix&nbsp;of&nbsp;independent&nbsp;values<br>
@@ -39,7 +39,7 @@ degrees&nbsp;--&nbsp;a&nbsp;list&nbsp;of&nbsp;degrees&nbsp;of&nbsp;the&nbsp;poly
 intercept&nbsp;--&nbsp;Boolean:&nbsp;whether&nbsp;an&nbsp;intercept&nbsp;term&nbsp;should&nbsp;be&nbsp;included&nbsp;in&nbsp;the&nbsp;polynomial&nbsp;function<br>
 weights&nbsp;--&nbsp;Matrix:&nbsp;an&nbsp;optional&nbsp;weights&nbsp;matrix&nbsp;to&nbsp;weight&nbsp;certain&nbsp;data&nbsp;points&nbsp;over&nbsp;others<br>
 regularization_coefficient&nbsp;--&nbsp;float:&nbsp;a&nbsp;regularization&nbsp;parameter&nbsp;that&nbsp;is&nbsp;scalar&nbsp;multiplied&nbsp;with&nbsp;the&nbsp;identity&nbsp;matrix</tt></dd></dl>
- <dl><dt><a name="-linear_least_squares"><strong>linear_least_squares</strong></a>(H, z, W=None)</dt><dd><tt>Return&nbsp;the&nbsp;parameters&nbsp;of&nbsp;a&nbsp;first-order&nbsp;polynomial&nbsp;in&nbsp;a&nbsp;tuple.<br>
+ <dl><dt><a name="-linear_least_squares"><strong>linear_least_squares</strong></a>(H: mola.matrix.Matrix, z: mola.matrix.Matrix, W=None)</dt><dd><tt>Return&nbsp;the&nbsp;parameters&nbsp;of&nbsp;a&nbsp;first-order&nbsp;polynomial&nbsp;in&nbsp;a&nbsp;tuple.<br>
 The&nbsp;parameters&nbsp;are&nbsp;the&nbsp;slope&nbsp;(first&nbsp;element)&nbsp;and&nbsp;the&nbsp;intercept&nbsp;(second&nbsp;element).<br>
 &nbsp;<br>
 Arguments:<br>
