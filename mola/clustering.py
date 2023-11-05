@@ -1,12 +1,13 @@
+from mola.matrix import Matrix
+from mola.utils import zeros, get_mean, uniques, randoms
 from random import random
 from copy import deepcopy
 import math
-from mola.matrix import Matrix
-from mola.utils import zeros, get_mean, uniques, randoms
 
 # calculate the Euclidean distance between two points; note that this actually returns the squared distance, but because we only need it to compare distances, it doesn't matter and not including the square root is faster to compute
 def distance_euclidean_pow(p1,p2) -> float:
-    """Return the squared Euclidean distance between two points.
+    """
+    Return the squared Euclidean distance between two points.
     If you want to retrieve the actual Euclidean distance, take the square root of the result. However, using this squared version is computationally more efficient.
     
     Arguments:
@@ -42,6 +43,8 @@ def distance_taxicab(p1,p2) -> float:
 def find_k_means(data: Matrix, num_centers = 2, max_iterations = 100, distance_function = distance_euclidean_pow, initial_centers = None):
     """
     Return the cluster centers using hard k-means clustering.
+    
+    K-means clustering is an iterative algorithm that finds the cluster centers by first assigning each point to the closest cluster center and then updating the cluster centers to be the mean of the points assigned to them. This process is repeated for a set number of iterations or until the cluster centers converge. The initial cluster centers are either randomized or given by the user.
     
     Note that there is no guarantee that the algorithm converges. This is why you should use several restarts or fuzzy k-means (function find_c_means() in this module).
     
@@ -115,7 +118,8 @@ def find_c_means(data: Matrix, num_centers = 2, max_iterations = 100, distance_f
     """
     Return the cluster centers and the membership matrix of points using soft k-means clustering (also known as fuzzy c-means).
     
-    This algorithm is well-suited to cluster data that is not clearly separable into distinct clusters.
+    Fuzzy c-means clustering is an iterative algorithm that finds the cluster centers by first assigning each point to each cluster center with a certain membership value (0 to 1) and then updating the cluster centers to be the weighted mean of the points assigned to them. This process is repeated for a set number of iterations or until the cluster centers converge. The initial cluster centers are either randomized or given by the user.
+    A major difference between hard k-means clustering and fuzzy c-means clustering is that in fuzzy c-means clustering, the points may belong partially to several clusters instead of belonging completely to one cluster, like in hard k-means clustering. Therefore, this algorithm is well-suited to cluster data that is not clearly separable into distinct clusters (e.g., symmetric distribution of data points).
         
     Arguments:
     data -- Matrix: the data containing the points to be clustered

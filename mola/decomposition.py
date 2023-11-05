@@ -9,8 +9,9 @@ from random import random
 def qrd(A_original: Matrix):
     """
     Return a two-element tuple of matrices.
+    
     The elements of the tuple are the Q and R matrices from the QR decomposition of the input matrix.
-    The original input matrix is decomposed into a rotation matrix Q and an upper triangular matrix R.
+    The original input matrix is decomposed into a rotation matrix Q and an upper triangular matrix R using Householder reflections.
     The decomposition is valid for any real square matrix.
     
     Arguments:
@@ -62,8 +63,9 @@ def qrd(A_original: Matrix):
 
 def eigend(S: Matrix):
     """
-    Calculate the eigenvalue decomposition of matrix S and return the matrix of eigenvalues E and matrix of eigenvectors V.
-    Uses the Jacobi eigendecomposition algorithm.
+    Return the matrix of eigenvalues E and matrix of eigenvectors V from the eigendecomposition of matrix S.
+    
+    This implementation uses the Jacobi eigendecomposition algorithm to compute the eigenvalue decomposition.
     
     Arguments:
     S -- Matrix: the matrix whose eigenvalue decomposition is to be calculated

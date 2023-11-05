@@ -7,9 +7,12 @@ def linear_least_squares(H: Matrix, z: Matrix, W=None):
     Return the parameters of a first-order polynomial in a tuple.
     The parameters are the slope (first element) and the intercept (second element).
     
+    This implementation uses the least squares criterion to find the parameters that minimize ||y-H*theta||^2, where y is the vector of dependent values, H is the observation matrix, and theta is the vector of parameters.
+    In common terms, the algorithm finds the function parameters that minimize the squared sum of differences between the observed values and the values given by the function with the estimated parameters for the given independent values.
+    
     Arguments:
     H -- Matrix: the observation matrix of the linear system of equations
-    z -- Matrix: the measured values depicting the right side of the linear system of equations
+    z -- Matrix: the observed or dependent values depicting the right side of the linear system of equations
     W -- Matrix: a weight matrix containing the weights for observations in its diagonals
     
     If no 'W' is given, an identity matrix is assumed and all observations are equally weighted.
@@ -69,6 +72,8 @@ def fit_univariate_polynomial(independent_values, dependent_values, degrees=[1],
 def fit_nonlinear(independent_values, dependent_values, h, J, initial=None, max_iters = 100):
     """
     Return the estimated parameters of a nonlinear model using the Gauss-Newton iteration algorithm.
+    
+    The algorithm uses Gauss-Newton iteration to find the parameters that minimize the least squares criterion ||y-h(theta)||^2, where y is the vector of dependent values, h is the model function, and theta is the vector of the function's parameters. The estimates are improved iteratively by evaluating the gradient of the least squares criterion and using that gradient to update the parameter estimates in small steps. The gradient is approximated by Jacobian matrices.
     
     Arguments:
     independent_values -- Matrix: the matrix of independent values

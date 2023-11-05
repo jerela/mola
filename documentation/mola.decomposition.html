@@ -25,8 +25,9 @@
 <font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
     
 <tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
-<td width="100%"><dl><dt><a name="-eigend"><strong>eigend</strong></a>(S: mola.matrix.Matrix)</dt><dd><tt>Calculate&nbsp;the&nbsp;eigenvalue&nbsp;decomposition&nbsp;of&nbsp;matrix&nbsp;S&nbsp;and&nbsp;return&nbsp;the&nbsp;matrix&nbsp;of&nbsp;eigenvalues&nbsp;E&nbsp;and&nbsp;matrix&nbsp;of&nbsp;eigenvectors&nbsp;V.<br>
-Uses&nbsp;the&nbsp;Jacobi&nbsp;eigendecomposition&nbsp;algorithm.<br>
+<td width="100%"><dl><dt><a name="-eigend"><strong>eigend</strong></a>(S: mola.matrix.Matrix)</dt><dd><tt>Return&nbsp;the&nbsp;matrix&nbsp;of&nbsp;eigenvalues&nbsp;E&nbsp;and&nbsp;matrix&nbsp;of&nbsp;eigenvectors&nbsp;V&nbsp;from&nbsp;the&nbsp;eigendecomposition&nbsp;of&nbsp;matrix&nbsp;S.<br>
+&nbsp;<br>
+This&nbsp;implementation&nbsp;uses&nbsp;the&nbsp;Jacobi&nbsp;eigendecomposition&nbsp;algorithm&nbsp;to&nbsp;compute&nbsp;the&nbsp;eigenvalue&nbsp;decomposition.<br>
 &nbsp;<br>
 Arguments:<br>
 S&nbsp;--&nbsp;Matrix:&nbsp;the&nbsp;matrix&nbsp;whose&nbsp;eigenvalue&nbsp;decomposition&nbsp;is&nbsp;to&nbsp;be&nbsp;calculated<br>
@@ -38,8 +39,9 @@ Raises&nbsp;an&nbsp;exception&nbsp;if&nbsp;the&nbsp;matrix&nbsp;is&nbsp;not&nbsp
 Arguments:<br>
 A&nbsp;--&nbsp;Matrix:&nbsp;the&nbsp;matrix&nbsp;whose&nbsp;dominant&nbsp;eigenvector&nbsp;is&nbsp;to&nbsp;be&nbsp;calculated</tt></dd></dl>
  <dl><dt><a name="-qrd"><strong>qrd</strong></a>(A_original: mola.matrix.Matrix)</dt><dd><tt>Return&nbsp;a&nbsp;two-element&nbsp;tuple&nbsp;of&nbsp;matrices.<br>
+&nbsp;<br>
 The&nbsp;elements&nbsp;of&nbsp;the&nbsp;tuple&nbsp;are&nbsp;the&nbsp;Q&nbsp;and&nbsp;R&nbsp;matrices&nbsp;from&nbsp;the&nbsp;QR&nbsp;decomposition&nbsp;of&nbsp;the&nbsp;input&nbsp;matrix.<br>
-The&nbsp;original&nbsp;input&nbsp;matrix&nbsp;is&nbsp;decomposed&nbsp;into&nbsp;a&nbsp;rotation&nbsp;matrix&nbsp;Q&nbsp;and&nbsp;an&nbsp;upper&nbsp;triangular&nbsp;matrix&nbsp;R.<br>
+The&nbsp;original&nbsp;input&nbsp;matrix&nbsp;is&nbsp;decomposed&nbsp;into&nbsp;a&nbsp;rotation&nbsp;matrix&nbsp;Q&nbsp;and&nbsp;an&nbsp;upper&nbsp;triangular&nbsp;matrix&nbsp;R&nbsp;using&nbsp;Householder&nbsp;reflections.<br>
 The&nbsp;decomposition&nbsp;is&nbsp;valid&nbsp;for&nbsp;any&nbsp;real&nbsp;square&nbsp;matrix.<br>
 &nbsp;<br>
 Arguments:<br>

@@ -19,6 +19,8 @@
 <tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
 <td width="100%"><dl><dt><a name="-fit_nonlinear"><strong>fit_nonlinear</strong></a>(independent_values, dependent_values, h, J, initial=None, max_iters=100)</dt><dd><tt>Return&nbsp;the&nbsp;estimated&nbsp;parameters&nbsp;of&nbsp;a&nbsp;nonlinear&nbsp;model&nbsp;using&nbsp;the&nbsp;Gauss-Newton&nbsp;iteration&nbsp;algorithm.<br>
 &nbsp;<br>
+The&nbsp;algorithm&nbsp;uses&nbsp;Gauss-Newton&nbsp;iteration&nbsp;to&nbsp;find&nbsp;the&nbsp;parameters&nbsp;that&nbsp;minimize&nbsp;the&nbsp;least&nbsp;squares&nbsp;criterion&nbsp;||y-h(theta)||^2,&nbsp;where&nbsp;y&nbsp;is&nbsp;the&nbsp;vector&nbsp;of&nbsp;dependent&nbsp;values,&nbsp;h&nbsp;is&nbsp;the&nbsp;model&nbsp;function,&nbsp;and&nbsp;theta&nbsp;is&nbsp;the&nbsp;vector&nbsp;of&nbsp;the&nbsp;function's&nbsp;parameters.&nbsp;The&nbsp;estimates&nbsp;are&nbsp;improved&nbsp;iteratively&nbsp;by&nbsp;evaluating&nbsp;the&nbsp;gradient&nbsp;of&nbsp;the&nbsp;least&nbsp;squares&nbsp;criterion&nbsp;and&nbsp;using&nbsp;that&nbsp;gradient&nbsp;to&nbsp;update&nbsp;the&nbsp;parameter&nbsp;estimates&nbsp;in&nbsp;small&nbsp;steps.&nbsp;The&nbsp;gradient&nbsp;is&nbsp;approximated&nbsp;by&nbsp;Jacobian&nbsp;matrices.<br>
+&nbsp;<br>
 Arguments:<br>
 independent_values&nbsp;--&nbsp;Matrix:&nbsp;the&nbsp;matrix&nbsp;of&nbsp;independent&nbsp;values<br>
 dependent_values&nbsp;--&nbsp;Matrix:&nbsp;the&nbsp;matrix&nbsp;of&nbsp;dependent&nbsp;values<br>
@@ -42,9 +44,12 @@ regularization_coefficient&nbsp;--&nbsp;float:&nbsp;a&nbsp;regularization&nbsp;p
  <dl><dt><a name="-linear_least_squares"><strong>linear_least_squares</strong></a>(H: mola.matrix.Matrix, z: mola.matrix.Matrix, W=None)</dt><dd><tt>Return&nbsp;the&nbsp;parameters&nbsp;of&nbsp;a&nbsp;first-order&nbsp;polynomial&nbsp;in&nbsp;a&nbsp;tuple.<br>
 The&nbsp;parameters&nbsp;are&nbsp;the&nbsp;slope&nbsp;(first&nbsp;element)&nbsp;and&nbsp;the&nbsp;intercept&nbsp;(second&nbsp;element).<br>
 &nbsp;<br>
+This&nbsp;implementation&nbsp;uses&nbsp;the&nbsp;least&nbsp;squares&nbsp;criterion&nbsp;to&nbsp;find&nbsp;the&nbsp;parameters&nbsp;that&nbsp;minimize&nbsp;||y-H*theta||^2,&nbsp;where&nbsp;y&nbsp;is&nbsp;the&nbsp;vector&nbsp;of&nbsp;dependent&nbsp;values,&nbsp;H&nbsp;is&nbsp;the&nbsp;observation&nbsp;matrix,&nbsp;and&nbsp;theta&nbsp;is&nbsp;the&nbsp;vector&nbsp;of&nbsp;parameters.<br>
+In&nbsp;common&nbsp;terms,&nbsp;the&nbsp;algorithm&nbsp;finds&nbsp;the&nbsp;function&nbsp;parameters&nbsp;that&nbsp;minimize&nbsp;the&nbsp;squared&nbsp;sum&nbsp;of&nbsp;differences&nbsp;between&nbsp;the&nbsp;observed&nbsp;values&nbsp;and&nbsp;the&nbsp;values&nbsp;given&nbsp;by&nbsp;the&nbsp;function&nbsp;with&nbsp;the&nbsp;estimated&nbsp;parameters&nbsp;for&nbsp;the&nbsp;given&nbsp;independent&nbsp;values.<br>
+&nbsp;<br>
 Arguments:<br>
 H&nbsp;--&nbsp;Matrix:&nbsp;the&nbsp;observation&nbsp;matrix&nbsp;of&nbsp;the&nbsp;linear&nbsp;system&nbsp;of&nbsp;equations<br>
-z&nbsp;--&nbsp;Matrix:&nbsp;the&nbsp;measured&nbsp;values&nbsp;depicting&nbsp;the&nbsp;right&nbsp;side&nbsp;of&nbsp;the&nbsp;linear&nbsp;system&nbsp;of&nbsp;equations<br>
+z&nbsp;--&nbsp;Matrix:&nbsp;the&nbsp;observed&nbsp;or&nbsp;dependent&nbsp;values&nbsp;depicting&nbsp;the&nbsp;right&nbsp;side&nbsp;of&nbsp;the&nbsp;linear&nbsp;system&nbsp;of&nbsp;equations<br>
 W&nbsp;--&nbsp;Matrix:&nbsp;a&nbsp;weight&nbsp;matrix&nbsp;containing&nbsp;the&nbsp;weights&nbsp;for&nbsp;observations&nbsp;in&nbsp;its&nbsp;diagonals<br>
 &nbsp;<br>
 If&nbsp;no&nbsp;'W'&nbsp;is&nbsp;given,&nbsp;an&nbsp;identity&nbsp;matrix&nbsp;is&nbsp;assumed&nbsp;and&nbsp;all&nbsp;observations&nbsp;are&nbsp;equally&nbsp;weighted.</tt></dd></dl>
