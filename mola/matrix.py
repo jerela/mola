@@ -1103,8 +1103,11 @@ class LabeledMatrix(Matrix):
         c -- str: label of the column
         as_list - Boolean: whether to return the column as a list or not, in which case it is returned as a matrix (default true)
         """
-        idx = self.labels_cols.index(c)
-        return super().get_column(idx, as_list)
+        if isinstance(c,str):
+            idx = self.labels_cols.index(c)
+            return super().get_column(idx, as_list)
+        else:
+            return super().get_column(c, as_list)
     
 
     def get_row(self, r: str, as_list=True):
@@ -1115,8 +1118,11 @@ class LabeledMatrix(Matrix):
         r -- str: label of the row
         as_list - Boolean: whether to return the row as a list or not, in which case it is returned as a matrix (default true)
         """
-        idx = self.labels_rows.index(r)
-        return super().get_row(idx, as_list)
+        if isinstance(r,str):
+            idx = self.labels_rows.index(r)
+            return super().get_row(idx, as_list)
+        else:
+            return super().get_row(r, as_list)
 
 
     def __getitem__(self,label):
