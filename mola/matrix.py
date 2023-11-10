@@ -990,3 +990,212 @@ class Matrix:
             
         return eigenvector 
             
+
+
+class LabeledMatrix(Matrix):
+    """
+    A child class of Matrix that has labeled columns.
+    
+    Attributes:
+    data -- nested list: contains the numeric values in the matrix, implemented as a list of lists that represent the rows of the matrix
+    n_rows -- unsigned integer: the number of rows in the matrix, also known as its height
+    n_cols -- unsigned integer: the number of columns in the matrix, also known as its width
+    labels_cols -- list of strings: the unique labels of the columns of the matrix
+    labels_rows -- list of strings: the unique labels of the rows of the matrix
+    """
+    
+    labels_rows = []
+    labels_cols = []
+
+    def __init__(self, *args, labels=None, column=True, labels_col = None, labels_row = None):
+        
+        # ensure that either labels is given or labels_col and labels_row are given, but both labels and labels_col/labels_row cannot be given
+        if labels != None and (labels_col != None or labels_row != None):
+            raise Exception("You cannot define both labels and labels_col or labels_row.")
+        
+        # if labels is given, use it to initialize the labels of the matrix (either row labels or columns labels depending on the value of 'column') 
+        if labels != None and column == True:
+            self.labels_cols = labels
+        elif labels != None and column == False:
+            self.labels_rows = labels
+            
+        # if labels_col or labels_row are given, use them to initialize the labels of the matrix
+        if labels_col != None:
+            self.labels_cols = labels_col
+        if labels_row != None:
+            self.labels_rows = labels_row
+            
+        # ensure that all label elements are unique (we don't want duplicate labels because we must be able to use them unambiguously to access specific rows and columns)
+        if self.labels_cols != None:
+            if len(self.labels_cols) != len(set(self.labels_cols)):
+                raise Exception("Column labels must be unique!")
+            if len(self.labels_rows) != len(set(self.labels_rows)):
+                raise Exception("Row labels must be unique!")
+
+        # if the number of non-label-related arguments is 1, we either have a dictionary argument or arguments according to the parent class
+        if len(args) == 1:
+            # check to see if the argument is a dictionary and if so, unpack that dictionary to generate the data and the labels
+            if isinstance(args[0], dict):
+                data = [x for x in args[0].values()]
+                # if the labels are for columns, transpose the data so that it is in the correct format
+                if column:
+                    data = list(map(list, zip(*data)))
+                    self.labels_cols = list(args[0].keys())
+                else:
+                    self.labels_rows = list(args[0].keys())
+                super().__init__(data)
+            # if no dictionary is present, we can refer to the parent's implementation of the constructor
+            elif isinstance(args[0], list):
+                super().__init__(args[0])
+            else:
+                raise Exception("LabeledMatrix must be initialized with a dictionary or a list of lists!")
+        else:
+            super().__init__(*args)
+            
+
+    # override __str__
+    def __str__(self, precision = 4, space = 20):
+        """
+        Return a string that describes the matrix when string() is called with the matrix as the argument.
+        Row and column labels are shown in left and top borders, respectively.
+        This function defines the string representation of LabeledMatrix.
+        """
+        
+        # first, populate an f-string with column labels
+        if len(self.labels_rows) > 0:
+            fstring_labels = f"{'':^{space}}"
+        else:
+            fstring_labels = f"{'':^0}"
+        for label in self.labels_cols:
+            fstring_labels = fstring_labels + f"{label:^{space}}"
+
+        # fstring_total will contain the whole matrix (data and labels) as a single f-string  
+        fstring_total = fstring_labels
+        # populate each row of the f-string starting with the row label and then the values on that row
+        for i in range(self.n_rows):
+            fstring_row = f"{'':^0}"
+            if len(self.labels_rows) > 0:
+                fstring_row = fstring_row + f"{self.labels_rows[i]:^{space}}"
+            for j in range(self.n_cols):
+                matrix_string = str(round(self.data[i][j],precision))
+                fstring_row = fstring_row + f"{matrix_string:^{space}}"
+            # at the end of each row, we should add a line break
+            fstring_total = fstring_total + '\n' + fstring_row
+        return fstring_total
+
+    # override print
+    def print(self, precision = 4, space = 20):
+        """
+        Print a string that describes the labeled matrix.
+        
+        Calls the overloaded str() function with the possibility to specify how many decimals are shown.
+        
+        Arguments:
+        precision -- unsigned integer: the number of decimals shown in the output (default 4)
+        """
+        print(self.__str__(precision, space))
+        
+    def get_column(self, c: str, as_list=True):
+        """
+        Return a specified column of the matrix as list or matrix.
+        
+        Arguments:
+        c -- str: label of the column
+        as_list - Boolean: whether to return the column as a list or not, in which case it is returned as a matrix (default true)
+        """
+        idx = self.labels_cols.index(c)
+        return super().get_column(idx, as_list)
+    
+
+    def get_row(self, r: str, as_list=True):
+        """
+        Return a specified row of the matrix as list or matrix.
+        
+        Arguments:
+        r -- str: label of the row
+        as_list - Boolean: whether to return the row as a list or not, in which case it is returned as a matrix (default true)
+        """
+        idx = self.labels_rows.index(r)
+        return super().get_row(idx, as_list)
+
+
+    def __getitem__(self,label):
+        """
+        Return a matrix from the specified labels.
+        Overloads the get[] operator.
+        
+        Arguments:
+        label -- str, or a two-element tuple of strings
+        
+        Calls the parent's __getitem__() if label is not of expected type.
+        """
+        # first, check if the given label is a string (only one row is queried)
+        if isinstance(label,str):
+            # if the label is a string, return a matrix with the specified row
+            return super().__getitem__(self.labels_rows.index(label))
+        # otherwise, check if the given index is a tuple of strings (i.e., a value from a given row and column is queried)
+        elif isinstance(label,tuple):
+            row,col = label
+            # rows is str and cols is str (one value from given row and column indices is queried)
+            if isinstance(row,str) and isinstance(col,str):
+                return super().__getitem__((self.labels_rows.index(row),self.labels_cols.index(col)))
+            else:
+                return super().__getitem__(label)
+
+            
+        else:
+            return super().__getitem__(label)
+
+    # then to set data
+    def __setitem__(self,label,value):
+        """
+        Set elements of the matrix.
+        Overloads the set[] operator.
+        
+        Arguments:
+        label -- str, or a two-element tuple of strings
+        
+        Calls the parent's __setitem__() if label is not of expected type.
+        """
+        if isinstance(label,tuple):
+            row, col = label
+            super().__setitem__((self.labels_rows.index(row),self.labels_cols.index(col)), value)
+        elif isinstance(label,str):
+            super().__setitem__(self.labels_rows.index(label), value)
+            
+        else:
+            return super().__setitem__(label,value)
+        
+    # set a row at given label to given values from a list
+    def set_row(self, r: str, new_row: list):
+        """
+        Set the specified row of the matrix.
+
+        Arguments:
+        r -- str: label of the row
+        new_row -- list: the values that are assigned to that row
+        """
+        super().set_row(self.labels_rows.index(r), new_row)
+
+    # set a single value in given labels
+    def set(self, row: str, col: str, value):
+        """
+        Set the element at specified labels.
+        
+        Arguments:
+        row -- str: label of the row
+        col -- str: label of the column
+        value -- numeric value: the value that is assigned to the specified element
+        """
+        super().set(self.labels_rows.index(row), self.labels_cols.index(col), value)
+        
+    # get a single value in given labels
+    def get(self, row: str, col: str):
+        """
+        Get the element at specified position.
+        
+        Arguments:
+        row -- str: label of the row
+        col -- str: label of the column
+        """
+        return super().get(self.labels_rows.index(row), self.labels_cols.index(col))
