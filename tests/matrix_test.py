@@ -1,4 +1,4 @@
-from mola import Matrix
+from mola import Matrix, LabeledMatrix
 from mola import regression
 from mola import utils
 from mola import decomposition
@@ -41,3 +41,45 @@ def test_rank():
     assert(sing.get_rank() == 2)
     assert(A.get_rank() == 1)
     assert(B.get_rank() == 1)
+
+
+# TESTS FOR LABELED MATRICES BEGIN HERE
+def test_labeled_from_dict():
+    labeled_matrix_dict = {'first_column': [1, 2, 3], 'its_square': [1, 4, 9]}
+    labeled_matrix = LabeledMatrix(labeled_matrix_dict)
+    matrix = Matrix([[1, 1], [2, 4], [3, 9]])
+    assert(labeled_matrix == matrix)
+
+def test_labeled_from_lists():
+    labeled_matrix = LabeledMatrix([[1,2,3], [4,5,6], [7,8,9]], labels_col = ['first column', 'second column', 'third column'], labels_row=['first row', 'second row', 'third row'])
+    matrix = Matrix([[1,2,3], [4,5,6], [7,8,9]])
+    assert(labeled_matrix == matrix)
+
+def test_labeled_get_set():
+    labeled_matrix = LabeledMatrix([[1,2,3], [4,5,6], [7,8,9]], labels_col = ['first column', 'second column', 'third column'], labels_row=['first row', 'second row', 'third row'])
+    labeled_matrix.set('first row', 'third column', 0)
+    assert(labeled_matrix.get('first row', 'third column') == 0)
+
+def test_labeled_getitem():
+    labeled_matrix = LabeledMatrix([[1,2,3], [4,5,6], [7,8,9]], labels_col = ['first column', 'second column', 'third column'], labels_row=['first row', 'second row', 'third row'])
+    assert(labeled_matrix['first row'] == labeled_matrix[0])
+    assert(labeled_matrix['second row','third column'] == labeled_matrix[1,2])
+    
+def test_labeled_setitem():
+    labeled_matrix = LabeledMatrix([[1,2,3], [4,5,6], [7,8,9]], labels_col = ['first column', 'second column', 'third column'], labels_row=['first row', 'second row', 'third row'])   
+    labeled_matrix['second row','third column'] = 0
+    assert(labeled_matrix['second row','third column'] == 0)
+
+def test_labeled_get_row():
+    labeled_matrix = LabeledMatrix([[1,2,3], [4,5,6], [7,8,9]], labels_col = ['first column', 'second column', 'third column'], labels_row=['first row', 'second row', 'third row'])   
+    assert(labeled_matrix.get_row('second row') == labeled_matrix.get_row(1))
+    
+def test_labeled_set_row():
+    labeled_matrix = LabeledMatrix([[1,2,3], [4,5,6], [7,8,9]], labels_col = ['first column', 'second column', 'third column'], labels_row=['first row', 'second row', 'third row'])
+    labeled_matrix.set_row('first row', [0,0,0])
+    assert(labeled_matrix.get_row('first row') == [0,0,0])
+
+def test_labeled_get_column():
+    labeled_matrix = LabeledMatrix([[1,2,3], [4,5,6], [7,8,9]], labels_col = ['first column', 'second column', 'third column'], labels_row=['first row', 'second row', 'third row'])   
+    assert(labeled_matrix.get_column('third column') == labeled_matrix.get_column(2))
+    

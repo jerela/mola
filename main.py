@@ -1,7 +1,8 @@
-from mola import Matrix
+from mola import Matrix, LabeledMatrix
 from mola import regression
 from mola import utils
 from mola import decomposition
+from mola import clustering
 
 mat2 = Matrix(3,5,1)
 mat3 = mat2.get_transpose()
@@ -72,11 +73,6 @@ th = regression.linear_least_squares(H,y,W)
 print(th)
 
 
-mat10 = utils.read_matrix_from_file('data.txt')
-mat10.print()
-H = Matrix([[2,1],[4,1],[6,1]])
-y = Matrix([[0],[1],[2]])
-th = regression.linear_least_squares(H,y)
 
 independent_values = Matrix([ [2],[4],[6] ])
 dependent_values = Matrix([[0],[1],[2]])
@@ -113,3 +109,35 @@ mat13 = Matrix([[1,0], [1,3]])
 v,e = decomposition.eigenvector(mat13)
 v.print()
 print(e)
+
+
+mat1 = Matrix(3,5,1)
+mat2 = utils.identity(3,3)
+mat1.print()
+mat2.print()
+mm = mat2*mat1
+mm.print()
+assert(mat2*mat1==mat1)
+
+
+
+# TEST GAUSS-NEWTON ITERATION
+h = Matrix([lambda a,x: pow(a,x)])
+independents = Matrix([1, 2, 3])
+y = Matrix([2, 4, 8])
+# let J be the Jacobian of h(x)
+J = Matrix([lambda a,x: x*pow(a,x-1)])
+
+theta = regression.fit_nonlinear(independents, y, h, J, initial=Matrix([0.5]))
+print(theta)
+
+
+# TEST K-MEANS CLUSTERING
+initial_centers = Matrix([[0,0],[20,0]])
+symmetric_points = Matrix([[-1,0],[-2,2],[1,1],[20,2],[18,0],[22,-1],[23,-1]])
+centers = clustering.find_k_means(data=symmetric_points,num_centers=2,initial_centers=initial_centers)
+
+
+print(centers)
+assert(utils.equals_approx(centers,Matrix([[-0.6667, 1.0],[20.75, 0.0]]),precision = 1e-4))
+

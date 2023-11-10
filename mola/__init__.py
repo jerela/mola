@@ -1,1 +1,1 @@
-from mola.matrix import Matrix
+from mola.matrix import Matrix, LabeledMatrix
