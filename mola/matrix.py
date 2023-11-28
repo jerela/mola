@@ -166,7 +166,7 @@ class Matrix:
                         self.data[r][c] = value.data[i][j]
                         j = j + 1
                     i = i + 1
-            #otherwise, if either of the indices is a slice and the given value is a matrix object
+            # otherwise, if either of the indices is a slice and the given value is a matrix object
             elif isinstance(value,Matrix) and isinstance(rows,int) and isinstance(cols,slice):
                 i = 0
                 if cols == slice(None,None,None):
@@ -175,6 +175,8 @@ class Matrix:
                     self.data[rows][c] = value.data[i][c]
             else:
                 raise Exception("Undefined behaviour in setitem. Needs to be defined.")
+        elif isinstance(idx,int):
+            self.set_row(idx,value)
         else:
             raise Exception("invalid setitem arg")
         

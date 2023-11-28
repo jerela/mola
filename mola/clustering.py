@@ -1,5 +1,7 @@
+from asyncio.windows_events import INFINITE
+from json.encoder import INFINITY
 from mola.matrix import Matrix
-from mola.utils import zeros, get_mean, uniques, randoms
+from mola.utils import zeros, get_mean, uniques, randoms, norm
 from random import random
 from copy import deepcopy
 import math
@@ -23,6 +25,17 @@ def distance_euclidean_pow(p1,p2) -> float:
     for i in range(len(p1)):
         distance = distance + pow(p1[i]-p2[i],2)
     return distance
+
+
+def distance_euclidean(p1,p2) -> float:
+    """
+    Return the Euclidean distance between two points.
+    
+    Arguments:
+    p1 -- list: the first point
+    p2 -- list: the second point
+    """
+    return math.sqrt(distance_euclidean_pow(p1,p2))
 
 
 def distance_taxicab(p1,p2) -> float:
@@ -196,4 +209,73 @@ def find_c_means(data: Matrix, num_centers = 2, max_iterations = 100, distance_f
             print("WARNING: fuzzy k-means centers did not converge in " , str(max_iterations), " iterations. Consider increasing the maximum number of iterations.")
 
     return centers, U
+
+
+# density-based subtractive clustering
+def find_density_clusters(data: Matrix, num_centers = 2, beta = 0.5, sigma = 0.5):
+    """
+    Return the cluster centers using density-based subtractive clustering.
+    
+    Density-based subtractive clustering is an iterative algorithm that finds the cluster centers by first calculating the mountain function for each point and then selecting the peaks of the mountain functions as cluster centers. The mountain function is calculated by summing the Gaussian functions centered at each point.
+    
+    Arguments:
+    data -- Matrix: the data containing the points to be clustered
+    num_centers -- int: the number of cluster centers to be found (default 2)
+    beta -- float: the width of the Gaussian function (default 0.5)
+    sigma -- float: the width of the Gaussian function (default 0.5)
+    """
+
+    # get the number of data points (samples) and the dimension of each data point
+    n_samples = data.get_height()
+    dim = data.get_width()
+
+    # initialize the values of mountain functions to zero
+    #mountain_func = zeros(n_samples, 1)
+    mountain_func = [0 for x in range(n_samples)]
+
+    # construct mountain function value for each data sample
+    # iterate through centers
+    for i in range(n_samples):
+        # iterate through data points
+        for k in range(n_samples):
+            mountain_func[i] = mountain_func[i] + math.exp( - ( pow(distance_euclidean(data[i,:],data[k,:]),2) ) / (2*sigma**sigma) )
+
+    # select cluster centers and destruct mountain functions
+    mountain_func_new = deepcopy(mountain_func)
+
+    c_subtractive = zeros(num_centers,dim)
+
+    # iterate through the number of labels (assumption is that there are 2 clusters)
+    for k in range(num_centers):
+        # select cluster centers
+        peak = 0;
+        peak_i = 0;
+        for i in range(n_samples):
+            if mountain_func_new[i] > peak:
+                print('For cluster ' + str(k) + ' found peak ' + str(mountain_func_new[i]) + ' at ' + str(data[i,0]) + ',' + str(data[i,1]))
+                peak = mountain_func_new[i]
+                peak_i = i;
+            
+    
+        
+
+        # save cluster centers
+        c_subtractive[k,:] = data[peak_i,:].get_transpose()
+    
+        # destruct mountain functions
+        for i in range(n_samples):
+            mountain_func_new[i] = mountain_func_new[i] - mountain_func_new[peak_i] * math.exp( - ( pow(distance_euclidean(data[i,:],c_subtractive[k,:]),2)) / (2*beta**beta) )
+
+    # assign all data points to a cluster depending on the distance
+    labeled_subtractive = [0 for x in range(n_samples)]
+    for i in range(n_samples):
+        cluster = 0
+        prev_norm = 1e6
+        for k in range(num_centers):
+            if norm(data[i,:]-c_subtractive[k,:]) < prev_norm:
+                prev_norm = norm(data[i,:]-c_subtractive[k,:])
+                cluster = k;
+        labeled_subtractive[i] = cluster
+    
+    return labeled_subtractive
 

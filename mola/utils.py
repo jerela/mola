@@ -202,3 +202,7 @@ def uniques(data):
         if row not in unique_rows:
             unique_rows.append(row)
     return unique_rows
+
+
+def norm(data):
+    return data.norm_Euclidean()
