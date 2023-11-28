@@ -16,9 +16,9 @@ def distance_euclidean_pow(p1,p2) -> float:
     """
     
     if isinstance(p1,Matrix):
-        p1 = p1.get_column(0)
+        p1 = p1.get_row(0)
     if isinstance(p2,Matrix):
-        p2 = p2.get_column(0)
+        p2 = p2.get_row(0)
     distance = 0
     for i in range(len(p1)):
         distance = distance + pow(p1[i]-p2[i],2)
@@ -149,7 +149,7 @@ def find_c_means(data: Matrix, num_centers = 2, max_iterations = 100, distance_f
         for row in range(num_points):
             for c in range(num_centers):
                 distance_to_center = distance_function(centers[c],data.get_row(row))
-                U[row,c] = 1 / sum([pow(distance_to_center/distance_function(centers[j],data.get_row(row)),2/(m-1)) for j in range(num_centers)])
+                U[row,c] = 1 / sum([pow(distance_to_center/distance_function(centers[j,:],data.get_row(row)),2/(m-1)) for j in range(num_centers)])
         
     def update_centers():
         """
@@ -160,7 +160,7 @@ def find_c_means(data: Matrix, num_centers = 2, max_iterations = 100, distance_f
             numerator = zeros(1,dim)
             denominator = 0
             for row in range(num_points):
-                numerator = numerator + pow(U.get(row,c),m)*(data[row,:].get_transpose())
+                numerator = numerator + pow(U.get(row,c),m)*(data[row,:])
                 denominator = denominator + pow(U[row,c],m)
             centers[c,:] = numerator / denominator
 
