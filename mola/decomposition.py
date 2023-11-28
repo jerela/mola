@@ -202,7 +202,7 @@ def power_method(A: Matrix) -> Matrix:
     """
         
     # initialize the vector with random values using list comprehension
-    vector = Matrix([random() for x in range(A.get_height())])
+    vector = Matrix([random() for x in range(A.get_height())]).get_transpose()
         
     # do the iteration to (hopefully) converge the vector towards its dominant eigenvector
     for i in range(100):

@@ -123,8 +123,8 @@ assert(mat2*mat1==mat1)
 
 # TEST GAUSS-NEWTON ITERATION
 h = Matrix([lambda a,x: pow(a,x)])
-independents = Matrix([1, 2, 3])
-y = Matrix([2, 4, 8])
+independents = Matrix([1, 2, 3]).get_transpose()
+y = Matrix([2, 4, 8]).get_transpose()
 # let J be the Jacobian of h(x)
 J = Matrix([lambda a,x: x*pow(a,x-1)])
 
@@ -141,3 +141,8 @@ centers = clustering.find_k_means(data=symmetric_points,num_centers=2,initial_ce
 print(centers)
 assert(utils.equals_approx(centers,Matrix([[-0.6667, 1.0],[20.75, 0.0]]),precision = 1e-4))
 
+
+# TEST SUBTRACTIVE CLUSTERING
+density_points = Matrix([[1,2], [0.5,1.5], [0,1], [0,0.5], [0,0], [0,-0.5], [0,-1], [0.5,-1.5], [1,-2], [2,0], [2.5,-0.5], [3,-1], [3,-1.5], [3,-2], [3,-2.5], [3,-3], [2.5,-3.5], [2,-4]])
+mountaintops = clustering.find_density_clusters(data=density_points, num_centers=2, beta = 0.25, sigma = 0.25)
+print(mountaintops)

@@ -70,15 +70,11 @@ class Matrix:
                 row = lists[j]
                 col.append(row)
             self.data = col
-        # if the input parameter was not a nested list, assume it was a simple 1D list and construct a matrix with a single column
+        # if the input parameter was not a nested list, assume it was a simple 1D list and construct a Matrix that is actually a row vector
         elif isinstance(lists,list):
-            self.n_rows = len(lists)
-            self.n_cols = 1
-            col = []
-            for j in range(self.n_rows):
-                row = lists[j]
-                col.append([row])
-            self.data = col        
+            self.n_rows = 1
+            self.n_cols = len(lists)
+            self.data = [lists]
 
     def __abs__(self):
         """
@@ -123,7 +119,7 @@ class Matrix:
             # rows is slice and cols is int (several values from a single column are queried)
             elif isinstance(rows,slice) and isinstance(cols,int):
                 #sliced_data = Matrix([r[cols] for r in self.data[rows]])
-                return Matrix([r[cols] for r in self.data[rows]])
+                return Matrix([r[cols] for r in self.data[rows]]).get_transpose()
             # if both are slices (a submatrix is queried)
             elif isinstance(rows,slice) and isinstance(cols,slice):
                 #newlist = [r[cols] for r in self.data[rows]]
@@ -327,7 +323,7 @@ class Matrix:
         output = Matrix(self.n_rows,self.n_cols,0)
         # first, ensure that the dimensions of the matrices match
         if self.n_rows != other.n_rows or self.n_cols != other.n_cols:
-            raise Exception("Matrix dimensions must match for elementwise addition or subtraction!")
+            raise Exception("Matrix dimensions must match for elementwise addition or subtraction! Left side is " + str(self.n_rows) + "x" + str(self.n_cols) + ", right side is " + str(other.n_rows) + "x" + str(other.n_cols))
         # if we passed the dimension check, we can subtract the matrices elementwise
         for i in range(self.n_rows):
             for j in range(self.n_cols):

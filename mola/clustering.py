@@ -1,5 +1,3 @@
-from asyncio.windows_events import INFINITE
-from json.encoder import INFINITY
 from mola.matrix import Matrix
 from mola.utils import zeros, get_mean, uniques, randoms, norm
 from random import random
@@ -107,7 +105,7 @@ def find_k_means(data: Matrix, num_centers = 2, max_iterations = 100, distance_f
                 if closest_center[row] == i:
                     points_in_cluster.append(data.get_row(row))
             if len(points_in_cluster) > 0:
-                centers[i,:] = get_mean(points_in_cluster).get_transpose()
+                centers[i,:] = get_mean(points_in_cluster)
             
         # if the centers remained the same as in previous iteration, break out of the loop
         if centers == previous_centers:
@@ -260,7 +258,7 @@ def find_density_clusters(data: Matrix, num_centers = 2, beta = 0.5, sigma = 0.5
         
 
         # save cluster centers
-        c_subtractive[k,:] = data[peak_i,:].get_transpose()
+        c_subtractive[k,:] = data[peak_i,:]
     
         # destruct mountain functions
         for i in range(n_samples):
