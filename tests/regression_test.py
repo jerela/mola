@@ -25,8 +25,8 @@ def test_first_order_polynomial_regression():
 def test_nonlinear_regression():
     """Test nonlinear regression with Gauss-Newton iteration."""
     h = Matrix([lambda a,x: pow(a,x)])
-    independents = Matrix([1, 2, 3])
-    y = Matrix([2, 4, 8])
+    independents = Matrix([1, 2, 3]).get_transpose()
+    y = Matrix([2, 4, 8]).get_transpose()
     # let J be the Jacobian of h(x)
     J = Matrix([lambda a,x: x*pow(a,x-1)])
     # estimate the parameter (the base a of a^x)
