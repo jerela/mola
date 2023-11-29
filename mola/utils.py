@@ -178,8 +178,6 @@ def transpose_list(data: list) -> list:
         data_transposed.append(new_row)
     return data_transposed
 
-
-
 # return the unique rows of a matrix or a list
 def uniques(data):
     """
@@ -203,6 +201,29 @@ def uniques(data):
             unique_rows.append(row)
     return unique_rows
 
-
-def norm(data):
+# return the euclidean norm of a matrix
+def norm(data: Matrix) -> float:
+    """
+    Return the Euclidean norm of a matrix.
+    You could also just call data.norm_Euclidean() directly, but this is a wrapper function for convenience.
+    
+    Arguments:
+    data -- Matrix: the matrix whose Euclidean norm is to be returned
+    """
     return data.norm_Euclidean()
+
+# construct a Matrix that represents a column vector from one-dimensional list
+def column(data: list) -> Matrix:
+    """
+    Return a column vector Matrix object constructed from a one-dimensional list.
+    This is the same as calling Matrix(data).get_transpose() with a check to make sure the list is one-dimensional.
+    
+    Arguments:
+    data -- list: the 1D list to be used as the data of the matrix
+
+    Raises an exception if the list is multidimensional.
+    """
+    if isinstance(list[0],list):
+        raise Exception("exception in utils.column(): list is multidimensional")
+
+    return Matrix(data).get_transpose()

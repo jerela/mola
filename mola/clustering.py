@@ -119,7 +119,7 @@ def find_k_means(data: Matrix, num_centers = 2, max_iterations = 100, distance_f
         if iteration == max_iterations-1:
             print("WARNING: k-means centers did not converge in " , str(max_iterations), " iterations. Consider increasing the maximum number of iterations or using fuzzy k-means.")
 
-    return centers
+    return centers, closest_center
 
 
 
@@ -219,8 +219,8 @@ def find_density_clusters(data: Matrix, num_centers = 2, beta = 0.5, sigma = 0.5
     Arguments:
     data -- Matrix: the data containing the points to be clustered
     num_centers -- int: the number of cluster centers to be found (default 2)
-    beta -- float: the width of the Gaussian function (default 0.5)
-    sigma -- float: the width of the Gaussian function (default 0.5)
+    beta -- float: the width of the Gaussian function (default 0.5) used to destruct the mountain function
+    sigma -- float: the width of the Gaussian function (default 0.5) used to construct the mountain function
     """
 
     # get the number of data points (samples) and the dimension of each data point
@@ -232,26 +232,30 @@ def find_density_clusters(data: Matrix, num_centers = 2, beta = 0.5, sigma = 0.5
     mountain_func = [0 for x in range(n_samples)]
 
     # construct mountain function value for each data sample
-    # iterate through centers
+    # calculate the sum of Gaussian functions centered at each data point
     for i in range(n_samples):
-        # iterate through data points
         for k in range(n_samples):
-            mountain_func[i] = mountain_func[i] + math.exp( - ( pow(distance_euclidean(data[i,:],data[k,:]),2) ) / (2*sigma**sigma) )
+            mountain_func[i] += math.exp( - ( pow(distance_euclidean(data[i,:],data[k,:]),2) ) / (2*sigma*sigma) )
 
     # select cluster centers and destruct mountain functions
-    mountain_func_new = deepcopy(mountain_func)
+    mountain_func_prev = deepcopy(mountain_func)
+    mountain_func_current = deepcopy(mountain_func)
 
     c_subtractive = zeros(num_centers,dim)
 
     # iterate through the number of labels (assumption is that there are 2 clusters)
     for k in range(num_centers):
+
+        #mountain_func_current = deepcopy(mountain_func_prev)
+        
+
         # select cluster centers
         peak = 0;
         peak_i = 0;
         for i in range(n_samples):
-            if mountain_func_new[i] > peak:
-                print('For cluster ' + str(k) + ' found peak ' + str(mountain_func_new[i]) + ' at ' + str(data[i,0]) + ',' + str(data[i,1]))
-                peak = mountain_func_new[i]
+            if mountain_func_current[i] > peak:
+                #print('For cluster ' + str(k) + ' found peak ' + str(mountain_func_current[i]) + ' at ' + str(data[i,0]) + ',' + str(data[i,1]))
+                peak = mountain_func_current[i]
                 peak_i = i;
             
     
@@ -260,9 +264,12 @@ def find_density_clusters(data: Matrix, num_centers = 2, beta = 0.5, sigma = 0.5
         # save cluster centers
         c_subtractive[k,:] = data[peak_i,:]
     
-        # destruct mountain functions
+        print('For cluster ' + str(k) + ' found peak ' + str(mountain_func_current[peak_i]) + ' at ' + str(data[peak_i,0]) + ',' + str(data[peak_i,1]))
+
+        # destruct mountain functions at the current cluster center (peak of highest mountain function)
         for i in range(n_samples):
-            mountain_func_new[i] = mountain_func_new[i] - mountain_func_new[peak_i] * math.exp( - ( pow(distance_euclidean(data[i,:],c_subtractive[k,:]),2)) / (2*beta**beta) )
+            mountain_func_current[i] -= math.exp( - ( pow(distance_euclidean(data[i,:],c_subtractive[k,:]),2)) / (2*beta*beta) )
+            #mountain_func_current[i] -= mountain_func_current[k]*math.exp( - ( pow(distance_euclidean(data[i,:],c_subtractive[k,:]),2)) / (2*beta*beta) )
 
     # assign all data points to a cluster depending on the distance
     labeled_subtractive = [0 for x in range(n_samples)]
@@ -275,5 +282,5 @@ def find_density_clusters(data: Matrix, num_centers = 2, beta = 0.5, sigma = 0.5
                 cluster = k;
         labeled_subtractive[i] = cluster
     
-    return labeled_subtractive
+    return c_subtractive, labeled_subtractive
 

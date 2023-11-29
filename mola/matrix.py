@@ -962,7 +962,7 @@ class Matrix:
     #        for j in cols_list:
     #            self.data[i][j] = matrix[i-rows_first][j-cols_first]
             
-    def norm_Euclidean(self):
+    def norm_Euclidean(self) -> float:
         """Return the Euclidean norm of the matrix."""
         norm = 0
         for i in range(self.n_rows):

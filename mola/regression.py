@@ -24,7 +24,7 @@ def linear_least_squares(H: Matrix, z: Matrix, W=None):
     return th_tuple
 
 
-def fit_univariate_polynomial(independent_values, dependent_values, degrees=[1], intercept=True, weights = None, regularization_coefficient = None):
+def fit_univariate_polynomial(independent_values: Matrix, dependent_values: Matrix, degrees=[1], intercept=True, weights = None, regularization_coefficient = None):
     """
     Return the parameters of an nth-order polynomial in a tuple.
     The algorithm uses least squares regression to minimize the term ||y-H*theta||^2, where y is the vector of dependent values, H is the observation matrix, and theta is the vector of parameters.
@@ -69,7 +69,7 @@ def fit_univariate_polynomial(independent_values, dependent_values, degrees=[1],
     return th_tuple
 
 # fit nonlinear function parameters using Gauss-Newton iteration
-def fit_nonlinear(independent_values, dependent_values, h, J, initial=None, max_iters = 100):
+def fit_nonlinear(independent_values: Matrix, dependent_values: Matrix, h: Matrix, J: Matrix, initial=None, max_iters = 100):
     """
     Return the estimated parameters of a nonlinear model using the Gauss-Newton iteration algorithm.
     

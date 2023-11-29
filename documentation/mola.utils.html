@@ -25,7 +25,14 @@
 <font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
     
 <tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
-<td width="100%"><dl><dt><a name="-equals_approx"><strong>equals_approx</strong></a>(left, right, precision=1e-12) -&gt; bool</dt><dd><tt>Return&nbsp;true&nbsp;if&nbsp;the&nbsp;compared&nbsp;objects&nbsp;are&nbsp;roughly&nbsp;equal&nbsp;elementwise.&nbsp;Otherwise,&nbsp;return&nbsp;false.<br>
+<td width="100%"><dl><dt><a name="-column"><strong>column</strong></a>(data: list) -&gt; mola.matrix.Matrix</dt><dd><tt>Return&nbsp;a&nbsp;column&nbsp;vector&nbsp;Matrix&nbsp;object&nbsp;constructed&nbsp;from&nbsp;a&nbsp;one-dimensional&nbsp;list.<br>
+This&nbsp;is&nbsp;the&nbsp;same&nbsp;as&nbsp;calling&nbsp;Matrix(data).get_transpose()&nbsp;with&nbsp;a&nbsp;check&nbsp;to&nbsp;make&nbsp;sure&nbsp;the&nbsp;list&nbsp;is&nbsp;one-dimensional.<br>
+&nbsp;<br>
+Arguments:<br>
+data&nbsp;--&nbsp;list:&nbsp;the&nbsp;1D&nbsp;list&nbsp;to&nbsp;be&nbsp;used&nbsp;as&nbsp;the&nbsp;data&nbsp;of&nbsp;the&nbsp;matrix<br>
+&nbsp;<br>
+Raises&nbsp;an&nbsp;exception&nbsp;if&nbsp;the&nbsp;list&nbsp;is&nbsp;multidimensional.</tt></dd></dl>
+ <dl><dt><a name="-equals_approx"><strong>equals_approx</strong></a>(left, right, precision=1e-12) -&gt; bool</dt><dd><tt>Return&nbsp;true&nbsp;if&nbsp;the&nbsp;compared&nbsp;objects&nbsp;are&nbsp;roughly&nbsp;equal&nbsp;elementwise.&nbsp;Otherwise,&nbsp;return&nbsp;false.<br>
 &nbsp;<br>
 Arguments:<br>
 left&nbsp;--&nbsp;Matrix,&nbsp;list,&nbsp;tuple,&nbsp;or&nbsp;a&nbsp;single&nbsp;value:&nbsp;the&nbsp;object&nbsp;on&nbsp;the&nbsp;left&nbsp;side&nbsp;of&nbsp;the&nbsp;comparison<br>
@@ -45,7 +52,11 @@ rows&nbsp;--&nbsp;unsigned&nbsp;integer:&nbsp;height&nbsp;of&nbsp;the&nbsp;matri
 cols&nbsp;--&nbsp;unsigned&nbsp;integer:&nbsp;width&nbsp;of&nbsp;the&nbsp;matrix&nbsp;(default&nbsp;None)<br>
 &nbsp;<br>
 If&nbsp;'cols'&nbsp;is&nbsp;not&nbsp;specified,&nbsp;the&nbsp;matrix&nbsp;is&nbsp;assumed&nbsp;to&nbsp;have&nbsp;the&nbsp;same&nbsp;number&nbsp;of&nbsp;columns&nbsp;as&nbsp;the&nbsp;number&nbsp;of&nbsp;rows.</tt></dd></dl>
- <dl><dt><a name="-norm"><strong>norm</strong></a>(data)</dt></dl>
+ <dl><dt><a name="-norm"><strong>norm</strong></a>(data: mola.matrix.Matrix) -&gt; float</dt><dd><tt>Return&nbsp;the&nbsp;Euclidean&nbsp;norm&nbsp;of&nbsp;a&nbsp;matrix.<br>
+You&nbsp;could&nbsp;also&nbsp;just&nbsp;call&nbsp;data.norm_Euclidean()&nbsp;directly,&nbsp;but&nbsp;this&nbsp;is&nbsp;a&nbsp;wrapper&nbsp;function&nbsp;for&nbsp;convenience.<br>
+&nbsp;<br>
+Arguments:<br>
+data&nbsp;--&nbsp;Matrix:&nbsp;the&nbsp;matrix&nbsp;whose&nbsp;Euclidean&nbsp;norm&nbsp;is&nbsp;to&nbsp;be&nbsp;returned</tt></dd></dl>
  <dl><dt><a name="-ones"><strong>ones</strong></a>(height: int, width: int) -&gt; mola.matrix.Matrix</dt><dd><tt>Return&nbsp;a&nbsp;matrix&nbsp;where&nbsp;all&nbsp;elements&nbsp;are&nbsp;1.<br>
 &nbsp;<br>
 Arguments:<br>
