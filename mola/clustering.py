@@ -215,6 +215,10 @@ def find_density_clusters(data: Matrix, num_centers = 2, beta = 0.5, sigma = 0.5
     Return the cluster centers using density-based subtractive clustering.
     
     Density-based subtractive clustering is an iterative algorithm that finds the cluster centers by first calculating the mountain function for each point and then selecting the peaks of the mountain functions as cluster centers. The mountain function is calculated by summing the Gaussian functions centered at each point.
+
+    The mountain function at a given point is a measure of density of data points. The higher the mountain function, the more data points are close to the given point. Therefore, the peaks of the mountain functions are the points that are surrounded by many data points. These points are selected as cluster centers. The mountain functions are then destructed by subtracting a Gaussian function centered at each cluster center. This ensures that the next cluster center is not selected too close to the previous cluster center.
+    
+    The potential set of points for cluster centers are either the same as the input data points or points on a grid encompassing the input space (not implemented yet).
     
     Arguments:
     data -- Matrix: the data containing the points to be clustered
@@ -231,25 +235,22 @@ def find_density_clusters(data: Matrix, num_centers = 2, beta = 0.5, sigma = 0.5
     #mountain_func = zeros(n_samples, 1)
     mountain_func = [0 for x in range(n_samples)]
 
-    # construct mountain function value for each data sample
+    # construct mountain function value for at each data point
     # calculate the sum of Gaussian functions centered at each data point
     for i in range(n_samples):
         for k in range(n_samples):
             mountain_func[i] += math.exp( - ( pow(distance_euclidean(data[i,:],data[k,:]),2) ) / (2*sigma*sigma) )
 
     # select cluster centers and destruct mountain functions
-    mountain_func_prev = deepcopy(mountain_func)
     mountain_func_current = deepcopy(mountain_func)
 
+    # initialize the cluster centers to zero
     c_subtractive = zeros(num_centers,dim)
 
     # iterate through the number of labels (assumption is that there are 2 clusters)
     for k in range(num_centers):
 
-        #mountain_func_current = deepcopy(mountain_func_prev)
-        
-
-        # select cluster centers
+        # select k'th cluster center as the point with the highest mountain function
         peak = 0;
         peak_i = 0;
         for i in range(n_samples):
@@ -257,16 +258,13 @@ def find_density_clusters(data: Matrix, num_centers = 2, beta = 0.5, sigma = 0.5
                 #print('For cluster ' + str(k) + ' found peak ' + str(mountain_func_current[i]) + ' at ' + str(data[i,0]) + ',' + str(data[i,1]))
                 peak = mountain_func_current[i]
                 peak_i = i;
-            
-    
-        
 
-        # save cluster centers
+        # store the cluster center
         c_subtractive[k,:] = data[peak_i,:]
     
         print('For cluster ' + str(k) + ' found peak ' + str(mountain_func_current[peak_i]) + ' at ' + str(data[peak_i,0]) + ',' + str(data[peak_i,1]))
 
-        # destruct mountain functions at the current cluster center (peak of highest mountain function)
+        # destruct mountain functions according to distance from the current cluster center (the close a data point is to the center, the more its mountain function gets destructed)
         for i in range(n_samples):
             mountain_func_current[i] -= math.exp( - ( pow(distance_euclidean(data[i,:],c_subtractive[k,:]),2)) / (2*beta*beta) )
             #mountain_func_current[i] -= mountain_func_current[k]*math.exp( - ( pow(distance_euclidean(data[i,:],c_subtractive[k,:]),2)) / (2*beta*beta) )
