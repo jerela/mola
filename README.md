@@ -27,9 +27,13 @@ See main.py for examples and read the documentation.
 ## Current features
 
 - basic matrix operations implemented (addition, multiplication, transpose, inverse)
+- matrices with labeled rows and columns
 - user-friendly wrappers for function fitting (including linear least squares regression, Tikhonov regularization, Gauss-Newton iteration for nonlinear fitting)
 - some basic matrix decompositions (QR decomposition and eigendecomposition)
-- clustering with hard k-means and fuzzy c-means
+- clustering with hard k-means and fuzzy c-means and density-based clustering (see examples/visualize_clustering.py for a demonstration)
+
+
+![visualization of clustering algorithms](https://github.com/jerela/mola/blob/master/examples/visualize_clustering.png)
 
 ## Classes
 
@@ -42,9 +46,7 @@ See main.py for examples and read the documentation.
 - different matrix norms (only Frobenius and Euclidean norm implemented right now)
 - more decompositions (SVD)
 - user-friendly wrapper for logistic regression
-- more clustering algorithms (mountain clustering, subtractive clustering)
 - preprocessing functions for matrix data (center and scale, e.g., z-scores)
-- labeled matrices
 - example data analysis project to showcase existing features
 
 ## License
