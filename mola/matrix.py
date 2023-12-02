@@ -302,7 +302,7 @@ class Matrix:
         output = Matrix(self.n_rows,self.n_cols,0)
         # first, ensure that the dimensions of the matrices match
         if self.n_rows != other.n_rows or self.n_cols != other.n_cols:
-            raise Exception("Matrix dimensions must match for elementwise addition or subtraction! Left side is ", str(self.n_rows), "x", str(self.n_cols), " and right side is ", str(other.get_height()), "x", str(other.get_width()), "!")
+            raise Exception("Matrix dimensions must match for elementwise addition or subtraction! Left side is " + str(self.n_rows) + "x" + str(self.n_cols) + " and right side is " + str(other.get_height()) + "x" + str(other.get_width()) + "!")
         # if we passed the dimension check, we can add the matrices elementwise
         for i in range(self.n_rows):
             for j in range(self.n_cols):
@@ -368,7 +368,7 @@ class Matrix:
         if as_list:
             return column
         else:
-            return self.construct_from_lists(column)
+            return Matrix(column).get_transpose()
     
     # set a row at given index to given values from a list
     def set_row(self, r: int, new_row: list):

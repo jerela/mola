@@ -24,11 +24,11 @@ def test_first_order_polynomial_regression():
 
 def test_nonlinear_regression():
     """Test nonlinear regression with Gauss-Newton iteration."""
-    h = Matrix([lambda a,x: pow(a,x)])
+    h = Matrix([lambda a,x: pow(a[0],x[0])])
     independents = Matrix([1, 2, 3]).get_transpose()
     y = Matrix([2, 4, 8]).get_transpose()
     # let J be the Jacobian of h(x)
-    J = Matrix([lambda a,x: x*pow(a,x-1)])
+    J = Matrix([lambda a,x: x[0]*pow(a[0],x[0]-1)])
     # estimate the parameter (the base a of a^x)
     theta = regression.fit_nonlinear(independents, y, h, J, initial=Matrix([0.5]))
     assert(theta[0] == 2)

@@ -24,8 +24,8 @@ The&nbsp;algorithm&nbsp;uses&nbsp;Gauss-Newton&nbsp;iteration&nbsp;to&nbsp;find&
 Arguments:<br>
 independent_values&nbsp;--&nbsp;Matrix:&nbsp;the&nbsp;matrix&nbsp;of&nbsp;independent&nbsp;values<br>
 dependent_values&nbsp;--&nbsp;Matrix:&nbsp;the&nbsp;matrix&nbsp;of&nbsp;dependent&nbsp;values<br>
-h&nbsp;--&nbsp;Matrix:&nbsp;the&nbsp;model&nbsp;function<br>
-J&nbsp;--&nbsp;Matrix:&nbsp;the&nbsp;Jacobian&nbsp;matrix&nbsp;of&nbsp;the&nbsp;model&nbsp;function<br>
+h&nbsp;--&nbsp;Matrix:&nbsp;the&nbsp;model&nbsp;function&nbsp;as&nbsp;a&nbsp;lambda&nbsp;function&nbsp;inside&nbsp;a&nbsp;matrix,&nbsp;where&nbsp;the&nbsp;inputs&nbsp;of&nbsp;the&nbsp;function&nbsp;are&nbsp;the&nbsp;list&nbsp;of&nbsp;parameters&nbsp;and&nbsp;the&nbsp;list&nbsp;of&nbsp;independent&nbsp;values&nbsp;from&nbsp;a&nbsp;single&nbsp;sample<br>
+J&nbsp;--&nbsp;Matrix:&nbsp;the&nbsp;Jacobian&nbsp;matrix&nbsp;of&nbsp;the&nbsp;model&nbsp;function&nbsp;as&nbsp;lambda&nbsp;functions&nbsp;inside&nbsp;a&nbsp;matrix,&nbsp;where&nbsp;each&nbsp;column&nbsp;corresponds&nbsp;to&nbsp;the&nbsp;partial&nbsp;derivative&nbsp;of&nbsp;the&nbsp;function&nbsp;with&nbsp;respect&nbsp;to&nbsp;one&nbsp;parameter<br>
 initial&nbsp;--&nbsp;Matrix:&nbsp;the&nbsp;initial&nbsp;guess&nbsp;of&nbsp;the&nbsp;parameters&nbsp;(default&nbsp;None,&nbsp;in&nbsp;which&nbsp;case&nbsp;they&nbsp;are&nbsp;randomized)<br>
 max_iters&nbsp;--&nbsp;int:&nbsp;the&nbsp;maximum&nbsp;number&nbsp;of&nbsp;iterations&nbsp;(default&nbsp;100)</tt></dd></dl>
  <dl><dt><a name="-fit_univariate_polynomial"><strong>fit_univariate_polynomial</strong></a>(independent_values: mola.matrix.Matrix, dependent_values: mola.matrix.Matrix, degrees=[1], intercept=True, weights=None, regularization_coefficient=None)</dt><dd><tt>Return&nbsp;the&nbsp;parameters&nbsp;of&nbsp;an&nbsp;nth-order&nbsp;polynomial&nbsp;in&nbsp;a&nbsp;tuple.<br>

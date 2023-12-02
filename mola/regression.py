@@ -78,15 +78,15 @@ def fit_nonlinear(independent_values: Matrix, dependent_values: Matrix, h: Matri
     Arguments:
     independent_values -- Matrix: the matrix of independent values
     dependent_values -- Matrix: the matrix of dependent values
-    h -- Matrix: the model function
-    J -- Matrix: the Jacobian matrix of the model function
+    h -- Matrix: the model function as a lambda function inside a matrix, where the inputs of the function are the list of parameters and the list of independent values from a single sample
+    J -- Matrix: the Jacobian matrix of the model function as lambda functions inside a matrix, where each column corresponds to the partial derivative of the function with respect to one parameter
     initial -- Matrix: the initial guess of the parameters (default None, in which case they are randomized)
     max_iters -- int: the maximum number of iterations (default 100)
     """
 
     # if no initial guess is given, randomize it
     if initial is None:
-        initial = randoms(1,J.get_width())
+        initial = randoms(J.get_width(),1)
     theta = initial
     
     # set the step size
@@ -103,9 +103,11 @@ def fit_nonlinear(independent_values: Matrix, dependent_values: Matrix, h: Matri
     for i in range(max_iters):
         # evaluate the model function and Jacobian for each samples and each unknown parameter using the latest parameter estimates
         for sample in range(n_samples):
+            # construct the values of function h and Jacobian Jh for the current sample
             for col in range(h.get_width()):
-                H[sample,col] = h.get(0,col)(theta.get(0,col),independent_values.get(sample,col))
-                Jh[sample,col] = J.get(0,col)(theta.get(0,col),independent_values.get(sample,col))
+                H[sample,col] = h.get(0,col)(theta.get_column(0,as_list=True),independent_values.get_row(sample,as_list=True))
+            for col in range(J.get_width()):
+                Jh[sample,col] = J.get(0,col)(theta.get_column(0,as_list=True),independent_values.get_row(sample,as_list=True))
         # update theta
         theta = theta + (Jh.get_transpose()*Jh).get_inverse() * Jh.get_transpose() * (dependent_values - H)
 

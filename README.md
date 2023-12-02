@@ -33,6 +33,7 @@ See main.py for examples and read the documentation.
 - clustering with hard k-means and fuzzy c-means and density-based clustering (see examples/visualize_clustering.py for a demonstration)
 
 
+![visualization of regression algorithms](https://github.com/jerela/mola/blob/master/examples/visualize_regression.png)
 ![visualization of clustering algorithms](https://github.com/jerela/mola/blob/master/examples/visualize_clustering.png)
 
 ## Classes
@@ -40,6 +41,10 @@ See main.py for examples and read the documentation.
 ### Matrix
 
 **Matrix** is the main class of **mola**. In practice, the elements of the matrix are implemented with lists. Most of its functionality involves calling methods from this class.
+
+### LabeledMatrix
+
+**LabeledMatrix** inherits **Matrix** and allows labeling of rows and columns, as well as overriding certain setter and getter functions to use those labels.
 
 ## TODO:
 - checks to see if matrix is positive/negative definite/semidefinite
