@@ -174,6 +174,6 @@ H = Matrix([[2,1],[4,1],[6,1]])
 # define the measurements
 y = Matrix([[0],[1],[2]])
 
-theta = regression.irls(H, y, threshold = 1e-12)
+theta = regression.fit_irls(H, y, p=2, threshold = 1e-12)
 
 print(theta)

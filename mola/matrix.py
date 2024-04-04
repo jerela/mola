@@ -87,6 +87,16 @@ class Matrix:
         else:
             return iter(self.data)
 
+    def __pow__(self,exponent):
+        n = self.get_height()
+        m = self.get_width()
+        mat = Matrix(n,m,0)
+        
+        for i in range(n):
+            for j in range(m):
+                mat[i,j] = self.data[i][j]**exponent
+        return mat
+
     def __abs__(self):
         """
         Return the absolute value of a 1x1 matrix (i.e., a matrix with just one element).
@@ -980,6 +990,22 @@ class Matrix:
             for j in range(self.n_cols):
                 norm = norm + pow(self.data[i][j],2)
         return math.sqrt(norm)
+        
+    def norm_entrywise(self,p=2) -> float:
+        """
+        Return the entry-wise norm of the matrix with a given p.
+        
+        Arguments:
+        p -- float: the exponential of the norm (default 2, where the norm is the Frobenius norm)
+        """
+        n = self.get_height()
+        m = self.get_width()
+        s = 0
+        
+        for i in range(n):
+            for j in range(m):
+                s += (abs(self.data[i][j])**p)**(1/p)
+        return s
 
     # doesn't seem to work
     def get_dominant_eigenvector(self):

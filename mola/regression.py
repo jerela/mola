@@ -1,5 +1,5 @@
 from mola.matrix import Matrix
-from mola.utils import identity, ones, zeros, randoms, covmat, diag
+from mola.utils import identity, ones, zeros, randoms, diag
 from copy import deepcopy
 
 def linear_least_squares(H: Matrix, z: Matrix, W=None):
@@ -23,13 +23,15 @@ def linear_least_squares(H: Matrix, z: Matrix, W=None):
     th_tuple = (th.get(0,0), th.get(1,0))
     return th_tuple
 
-def irls(H: Matrix, z: Matrix, threshold = 1e-6):
+def fit_irls(H: Matrix, z: Matrix, p: int = 2, threshold: float = 1e-6):
     """
     Return the iteratively reweighted least squares (IRLS) estimate of the parameters of a model defined by observation matrix H and dependent values z.
     
     Arguments:
     H -- Matrix: the observation matrix of the linear system of equations
     z -- Matrix: the observed or dependent values depicting the right side of the linear system of equations
+    p -- float: norm exponential (default 2)
+    threshold -- float: the maximum difference between two consecutive estimate sets to break from iteration
     """
     
     # estimate the parameters using ordinary least squares
@@ -37,21 +39,24 @@ def irls(H: Matrix, z: Matrix, threshold = 1e-6):
 
     
     difference = float('inf')
+    delta = 1e-5
     
     while difference > threshold:
 
+        th_previous = th
+
         # calculate absolute values of residuals
-        residuals = (H*th-z).get_absolute_matrix()
-    
-        # estimate sample variance-covariance matrix V using the OLS residuals
-        #V = covmat(residuals)
+        residuals = ((H*th-z).get_absolute_matrix())**(p-2)
+
+        # formulate weighting matrix W as the diagonal of the residuals
         W = diag(residuals)
         print("W: ", W)
     
         # re-estimate the parameters using generalized least squares
         th = ((H.get_transpose())*W*H).get_inverse() * H.get_transpose() * W * z
         
-        difference = residuals.norm_Euclidean()
+        difference = (th-th_previous).norm_entrywise(p)
+        print("diff: ", difference)
     
     th_tuple = tuple(th.get_column(0))
     return th_tuple
