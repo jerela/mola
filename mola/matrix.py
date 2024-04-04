@@ -24,7 +24,6 @@ class Matrix:
         elif len(args) == 3:
             self.__construct_by_dimensions(args[0], args[1], args[2])
 
-
     # construct a matrix with r rows, c columns, and some initial value (default 0)
     def __construct_by_dimensions(self,r,c,value=0):
         """
@@ -75,6 +74,18 @@ class Matrix:
             self.n_rows = 1
             self.n_cols = len(lists)
             self.data = [lists]
+
+    # define iterability for the matrix
+    def __iter__(self):
+        """
+        Return an iterator of the matrix.
+        For a single-column matrix, the iterator loops through the elements of the column.
+        For other matrices, the iterator loops through the columns as lists.
+        """
+        if self.n_cols == 1:
+            return iter(self.get_column(0,as_list=True))
+        else:
+            return iter(self.data)
 
     def __abs__(self):
         """
@@ -987,7 +998,20 @@ class Matrix:
             err = (eigenvector-eigenvector_prev).norm_Euclidean()
             
         return eigenvector 
-            
+       
+    def get_absolute_matrix(self):
+        """
+        Return a matrix where the elements are the absolute values of the original matrix.
+        """
+        
+        n = self.get_height()
+        m = self.get_width()
+        mat = Matrix(n,m,0)
+        
+        for i in range(n):
+            for j in range(m):
+                mat[i,j] = abs(self[i,j])
+        return mat
 
 
 class LabeledMatrix(Matrix):

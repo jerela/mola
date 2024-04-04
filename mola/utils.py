@@ -1,4 +1,5 @@
 import random
+import statistics
 from mola.matrix import Matrix
 
 
@@ -227,3 +228,112 @@ def column(data: list) -> Matrix:
         raise Exception("exception in utils.column(): list is multidimensional")
 
     return Matrix(data).get_transpose()
+    
+# calculate the variance of a vector of values
+def var(X):
+    """
+    Return the variance of the input.
+    """
+    return statistics.variance(X)     
+    
+# calculate the covariance of two vectors
+def cov(X,Y = None) -> float:
+    """
+    Return the covariance of a random variable or between two random variables.
+    
+    Note that the result is the "sample covariance" that is normalized by N-1 rather than N, where N is the number of samples.
+    Use covmat() if you want to calculate the covariance matrix.
+    
+    Arguments:
+    X -- list or Matrix: the values representing samples from the first random variable or column-organized samples from several random variables
+    Y -- list or Matrix: the values representing samples from the second random variable (optional)
+    """
+    
+    # if X is a list and Y is not defined, calculate the covariance of X with itself, i.e., variance
+    if isinstance(X,list) and Y is None:
+        return var(X)
+        
+    # if X is a matrix and Y is not defined, try to calculate the covariance between the columns of X
+    elif isinstance(X,Matrix) and Y is None:        
+        n_cols = X.get_width()
+        # if X has more than 2 columns, calculate the covariance matrix
+        if n_cols > 2:
+            return covmat(X)
+        # if X has 2 columns, calculate the covariance between them
+        if n_cols == 2:
+            return cov(X[:,0],X[:,1])
+        # if X has 1 column, calculate its covariance with itself (variance)
+        if X.get_width() == 1:
+            return var(X.get_column(0,as_list=True))
+    
+    # if X and Y are both lists, calculate their sample covariance
+    elif isinstance(X,list) and isinstance(Y,list):
+        n = len(X)
+        mX = statistics.mean(X)
+        mY = statistics.mean(Y)
+        c = 0
+        for x,y in zip(X,Y):
+            c += (x-mX) * (y-mY)
+        c = c/(n-1)
+        return c
+        
+    # if X and Y are both matrices but have 1 column each, calculate their covariance
+    elif isinstance(X,Matrix) and isinstance(Y,Matrix):
+        if X.get_width() == 1 and Y.get_width() == 1:
+            return cov(X.get_column(0,as_list=True),Y.get_column(0,as_list=True))
+        else:
+            raise Exception("Invalid arguments for cov()")
+    
+    
+
+    
+
+def std(X):
+    """
+    Return the standard deviation of the input.
+    """
+    return statistics.stdev(X)
+
+def covmat(X: Matrix) -> Matrix:
+    """
+    Return the covariance matrix for the input matrix.
+    The diagonal of the covariance matrix contains variances.
+    Note that the result is the "sample covariance" that is normalized by N-1 rather than N, where N is the number of samples.
+    
+    Arguments:
+    X -- Matrix: a matrix where the vectors are organized into columns
+    """
+    if isinstance(X,Matrix):
+
+        n = X.get_height()
+        m = X.get_width()
+        
+        c = zeros(m,m)
+        
+        for i in range(m):
+            for j in range(m):
+                c[i,j] = cov(X.get_column(i,as_list=True),X.get_column(j,as_list=True))
+                
+        return c
+    else:
+        raise Exception("Input to covmat() must be a Matrix object.")
+    
+    
+def pearson(X,Y):
+    return cov(X,Y)/(std(X)*std(Y))
+    
+def diag(x):
+    if isinstance(x,Matrix):
+        if x.get_height() == 1:
+            v = x.get_row(0,as_list = True)
+        elif x.get_width() == 1:
+            v = x.get_column(0,as_list = True)
+        else:
+            raise Exception("Input argument to diag() is invalid")
+    n = len(v)
+    mat = identity(n)
+    for i in range(n):
+        mat[i,i] = v[i]
+    return mat
+    
+# ITERATIVELY REWEIGHTED GENERALIZED LEAST SQUARES

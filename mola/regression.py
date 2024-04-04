@@ -1,5 +1,5 @@
 from mola.matrix import Matrix
-from mola.utils import identity, ones, zeros, randoms
+from mola.utils import identity, ones, zeros, randoms, covmat, diag
 from copy import deepcopy
 
 def linear_least_squares(H: Matrix, z: Matrix, W=None):
@@ -23,6 +23,38 @@ def linear_least_squares(H: Matrix, z: Matrix, W=None):
     th_tuple = (th.get(0,0), th.get(1,0))
     return th_tuple
 
+def irls(H: Matrix, z: Matrix, threshold = 1e-6):
+    """
+    Return the iteratively reweighted least squares (IRLS) estimate of the parameters of a model defined by observation matrix H and dependent values z.
+    
+    Arguments:
+    H -- Matrix: the observation matrix of the linear system of equations
+    z -- Matrix: the observed or dependent values depicting the right side of the linear system of equations
+    """
+    
+    # estimate the parameters using ordinary least squares
+    th = ((H.get_transpose())*H).get_inverse() * H.get_transpose() * z
+
+    
+    difference = float('inf')
+    
+    while difference > threshold:
+
+        # calculate absolute values of residuals
+        residuals = (H*th-z).get_absolute_matrix()
+    
+        # estimate sample variance-covariance matrix V using the OLS residuals
+        #V = covmat(residuals)
+        W = diag(residuals)
+        print("W: ", W)
+    
+        # re-estimate the parameters using generalized least squares
+        th = ((H.get_transpose())*W*H).get_inverse() * H.get_transpose() * W * z
+        
+        difference = residuals.norm_Euclidean()
+    
+    th_tuple = tuple(th.get_column(0))
+    return th_tuple
 
 def fit_univariate_polynomial(independent_values: Matrix, dependent_values: Matrix, degrees=[1], intercept=True, weights = None, regularization_coefficient = None):
     """
