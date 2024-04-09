@@ -408,8 +408,13 @@ class Matrix:
         self.data[i][j] = value
 
     # get a single value in a given index
-    def get(self, i: int, j: int):
+    def get(self, i: int, j: int = None):
         """Get the element at specified position."""
+        if self.n_rows == 1 and j is None:
+            j = i
+            i = 0
+        if self.n_cols == 1 and j is None:
+            j = 0
         return self.data[i][j]
 
     # define what happens when the matrix is converted to a string, such as when print(Matrix) is called

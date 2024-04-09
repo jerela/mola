@@ -1,5 +1,6 @@
 import random
 import statistics
+import math
 from mola.matrix import Matrix
 
 
@@ -336,4 +337,56 @@ def diag(x):
         mat[i,i] = v[i]
     return mat
     
-# ITERATIVELY REWEIGHTED GENERALIZED LEAST SQUARES
+def correlation_matrix(n, x=None, sigma=0.5, delta=1.1, epsilon=1e-3, phi=1.1, process=None):
+    """
+    Return a square correlation matrix with given assumptions.
+    
+    Arguments:
+    n -- int: number of rows and columns in the matrix to return
+    x -- list or Matrix: a vector defining the variance function, such as a vector of residuals (default None)
+    sigma -- float: assumed standard deviation of the constant part of model errors (default 0.5)
+    delta -- float: shape parameter of the assumed power function of error variance (default 1.1)
+    epsilon -- float: a factor used to prevent the power function from approaching zero (default 1e-3)
+    phi -- float: the assumed correlation between successive observations when assuming an AR(1) process
+    process -- string: 'AR(1)' or None (default None)
+    
+    Use this function to return a correlation matrix when assuming a non-constant error variance or correlation between residual errors, or a combination of both.
+    """
+    W = identity(n)
+    
+    if process == 'AR(1)' and x is None:
+        for i in range(n):
+            for j in range(n):
+                W[i,j] = phi**abs(i-j)
+    elif process == 'AR(1)' and x is not None:
+        for i in range(n):
+            for j in range(n):
+                W[i,j] = sigma**2 * abs(x[i]*x[j])**delta * phi**abs(i-j)
+    elif process is None and x is not None:
+        for i in range(n):
+            W[i,i] = sigma**2 * (epsilon+abs(x[i])**delta)**2
+    else:
+        raise Exception('Invalid parameters in correlation_matrix()')
+    
+    return W
+
+def rmse(x1,x2):
+    """
+    Return the root mean square error of two vectors.
+    
+    Arguments:
+    x1 -- list or Matrix: the first vector
+    x2 -- list or Matrix: the vector to compare against
+    
+    Raises an exception if the vectors are not of equal length.
+    """
+    if isinstance(x1,Matrix) and isinstance(x2,Matrix):
+        x1 = x1.get_column(0,as_list=True)
+        x2 = x2.get_column(0,as_list=True)
+    
+    n = len(x1)
+    if len(x1)!=len(x2):
+        raise Exception('Arguments must be of equal length in rmse()')
+    
+    return math.sqrt(sum([(x-y)**2 for x,y in zip(x1,x2)])/n)
+    
