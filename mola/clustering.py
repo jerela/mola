@@ -140,22 +140,20 @@ def find_c_means(data: Matrix, num_centers = 2, max_iterations = 100, distance_f
     initial_centers -- Matrix: the initial cluster centers; if not specified, they are initialized randomly (default None)
     """
 
-    def update_membership_matrix():
+    def update_membership_matrix(U):
         """
         Update the membership matrix U.
         The function loops through each point in the data and calculates the membership value for each cluster center into the membership matrix.
         """
-        nonlocal U
         for row in range(num_points):
             for c in range(num_centers):
                 distance_to_center = distance_function(centers[c],data.get_row(row))
                 U[row,c] = 1 / sum([pow(distance_to_center/distance_function(centers[j,:],data.get_row(row)),2/(m-1)) for j in range(num_centers)])
         
-    def update_centers():
+    def update_centers(centers):
         """
         Update the cluster centers.
         """
-        nonlocal centers
         for c in range(num_centers):
             numerator = zeros(1,dim)
             denominator = 0
@@ -191,8 +189,8 @@ def find_c_means(data: Matrix, num_centers = 2, max_iterations = 100, distance_f
 
     for iteration in range(max_iterations):
 
-        update_centers()
-        update_membership_matrix()
+        update_centers(centers)
+        update_membership_matrix(U)
         
         # if the membership matrix U remained the same as in previous iteration, break out of the loop
         if abs(U.norm_Euclidean() - previous_U.norm_Euclidean()) < threshold:
