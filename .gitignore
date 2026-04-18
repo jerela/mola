@@ -366,3 +366,5 @@ python-linear-algebra.pyproj
 
 # folder with matrices as text files
 data/
+generate_docs.bat
+speed_benchmark.py
