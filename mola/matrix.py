@@ -79,11 +79,13 @@ class Matrix:
     def __iter__(self):
         """
         Return an iterator of the matrix.
-        For a single-column matrix, the iterator loops through the elements of the column.
+        For a single-column or single–row matrix, the iterator loops through the elements of the column.
         For other matrices, the iterator loops through the columns as lists.
         """
         if self.n_cols == 1:
             return iter(self.get_column(0,as_list=True))
+        elif self.n_rows == 1:
+            return iter(self.get_row(0,as_list=True))
         else:
             return iter(self.data)
 
@@ -341,8 +343,18 @@ class Matrix:
         
         Raises an exception if 'other' is a matrix but its dimensions do not match those of the matrix on the left.
         """
+        
         output = Matrix(self.n_rows,self.n_cols,0)
-        # first, ensure that the dimensions of the matrices match
+        
+        # first check if the object on the right is an integer or float; if it is, subtract it from all elements
+        if isinstance(self,Matrix) and (isinstance(other,int) or isinstance(other,float)):
+            print('self is matrix, other is int')
+            for i in range(self.n_rows):
+                for j in range(self.n_cols):
+                    output.set(i,j,self.data[i][j]-other)
+            return output
+        
+        # if both objects are matrices, ensure that the dimensions of the matrices match
         if self.n_rows != other.n_rows or self.n_cols != other.n_cols:
             raise Exception("Matrix dimensions must match for elementwise addition or subtraction! Left side is " + str(self.n_rows) + "x" + str(self.n_cols) + ", right side is " + str(other.n_rows) + "x" + str(other.n_cols))
         # if we passed the dimension check, we can subtract the matrices elementwise

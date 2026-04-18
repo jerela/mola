@@ -158,8 +158,13 @@ def get_mean(data: Matrix, along='col') -> Matrix:
     if along=='col':
         operable_data = transpose_list(operable_data)
 
-
-    return Matrix([sum(row)/len(row) for row in operable_data])
+    # the output in Matrix format
+    output = Matrix([sum(row)/len(row) for row in operable_data])
+    # if the output is a 1x1 Matrix, we return it as the float rather than the Matrix
+    if output.get_height() == 1 and output.get_width() == 1:
+        output = output.get(0,0)
+    
+    return output
     
 
 # transpose a 2D list
@@ -233,9 +238,23 @@ def column(data: list) -> Matrix:
 # calculate the variance of a vector of values
 def var(X):
     """
-    Return the variance of the input.
+    Return the variance of the input Matrix. Row vectors will be computed along the row, column vectors along the column, and actual matrices with multiple rows or columns will raise an exception.
     """
-    return statistics.variance(X)     
+    cols = X.get_width()
+    rows = X.get_height()
+    if cols == 1 and rows > 1:
+        dim = 'col'
+        length = rows
+    elif rows == 1 and cols > 1:
+        dim = 'row'
+        length = cols
+    elif rows > 1 and cols > 1:
+        raise Exception("exception in utils.var(): variance cannot be computed for a Matrix that isn't a row or column vector")
+    else:
+        dim = 'col'
+    mean_X = get_mean(X,along=dim)
+    variance = 1/(length-1) * sum((X-mean_X)**2)
+    return variance
     
 # calculate the covariance of two vectors
 def cov(X,Y = None) -> float:
