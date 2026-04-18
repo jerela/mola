@@ -122,11 +122,22 @@ assert(mat2*mat1==mat1)
 
 
 # TEST GAUSS-NEWTON ITERATION
+
 #h = Matrix([lambda a,x: pow(a,x)])
 #independents = Matrix([1, 2, 3]).get_transpose()
 #y = Matrix([2, 4, 8]).get_transpose()
 ## let J be the Jacobian of h(x)
 #J = Matrix([lambda a,x: x*pow(a,x-1)])
+
+h = Matrix([lambda a,x: pow(a[0],x[0])])
+independents = Matrix([1, 2, 3]).get_transpose()
+y = Matrix([2, 4, 8]).get_transpose()
+# let J be the Jacobian of h(x)
+J = Matrix([lambda a,x: x[0]*pow(a[0],x[0]-1)])
+
+theta = regression.fit_nonlinear(independents, y, h, J, initial=Matrix([0.5]))
+print("theta: " + str(theta))
+
 
 #theta = regression.fit_nonlinear(independents, y, h, J, initial=Matrix([0.5]))
 #print(theta)
@@ -135,7 +146,6 @@ assert(mat2*mat1==mat1)
 initial_centers = Matrix([[0,0],[20,0]])
 symmetric_points = Matrix([[-1,0],[-2,2],[1,1],[20,2],[18,0],[22,-1],[23,-1]])
 centers = clustering.find_k_means(data=symmetric_points,num_centers=2,initial_centers=initial_centers)[0]
-
 
 print(centers)
 assert(utils.equals_approx(centers,Matrix([[-0.6667, 1.0],[20.75, 0.0]]),precision = 1e-4))
@@ -177,3 +187,17 @@ y = Matrix([[0],[1],[2]])
 theta = regression.fit_irls(H, y, p=2, threshold = 1e-12)
 
 print(theta)
+#density_points = Matrix([[1,2], [0.5,1.5], [0,1], [0,0.5], [0,0], [0,-0.5], [0,-1], [0.5,-1.5], [1,-2], [2,0], [2.5,-0.5], [3,-1], [3,-1.5], [3,-2], [3,-2.5], [3,-3], [2.5,-3.5], [2,-4], [0.3, -0.7], [0.3, 0.7], [-0.3, -0.7], [-0.3, 0.7], [2.7, -2.7], [3.3, -2.7], [2.7, -1.3], [3.3, -1.3]])
+#centers_density, labels = clustering.find_density_clusters(data=density_points, num_centers=2, beta = 0.5, sigma = 0.5)
+#print(labels)
+
+
+#h = Matrix([lambda a,x: pow(a,x)])
+#independents = Matrix([1, 2, 3]).get_transpose()
+#y = Matrix([2, 4, 8]).get_transpose()
+## let J be the Jacobian of h(x)
+#J = Matrix([lambda a,x: x*pow(a,x-1)])
+## estimate the parameter (the base a of a^x)
+#theta = regression.fit_nonlinear(independents, y, h, J, initial=Matrix([0.5]))
+#assert(theta[0] == 2)
+
