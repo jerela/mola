@@ -184,7 +184,7 @@ def find_c_means(data: Matrix, num_centers = 2, max_iterations = 100, distance_f
     
     # initialize the membership matrix U; it has as many rows as there are points and as many columns as there are centers; therefore, the value U[i,j] describes how strongly point i belongs to cluster center j
     U = zeros(num_points,num_centers)
-    update_membership_matrix()
+    update_membership_matrix(U)
     previous_U = deepcopy(U)
 
     for iteration in range(max_iterations):
