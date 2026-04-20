@@ -310,9 +310,9 @@ def cov(X,Y = None) -> float:
 
 def std(X):
     """
-    Return the standard deviation of the input.
+    Return the standard deviation of the input Matrix. Row vectors will be computed along the row, column vectors along the column, and actual matrices with multiple rows or columns will raise an exception.
     """
-    return statistics.stdev(X)
+    return math.sqrt(var(X))
 
 def covmat(X: Matrix) -> Matrix:
     """

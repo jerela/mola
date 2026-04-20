@@ -158,14 +158,16 @@ print(mountaintops)
 
 
 
-x = [1, 2, 4, 7]
-c = utils.cov(x)
+x = Matrix([1, 2, 4, 7])
+#c = utils.cov(x)
 sd = utils.std(x)
 vari = utils.var(x)
 print(x)
-print(c)
+#print(c)
 print(sd)
-print(vari)
+print(f'variance of {x} is {vari}')
+
+
 X = Matrix([[1, 2], [4, 7]])
 C = utils.cov(X)
 Cm = utils.covmat(X)
@@ -200,4 +202,8 @@ print(theta)
 ## estimate the parameter (the base a of a^x)
 #theta = regression.fit_nonlinear(independents, y, h, J, initial=Matrix([0.5]))
 #assert(theta[0] == 2)
+
+
+
+
 

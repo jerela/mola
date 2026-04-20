@@ -348,7 +348,7 @@ class Matrix:
         
         # first check if the object on the right is an integer or float; if it is, subtract it from all elements
         if isinstance(self,Matrix) and (isinstance(other,int) or isinstance(other,float)):
-            print('self is matrix, other is int')
+            #print('self is matrix, other is int')
             for i in range(self.n_rows):
                 for j in range(self.n_cols):
                     output.set(i,j,self.data[i][j]-other)
