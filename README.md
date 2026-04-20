@@ -1,5 +1,7 @@
 # Matrix operations and linear algebra (mola) library for core Python
 
+[![Unit tests](https://github.com/jerela/mola/actions/workflows/python-package.yml/badge.svg?branch=master)](https://github.com/jerela/mola/actions/workflows/python-package.yml)
+
 - [Introduction](#introduction)
 - [Getting started](#getting-started)
 - [Prerequisites](#prerequisites)
