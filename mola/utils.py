@@ -259,7 +259,7 @@ def var(X):
 # calculate the covariance of two vectors
 def cov(X,Y = None) -> float:
     """
-    Return the covariance of a random variable or between two random variables.
+    Return the covariance of a random variable or between two random variables. Separate rows are treated as separate variables.
     
     Note that the result is the "sample covariance" that is normalized by N-1 rather than N, where N is the number of samples.
     Use covmat() if you want to calculate the covariance matrix.
@@ -273,37 +273,39 @@ def cov(X,Y = None) -> float:
     if isinstance(X,list) and Y is None:
         return var(X)
         
-    # if X is a matrix and Y is not defined, try to calculate the covariance between the columns of X
-    elif isinstance(X,Matrix) and Y is None:        
-        n_cols = X.get_width()
-        # if X has more than 2 columns, calculate the covariance matrix
-        if n_cols > 2:
+    # if X is a matrix and Y is not defined, try to calculate the covariance between the rows of X
+    elif isinstance(X,Matrix) and Y is None:
+        n_rows = X.get_height()
+        # if X has more than 2 rows, calculate the covariance matrix
+        if n_rows > 2:
             return covmat(X)
-        # if X has 2 columns, calculate the covariance between them
-        if n_cols == 2:
-            return cov(X[:,0],X[:,1])
-        # if X has 1 column, calculate its covariance with itself (variance)
-        if X.get_width() == 1:
-            return var(X.get_column(0,as_list=True))
+        # if X has 2 rows, calculate the covariance between them
+        if n_rows == 2:
+            return cov(X[0,:],X[1,:])
+        # if X has 1 row, calculate its covariance with itself (variance)
+        if n_rows == 1:
+            return var(X)
     
     # if X and Y are both lists, calculate their sample covariance
     elif isinstance(X,list) and isinstance(Y,list):
         n = len(X)
-        mX = statistics.mean(X)
-        mY = statistics.mean(Y)
+        mX = sum(X)/len(X)
+        mY = sum(Y)/len(Y)
         c = 0
         for x,y in zip(X,Y):
             c += (x-mX) * (y-mY)
         c = c/(n-1)
         return c
         
-    # if X and Y are both matrices but have 1 column each, calculate their covariance
+    # if X and Y are both matrices but have 1 row each, calculate their covariance
     elif isinstance(X,Matrix) and isinstance(Y,Matrix):
-        if X.get_width() == 1 and Y.get_width() == 1:
-            return cov(X.get_column(0,as_list=True),Y.get_column(0,as_list=True))
+        if X.get_height() == 1 and Y.get_height() == 1:
+            return cov(X.get_row(0,as_list=True),Y.get_row(0,as_list=True))
         else:
             raise Exception("Invalid arguments for cov()")
     
+    else:
+        raise Exception('Undefined case in cov()')
     
 
     
