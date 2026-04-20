@@ -15,4 +15,4 @@ def test_matrix_std():
     x_col = Matrix([[1], [2], [4], [7]])
     std_row = utils.std(x_row)
     std_col = utils.std(x_col)
-    assert(abs(std_row-2.6457513110) < 1e-12 and abs(std_col-2.6457513110) < 1e-12)
+    assert(abs(std_row-2.6457513110645907) < 1e-12 and abs(std_col-2.6457513110645907) < 1e-12)
