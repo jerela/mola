@@ -23,7 +23,7 @@ def test_matrix_covariance():
     x2 = Matrix([[0, 1, 2, 3], [3, 2, 1, 0]])
     x3 = Matrix([[1, 2, 6], [4, 5, 0], [7, 2, 9]])
 
-    c1 = utils.cov(x)
+    c1 = utils.cov(x1)
     c2 = utils.cov(x2)
     c3 = utils.cov(x3)
 
